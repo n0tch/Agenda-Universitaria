@@ -17,18 +17,18 @@ internal enum class LoginScreens(val route: String) {
     REGISTER("register_route")
 }
 
-fun NavGraphBuilder.loginGraph(navHostController: NavHostController) {
-    navigation(route = loginGraph, startDestination = LOGIN.route) {
-        composable(route = LOGIN.route) {
-            LoginScreenComponent(navHostController = navHostController)
-        }
-
-        composable(route = FORGOT_PASS.route) {
-            ForgotPassComponent(navHostController = navHostController)
-        }
-
-        composable(route = REGISTER.route){
-            RegisterComponent(navHostController = navHostController)
-        }
-    }
-}
+//fun NavGraphBuilder.loginGraph(navHostController: NavHostController) {
+//    navigation(route = loginGraph, startDestination = LOGIN.route) {
+//        composable(route = LOGIN.route) {
+//            LoginScreenComponent(navHostController = navHostController)
+//        }
+//
+//        composable(route = FORGOT_PASS.route) {
+//            ForgotPassComponent(navHostController = navHostController)
+//        }
+//
+//        composable(route = REGISTER.route){
+//            RegisterComponent(navHostController = navHostController)
+//        }
+//    }
+//}

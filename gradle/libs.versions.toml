@@ -7,6 +7,9 @@ minSdk = "26"
 versionCode = "1"
 versionName = "1.0"
 
+#Kotlin
+kotlinxCoroutines = "1.6.4"
+
 #Android
 gradlePlugin = "8.0.2"
 kotlin = "1.8.10"
@@ -43,6 +46,9 @@ dataStore = "1.0.0"
 gson = "2.8.7"
 
 [libraries]
+
+#Kotlin
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
 
 #Android
 androidx-lifecycle-runtimeCompose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidxLifecycle" }

@@ -7,12 +7,15 @@ import androidx.navigation.compose.rememberNavController
 import com.example.agendauniversitaria.feature.navigation.homeGraph
 import com.example.agendauniversitaria.feature.navigation.loginGraph
 import com.example.agendauniversitaria.feature.navigation.noteNavGraph
+import com.feature.navigation.login.loginGraph
+import com.feature.navigation.login.loginGraphRoute
 
 @Composable
-fun AgendaNavHost(startDestination: String = loginGraph) {
+fun AgendaNavHost(startDestination: String = loginGraphRoute) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = startDestination) {
+//        loginGraph(navController)
         loginGraph(navController)
         homeGraph(navController)
         noteNavGraph(navController)
