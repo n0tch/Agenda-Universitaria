@@ -1,0 +1,102 @@
+[versions]
+#Sdk
+compileSdk = "33"
+minSdk = "26"
+
+#App Versions
+versionCode = "1"
+versionName = "1.0"
+
+#Android
+gradlePlugin = "8.0.2"
+kotlin = "1.8.10"
+androidxLifecycle = "2.5.1"
+lifecycleRuntime = "2.4.1"
+
+#Compose
+compose = "1.4.2"
+composeMaterial3 = "1.0.1"
+activityCompose = "1.5.1"
+composeNavigation = "2.5.0"
+hiltNavigationCompose = "1.0.0-alpha03"
+composeContraints = "1.0.1"
+
+#Hilt
+hilt = "2.44"
+
+#firebase
+firebaseAuth = "21.1.0"
+firebaseStorage = "19.1.0"
+firebaseDatabase = "20.2.2"
+
+#Google services
+googleServices = "4.3.15"
+coroutinePlayService = "1.4.1"
+
+#Coil
+coilVersion = "2.3.0"
+
+#Data Store
+dataStore = "1.0.0"
+
+#Gson
+gson = "2.8.7"
+
+[libraries]
+
+#Android
+androidx-lifecycle-runtimeCompose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidxLifecycle" }
+androidx-lifecycle-viewModelCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidxLifecycle" }
+androidx-lifecycle-runTime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntime" }
+
+#Compose
+compose_ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
+compose_material = { module = "androidx.compose.material3:material3", version.ref = "composeMaterial3" }
+compose_tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
+compose_icons = { module = "androidx.compose.material:material-icons-extended", version.ref = "compose" }
+compose_activity = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+compose_runtime = { module = "androidx.compose.runtime:runtime", version.ref = "compose" }
+compose_navigation = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
+compose_contraints = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "composeContraints" }
+
+#Hilt
+hilt_android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt_compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
+hilt_navigation = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+
+#Firebase
+firebase_auth = { module = "com.google.firebase:firebase-auth-ktx", version.ref = "firebaseAuth" }
+firebase_storage = { module = "com.google.firebase:firebase-storage", version.ref = "firebaseStorage" }
+firebase_databse = { module = "com.google.firebase:firebase-database-ktx", version.ref = "firebaseDatabase" }
+
+#Google Services
+coroutine_play_service = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "coroutinePlayService" }
+
+#Coil
+coil_compose = { module = "io.coil-kt:coil-compose", version.ref = "coilVersion" }
+
+#DataStore
+data_store = { module = "androidx.datastore:datastore-preferences", version.ref = "dataStore" }
+
+#Gson
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+
+[bundles]
+compose = [
+    "compose.ui",
+    "compose.material",
+    "compose.tooling",
+    "compose.icons",
+    "compose.activity",
+    "compose.navigation",
+    "compose.contraints"
+]
+hilt = ["hilt.android", "hilt.navigation"]
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "gradlePlugin" }
+android-library = { id = "com.android.library", version.ref = "gradlePlugin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
