@@ -6,6 +6,8 @@ import com.core.network.profile.ProfileDataProvider
 import com.core.network.profile.ProfileDataProviderImp
 import com.core.network.register.RegisterDataProvider
 import com.core.network.register.RegisterDataProviderImp
+import com.core.network.user.UserDataProvider
+import com.core.network.user.UserDataProviderImp
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -29,4 +31,9 @@ internal abstract class NetworkModule {
     abstract fun bindsProfileDataProvider(
         profileDataProviderImp: ProfileDataProviderImp
     ): ProfileDataProvider
+
+    @Binds
+    abstract fun bindsUserDataProvider(
+        userDataProviderImp: UserDataProviderImp
+    ): UserDataProvider
 }

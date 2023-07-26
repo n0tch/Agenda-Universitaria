@@ -61,4 +61,7 @@ dependencies {
 
     implementation(libs.hilt.navigation)
     implementation(project(":features:authentication"))
+    implementation(project(":features:home"))
+    implementation(project(":features:note"))
+    implementation(project(":core:model"))
 }

@@ -5,11 +5,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.core.designsystem.components.ToastComponent
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreenComponent(
@@ -19,6 +21,7 @@ fun LoginScreenComponent(
     onForgotPasswordClicked: () -> Unit
 ) {
     val viewModel: LoginViewModel = hiltViewModel()
+    val coroutine = rememberCoroutineScope()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var isLoading by remember { mutableStateOf(false) }
 
@@ -41,7 +44,9 @@ fun LoginScreenComponent(
     LoginScreen(
         isLoading = isLoading,
         onForgotPass = {
-            onForgotPasswordClicked()
+            coroutine.launch {
+                onForgotPasswordClicked()
+            }
         }, onLogin = { email, password ->
             viewModel.loginWithCredentials(email, password)
         },

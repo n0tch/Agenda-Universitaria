@@ -6,6 +6,8 @@ import com.core.network.model.toCurrentUserResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -37,5 +39,10 @@ internal class ProfileDataProviderImp @Inject constructor(
 
         firebaseAuth.currentUser?.updateProfile(userUpdates)?.await()
         return firebaseAuth.currentUser.toCurrentUserResponse()
+    }
+
+    override fun resetPassword(email: String): Flow<Boolean> = flow {
+        firebaseAuth.sendPasswordResetEmail(email).await()
+        emit(true)
     }
 }

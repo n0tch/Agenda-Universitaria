@@ -5,6 +5,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.feature.navigation.home.navigateToHome
+import com.features.authentication.forgotpassword.ForgotPassComponent
 import com.features.authentication.login.LoginScreenComponent
 import com.features.authentication.register.RegisterComponent
 
@@ -15,7 +17,9 @@ fun NavGraphBuilder.loginGraph(navHostController: NavHostController) {
         composable(route = LoginScreens.LOGIN.route) {
             LoginScreenComponent(
                 navHostController = navHostController,
-                onLoginFinish = { },
+                onLoginFinish = {
+                    navHostController.navigateToHome()
+                },
                 onRegisterClicked = {
                     navHostController.navigate(LoginScreens.REGISTER.route)
                 },
@@ -26,7 +30,7 @@ fun NavGraphBuilder.loginGraph(navHostController: NavHostController) {
         }
 
         composable(route = LoginScreens.FORGOT_PASS.route) {
-//            ForgotPassComponent(navHostController = navHostController)
+            ForgotPassComponent(navHostController = navHostController)
         }
 
         composable(route = LoginScreens.REGISTER.route) {

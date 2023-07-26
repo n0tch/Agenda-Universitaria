@@ -22,15 +22,17 @@ fun RegisterComponent(
     var isLoading by remember { mutableStateOf(false) }
 
     when (uiState) {
-        is RegisterState.RegisterFail ->
+        is RegisterState.RegisterFail -> {
+            isLoading = false
             ToastComponent((uiState as RegisterState.RegisterFail).exception.message.toString())
-
+        }
         RegisterState.RegisterIdle -> {}
         RegisterState.RegisterLoading -> {
             isLoading = true
         }
 
         is RegisterState.RegisterSuccess -> {
+            ToastComponent("Login Success")
             LaunchedEffect(key1 = Unit, block = {
                 onRegisterSuccess()
             })

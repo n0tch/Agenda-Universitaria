@@ -1,33 +1,21 @@
 package com.core.domain
 
-import android.net.Uri
 import com.core.common.Result
-import com.core.data.repository.profile.ProfileRepository
 import com.core.data.repository.register.RegisterRepository
 import com.example.model.CurrentUser
 import javax.inject.Inject
 
 class RegisterUseCase @Inject constructor(
-    private val registerRepository: RegisterRepository,
-    private val profileRepository: ProfileRepository
+    private val registerRepository: RegisterRepository
 ) {
 
     suspend fun registerUser(
         email: String,
-        password: String,
-        userName: String,
-        photoUri: Uri?
+        password: String
     ): Result<CurrentUser> = try {
-
-        val registerResult = registerRepository.signupWithUserCredentials(email, password, photoUri)
-
-        if(registerResult is Result.Error){
-            Result.Error(registerResult.exception)
-        } else {
-            val userUpdated = profileRepository.updateRemoteUser(userName, photoUri)
-            Result.Success(userUpdated)
-        }
-    }catch (exception: Exception){
+        val registerResult = registerRepository.signupWithUserCredentials(email, password)
+        Result.Success(registerResult)
+    } catch (exception: Exception) {
         Result.Error(exception)
     }
 }
