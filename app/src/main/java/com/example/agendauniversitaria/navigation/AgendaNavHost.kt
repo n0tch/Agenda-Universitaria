@@ -4,12 +4,14 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.example.agendauniversitaria.feature.navigation.homeGraph
-import com.example.agendauniversitaria.feature.navigation.loginGraph
-import com.example.agendauniversitaria.feature.navigation.noteNavGraph
+import com.feature.navigation.authentication.login.loginGraph
+import com.feature.navigation.authentication.login.loginGraphRoute
+import com.feature.navigation.home.homeGraph
+import com.feature.navigation.home.homeGraphRoute
+import com.feature.navigation.note.noteNavGraph
 
 @Composable
-fun AgendaNavHost(startDestination: String = loginGraph) {
+fun AgendaNavHost(startDestination: String = loginGraphRoute) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = startDestination) {
@@ -20,7 +22,7 @@ fun AgendaNavHost(startDestination: String = loginGraph) {
 }
 
 fun NavController.navigateToHome(){
-    navigate(homeGraph) {
+    navigate(homeGraphRoute) {
         popUpTo(currentBackStackEntry?.destination?.route ?: "") {
             inclusive = true
         }
@@ -28,7 +30,7 @@ fun NavController.navigateToHome(){
 }
 
 fun NavController.navigateToLogin(){
-    navigate(loginGraph){
+    navigate(loginGraphRoute){
         popUpTo(currentBackStackEntry?.destination?.route ?: ""){
             inclusive = true
         }
