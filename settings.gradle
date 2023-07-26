@@ -15,7 +15,7 @@ dependencyResolutionManagement {
 rootProject.name = "Agenda Universitaria"
 include ':app'
 include ':core:network'
-include ':features:login'
+include ':features:authentication'
 include ':core:domain'
 include ':core:data'
 include ':core:common'

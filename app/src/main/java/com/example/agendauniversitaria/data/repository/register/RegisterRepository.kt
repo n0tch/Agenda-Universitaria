@@ -6,6 +6,4 @@ import com.google.firebase.auth.FirebaseUser
 interface RegisterRepository {
 
     suspend fun signupWithUserCredentials(email: String, password: String, photoUri: Uri?): FirebaseUser?
-
-
 }
