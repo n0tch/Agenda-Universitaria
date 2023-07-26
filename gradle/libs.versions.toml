@@ -11,7 +11,7 @@ versionName = "1.0"
 kotlinxCoroutines = "1.6.4"
 
 #Android
-gradlePlugin = "8.0.2"
+gradlePlugin = "8.1.0"
 kotlin = "1.8.10"
 androidxLifecycle = "2.5.1"
 lifecycleRuntime = "2.4.1"

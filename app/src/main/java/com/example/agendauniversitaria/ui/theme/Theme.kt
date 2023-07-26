@@ -14,6 +14,12 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import com.core.designsystem.ui.Pink40
+import com.core.designsystem.ui.Pink80
+import com.core.designsystem.ui.Purple40
+import com.core.designsystem.ui.Purple80
+import com.core.designsystem.ui.PurpleGrey40
+import com.core.designsystem.ui.PurpleGrey80
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -64,7 +70,7 @@ fun AgendaTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = MaterialTheme.typography,
         content = content
     )
 }
