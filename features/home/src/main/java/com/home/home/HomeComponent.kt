@@ -85,7 +85,8 @@ fun HomeComponent(
             }
         },
         onFabClicked = {
-            onNavigateToNotGraph()
+            viewModel.fetchNotes()
+//            onNavigateToNotGraph()
 //            navController.navigate(noteGraph)
         })
 }

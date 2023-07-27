@@ -1,6 +1,6 @@
 package com.core.network.login
 
-import com.core.network.model.CurrentUserResponse
+import com.core.network.model.userResponse.CurrentUserResponse
 import kotlinx.coroutines.flow.Flow
 
 interface LoginDataProvider {

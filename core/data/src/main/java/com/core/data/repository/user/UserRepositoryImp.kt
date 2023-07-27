@@ -14,12 +14,8 @@ class UserRepositoryImp @Inject constructor(
     private val userDataProvider: UserDataProvider
 ) : UserRepository {
 
-    override suspend fun fetchCurrentUser(): Flow<CurrentUser> = flow {
-        userDataProvider
-            .fetchCurrentUser()
-            .catch { throw it }
-            .map { it.toCurrentUser() }
-            .collect{ emit(it) }
+    override suspend fun fetchCurrentUser(): CurrentUser {
+        return userDataProvider.fetchCurrentUser().toCurrentUser()
     }
 
     override fun isUserLoggedIn(): Flow<Boolean> {

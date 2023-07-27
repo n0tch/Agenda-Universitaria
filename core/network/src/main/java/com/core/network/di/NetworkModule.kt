@@ -2,6 +2,8 @@ package com.core.network.di
 
 import com.core.network.login.LoginDataProvider
 import com.core.network.login.LoginDataProviderImp
+import com.core.network.note.NoteDataProvider
+import com.core.network.note.NoteDataProviderImp
 import com.core.network.profile.ProfileDataProvider
 import com.core.network.profile.ProfileDataProviderImp
 import com.core.network.register.RegisterDataProvider
@@ -36,4 +38,9 @@ internal abstract class NetworkModule {
     abstract fun bindsUserDataProvider(
         userDataProviderImp: UserDataProviderImp
     ): UserDataProvider
+
+    @Binds
+    abstract fun bindsNoteDataProvider(
+        noteDataProviderImp: NoteDataProviderImp
+    ): NoteDataProvider
 }

@@ -1,4 +1,4 @@
-package com.core.network.model
+package com.core.network.model.userResponse
 
 data class CurrentUserResponse(
     val id: String? = null,

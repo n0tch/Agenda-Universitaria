@@ -1,8 +1,8 @@
 package com.core.network.profile
 
 import android.net.Uri
-import com.core.network.model.CurrentUserResponse
-import com.core.network.model.toCurrentUserResponse
+import com.core.network.model.userResponse.CurrentUserResponse
+import com.core.network.model.userResponse.toCurrentUserResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.storage.FirebaseStorage

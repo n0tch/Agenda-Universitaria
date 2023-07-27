@@ -1,0 +1,43 @@
+package com.core.domain
+
+import com.core.common.AppDispatcher
+import com.core.common.Dispatcher
+import com.core.common.Result
+import com.core.data.repository.note.NoteRepository
+import com.core.data.repository.user.UserRepository
+import com.example.model.Note
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectIndexed
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import javax.inject.Inject
+
+class NoteUseCase @Inject constructor(
+    @Dispatcher(AppDispatcher.IO) private val ioDispatcher: CoroutineDispatcher,
+    private val noteRepository: NoteRepository,
+    private val userRepository: UserRepository
+) {
+
+    fun saveNote(title: String, description: String): Flow<Result<String>> = flow {
+        val currentUserId = userRepository.fetchCurrentUser().id
+
+        noteRepository
+            .saveNote(currentUserId, Note(title = title, body = description))
+            .flowOn(ioDispatcher)
+            .catch { Result.Error(it as Exception) }
+            .map { Result.Success(it) }
+            .collect { emit(it) }
+    }
+
+    fun fetchNotes(): Flow<Result<List<Note>>> = flow {
+        val currentUserId = userRepository.fetchCurrentUser().id
+        noteRepository.fetchNotes(currentUserId)
+            .flowOn(ioDispatcher)
+            .catch { Result.Error(it as Exception) }
+            .map { Result.Success(it) }
+            .collect { emit(it) }
+    }
+}

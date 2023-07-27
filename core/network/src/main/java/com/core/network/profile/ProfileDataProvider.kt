@@ -1,7 +1,7 @@
 package com.core.network.profile
 
 import android.net.Uri
-import com.core.network.model.CurrentUserResponse
+import com.core.network.model.userResponse.CurrentUserResponse
 import kotlinx.coroutines.flow.Flow
 
 interface ProfileDataProvider {
