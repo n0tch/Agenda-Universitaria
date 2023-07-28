@@ -9,7 +9,8 @@ import kotlinx.parcelize.Parcelize
 data class Note(
     val id: String = "",
     val title: String = "",
-    val body: String = ""
+    val body: String = "",
+    val label: String = ""
 ): Parcelable{
     override fun toString(): String {
         return Uri.encode(Gson().toJson(this))

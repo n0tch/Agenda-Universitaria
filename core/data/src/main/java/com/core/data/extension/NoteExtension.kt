@@ -5,5 +5,6 @@ import com.example.model.Note
 
 fun Note.toNoteResponse() = NoteResponse(
     title = title,
-    description = body
+    description = body,
+    label = label
 )

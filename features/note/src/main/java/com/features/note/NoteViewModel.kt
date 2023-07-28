@@ -1,5 +1,6 @@
 package com.features.note
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.core.common.AppDispatcher
@@ -20,11 +21,16 @@ class NoteViewModel @Inject constructor(
     private val noteUseCase: NoteUseCase
 ): ViewModel() {
 
+    init {
+//        saveNoteLabel()
+        getNoteLabels()
+    }
+
     val uiState: MutableStateFlow<NoteState> by lazy { MutableStateFlow(NoteState.NoteIdle) }
 
-    fun saveNote(title: String, description: String){
+    fun saveNote(title: String, description: String, label: String){
         viewModelScope.launch {
-            noteUseCase.saveNote(title, description).onStart {
+            noteUseCase.saveNote(title, description, label).onStart {
                 uiState.emit(NoteState.NoteIdle)
             }.collect {
                 when(it){
@@ -35,4 +41,34 @@ class NoteViewModel @Inject constructor(
         }
     }
 
+    fun saveNoteLabel(){
+        viewModelScope.launch {
+            noteUseCase.saveNoteLabel().collect {
+                when(it){
+                    is Result.Error -> {
+                        Log.e("erro", it.exception.toString())
+                    }
+                    is Result.Success -> {
+                        Log.e("success", it.data.toString())
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getNoteLabels() {
+        viewModelScope.launch {
+            noteUseCase.getNoteLabels().collect {
+                when(it){
+                    is Result.Error -> {
+                        Log.e("erro", it.exception.toString())
+                    }
+                    is Result.Success -> {
+                        uiState.emit(NoteState.NoteLabels(it.data))
+                        Log.e("success", it.data.toString())
+                    }
+                }
+            }
+        }
+    }
 }

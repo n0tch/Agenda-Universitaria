@@ -3,16 +3,14 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
-    alias(libs.plugins.hilt)
 }
 
 android {
-    namespace = "com.core.data"
+    namespace = "com.features.subject"
     compileSdk = 33
 
     defaultConfig {
         minSdk = 26
-        targetSdk = 33
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -34,16 +32,26 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.compose.get()
+    }
+    packagingOptions {
+        resources {
+            excludes.addAll(
+                listOf(
+                    "/META-INF/{AL2.0,LGPL2.1}",
+                    "META-INF/gradle/incremental.annotation.processors",
+                    "META-INF/DEPENDENCIES"
+                )
+            )
+        }
+    }
 }
 
 dependencies {
-
-    implementation(project(":core:network"))
-    implementation(project(":core:common"))
-    implementation(project(":core:model"))
-
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
 
     implementation(libs.core.ktx)
     implementation(libs.appcompat)
@@ -51,4 +59,19 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+    implementation(project(":core:common"))
+    implementation(project(":core:domain"))
+    implementation(project(":core:model"))
+    implementation(project(":core:designsystem"))
+
+    implementation(libs.androidx.lifecycle.runTime.ktx)
+    implementation(libs.androidx.lifecycle.runtimeCompose)
+    implementation(libs.androidx.lifecycle.viewModelCompose)
+    implementation(libs.bundles.compose)
+    implementation(libs.coil.compose)
+
+    implementation(libs.hilt.navigation)
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
 }

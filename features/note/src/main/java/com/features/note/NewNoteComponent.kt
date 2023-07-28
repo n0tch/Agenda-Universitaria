@@ -2,6 +2,7 @@ package com.features.note
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -16,6 +17,7 @@ fun NewNoteComponent(navController: NavController, note: Note = Note()) {
     val viewModel: NoteViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var save by remember { mutableStateOf(false) }
+    var noteLabelList: List<String> = remember { mutableStateListOf() }
 
     when (uiState) {
         is NoteState.NoteException -> {}
@@ -24,13 +26,18 @@ fun NewNoteComponent(navController: NavController, note: Note = Note()) {
         is NoteState.NoteSaved -> {
             save = true
         }
+
+        is NoteState.NoteLabels -> {
+            noteLabelList = (uiState as NoteState.NoteLabels).labels
+        }
     }
 
     NewNoteScreen(
         note = note,
         saved = save,
-        onSaveClicked = { title, desc ->
-            viewModel.saveNote(title, desc)
+        noteLabels = noteLabelList,
+        onSaveClicked = { title, desc, label ->
+            viewModel.saveNote(title, desc, label)
         },
         onBackClicked = {
             navController.popBackStack()

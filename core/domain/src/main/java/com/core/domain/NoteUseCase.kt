@@ -9,7 +9,6 @@ import com.example.model.Note
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectIndexed
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -21,11 +20,11 @@ class NoteUseCase @Inject constructor(
     private val userRepository: UserRepository
 ) {
 
-    fun saveNote(title: String, description: String): Flow<Result<String>> = flow {
+    fun saveNote(title: String, description: String, label: String): Flow<Result<String>> = flow {
         val currentUserId = userRepository.fetchCurrentUser().id
 
         noteRepository
-            .saveNote(currentUserId, Note(title = title, body = description))
+            .saveNote(currentUserId, Note(title = title, body = description, label = label))
             .flowOn(ioDispatcher)
             .catch { Result.Error(it as Exception) }
             .map { Result.Success(it) }
@@ -39,5 +38,15 @@ class NoteUseCase @Inject constructor(
             .catch { Result.Error(it as Exception) }
             .map { Result.Success(it) }
             .collect { emit(it) }
+    }
+
+    fun saveNoteLabel(): Flow<Result<Boolean>> = flow {
+        noteRepository.saveNoteLabel("").flowOn(ioDispatcher).collect {
+            emit(Result.Success(true))
+        }
+    }
+
+    fun getNoteLabels(): Flow<Result<List<String>>> = flow {
+        noteRepository.getNoteLabels().flowOn(ioDispatcher).map { Result.Success(it) }.collect{ emit(it) }
     }
 }
