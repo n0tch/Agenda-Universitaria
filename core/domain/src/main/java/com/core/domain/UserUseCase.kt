@@ -19,19 +19,15 @@ class UserUseCase @Inject constructor(
 ) {
 
     suspend fun fetchCurrentUser(): Flow<Result<CurrentUser>> = flow {
-        userRepository
-            .fetchCurrentUser()
-            .flowOn(ioDispatcher)
-            .catch { emit(Result.Error(it as Exception)) }
-            .map { Result.Success(it) }
-            .collect{ emit(it) }
-    }
+        val user = userRepository.fetchCurrentUser()
+        emit(Result.Success(user))
+    }.flowOn(ioDispatcher)
 
-    fun isUserLoggedIn(): Flow<Result<Boolean>>{
+    fun isUserLoggedIn(): Flow<Result<Boolean>> {
         TODO("")
     }
 
-    fun logout(): Flow<Result<Boolean>>{
+    fun logout(): Flow<Result<Boolean>> {
         TODO("")
     }
 }

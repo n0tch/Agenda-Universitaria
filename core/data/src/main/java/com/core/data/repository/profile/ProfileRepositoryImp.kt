@@ -4,7 +4,6 @@ import android.net.Uri
 import com.core.common.AppDispatcher
 import com.core.common.Dispatcher
 import com.core.data.extension.toCurrentUser
-import com.core.network.model.CurrentUserResponse
 import com.core.network.profile.ProfileDataProvider
 import com.example.model.CurrentUser
 import kotlinx.coroutines.CoroutineDispatcher

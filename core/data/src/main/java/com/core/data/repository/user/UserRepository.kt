@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
 
-    suspend fun fetchCurrentUser(): Flow<CurrentUser>
+    suspend fun fetchCurrentUser(): CurrentUser
 
     fun isUserLoggedIn(): Flow<Boolean>
 

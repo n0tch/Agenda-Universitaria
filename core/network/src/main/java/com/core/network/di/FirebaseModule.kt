@@ -20,8 +20,8 @@ internal object FirebaseModule {
 
     @Provides
     fun provideFirebaseStorage(): FirebaseStorage = FirebaseStorage.getInstance()
-//
-//    @Provides
-//    fun provideFirebaseDatabase(): FirebaseDatabase = Firebase.database
+
+    @Provides
+    fun provideFirebaseDatabase(): FirebaseDatabase = Firebase.database
 
 }

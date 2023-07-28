@@ -1,6 +1,6 @@
 package com.core.data.extension
 
-import com.core.network.model.CurrentUserResponse
+import com.core.network.model.userResponse.CurrentUserResponse
 import com.example.model.CurrentUser
 
 fun CurrentUserResponse.toCurrentUser() = CurrentUser(

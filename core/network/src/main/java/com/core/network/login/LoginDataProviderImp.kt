@@ -1,9 +1,8 @@
 package com.core.network.login
 
-import com.core.network.model.CurrentUserResponse
-import com.core.network.model.toCurrentUserResponse
+import com.core.network.model.userResponse.CurrentUserResponse
+import com.core.network.model.userResponse.toCurrentUserResponse
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await

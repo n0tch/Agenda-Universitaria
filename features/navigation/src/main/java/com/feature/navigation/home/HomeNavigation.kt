@@ -14,7 +14,6 @@ fun NavGraphBuilder.homeGraph(navController: NavController) {
     navigation(route = homeGraphRoute, startDestination = HomeScreens.HOME.route) {
         composable(route = HomeScreens.HOME.route) {
             HomeComponent(
-                navController = navController,
                 onNavigateToNote = { _ -> navController.navigate(NoteScreens.NOTE.route) },
                 onNavigateToNotGraph = { noteNavGraph(navController) },
                 onLogout = {})
