@@ -1,6 +1,5 @@
 package com.core.data.di
 
-import com.core.data.repository.user.UserRepository
 import com.core.data.repository.login.LoginRepository
 import com.core.data.repository.login.LoginRepositoryImp
 import com.core.data.repository.note.NoteRepository
@@ -9,6 +8,9 @@ import com.core.data.repository.profile.ProfileRepository
 import com.core.data.repository.profile.ProfileRepositoryImp
 import com.core.data.repository.register.RegisterRepository
 import com.core.data.repository.register.RegisterRepositoryImp
+import com.core.data.repository.subject.SubjectRepository
+import com.core.data.repository.subject.SubjectRepositoryImp
+import com.core.data.repository.user.UserRepository
 import com.core.data.repository.user.UserRepositoryImp
 import dagger.Binds
 import dagger.Module
@@ -33,4 +35,7 @@ abstract class DataRepositoryModule {
 
     @Binds
     abstract fun bindsNoteRepository(repository: NoteRepositoryImp): NoteRepository
+
+    @Binds
+    abstract fun bindsSubjectRepository(repository: SubjectRepositoryImp): SubjectRepository
 }

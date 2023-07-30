@@ -24,19 +24,14 @@ import androidx.compose.ui.graphics.Color.Companion.Blue
 import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.core.designsystem.components.Pill
+import com.core.designsystem.components.row.GridLazyRow
 import com.example.model.Note
 
 @Composable
 fun NotesGrid(onNoteClicked: (Note) -> Unit) {
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        contentPadding = PaddingValues(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        items((1..20).toList()) {
-            NoteItemCard(Note(title = "Titule $it", body = "hsauis u iuhsa uihs aiuhisuahauuu auahsuahlksa asas"), onNoteClicked)
-        }
+    GridLazyRow(list = (1..20).toList()) {
+        NoteItemCard(Note(title = "Titule $it", body = "hsauis u iuhsa uihs aiuhisuahauuu auahsuahlksa asas"), onNoteClicked)
     }
 }
 
@@ -56,21 +51,6 @@ fun NoteItemCard(item: Note, onNoteClicked: (Note) -> Unit) {
 //                Pill("Trabalho", Green.copy(0.4f))
             }
         }
-    }
-}
-
-@Composable
-fun Pill(text: String, color: Color) {
-    Box(
-        modifier = Modifier
-            .padding(2.dp)
-            .background(color, RoundedCornerShape(25.dp))
-    ) {
-        Text(
-            text = text,
-            modifier = Modifier.padding(4.dp),
-            fontSize = MaterialTheme.typography.bodySmall.fontSize
-        )
     }
 }
 

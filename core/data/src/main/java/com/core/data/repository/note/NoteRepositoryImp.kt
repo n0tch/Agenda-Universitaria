@@ -1,11 +1,9 @@
 package com.core.data.repository.note
 
 import com.core.data.extension.toNote
-import com.core.data.extension.toNoteLabel
 import com.core.data.extension.toNoteResponse
 import com.core.network.note.NoteDataProvider
 import com.example.model.Note
-import com.example.model.NoteLabel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -40,5 +38,12 @@ class NoteRepositoryImp @Inject constructor(
             .map { labelList ->
                 labelList.mapNotNull { it }
             }.collect { emit(it) }
+    }
+
+    override fun fetchNotesBySubject(userId: String, subject: String): Flow<List<Note>> = flow {
+        noteDataProvider
+            .fetchNotesBySubject(userId, subject)
+            .map { it.mapNotNull { it?.toNote() } }
+            .collect { emit(it) }
     }
 }

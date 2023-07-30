@@ -32,32 +32,27 @@ class MainActivity : AppCompatActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
 
-//                    val viewModel: OnboardingViewModel = hiltViewModel()
-//                    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-//
-//                    LaunchedEffect(key1 = Unit, block = {
-//                        viewModel.isUserLoggedIn()
-//                    })
-//
-//                    when (uiState) {
-//                        OnboardingState.OnboardingIdle -> {}
-//                        is OnboardingState.OnboardingUserLogged -> {
-////                            LaunchedEffect(key1 = Unit, block = {
-////
-////                            })
-//                            val startScreen =
-//                                if ((uiState as OnboardingState.OnboardingUserLogged).isLogged) {
-//                                    homeGraphRoute
-//                                } else {
-//                                    loginGraphRoute
-//                                }
-//                            AgendaNavHost(startScreen)
-//                        }
-//
-//                        is OnboardingState.OnboardingUserLoggedError -> {}
-//                    }
+                    val viewModel: OnboardingViewModel = hiltViewModel()
+                    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-                    AgendaNavHost(homeGraphRoute)
+                    LaunchedEffect(key1 = Unit, block = {
+                        viewModel.isUserLoggedIn()
+                    })
+
+                    when (uiState) {
+                        OnboardingState.OnboardingIdle -> {}
+                        is OnboardingState.OnboardingUserLogged -> {
+                            val startScreen =
+                                if ((uiState as OnboardingState.OnboardingUserLogged).isLogged) {
+                                    homeGraphRoute
+                                } else {
+                                    loginGraphRoute
+                                }
+                            AgendaNavHost(startScreen)
+                        }
+
+                        is OnboardingState.OnboardingUserLoggedError -> {}
+                    }
                 }
             }
         }

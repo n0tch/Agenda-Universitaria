@@ -13,4 +13,6 @@ interface NoteRepository {
     fun saveNoteLabel(noteLabel: String): Flow<String>
 
     fun getNoteLabels(): Flow<List<String>>
+
+    fun fetchNotesBySubject(userId: String, subject: String): Flow<List<Note>>
 }

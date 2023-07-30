@@ -21,7 +21,11 @@ import androidx.constraintlayout.compose.Dimension
 import coil.compose.AsyncImage
 
 @Composable
-fun DrawerBody(photoUrl: String, screensList: List<String>, onDrawerItemClicked: () -> Unit) {
+fun DrawerBody(
+    photoUrl: String,
+    screensList: List<String>,
+    onDrawerItemClicked: (String) -> Unit
+) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxHeight(0.5f)
@@ -49,7 +53,7 @@ fun DrawerBody(photoUrl: String, screensList: List<String>, onDrawerItemClicked:
             }
         ) {
             items(screensList) {
-                Column(modifier = Modifier.clickable { onDrawerItemClicked() }) {
+                Column(modifier = Modifier.clickable { onDrawerItemClicked(it) }) {
                     Text(
                         modifier = Modifier
                             .padding(12.dp)

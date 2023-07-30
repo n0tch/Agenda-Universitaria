@@ -7,7 +7,6 @@ import com.core.data.repository.user.UserRepository
 import com.example.model.CurrentUser
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -23,8 +22,8 @@ class UserUseCase @Inject constructor(
         emit(Result.Success(user))
     }.flowOn(ioDispatcher)
 
-    fun isUserLoggedIn(): Flow<Result<Boolean>> {
-        TODO("")
+    fun isUserLoggedIn(): Flow<Result<Boolean>> = flow {
+        userRepository.isUserLoggedIn().map { Result.Success(it) }.collect { emit(it) }
     }
 
     fun logout(): Flow<Result<Boolean>> {

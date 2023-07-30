@@ -1,5 +1,6 @@
-package com.core.network.model.userResponse
+package com.core.network.model
 
+import com.core.network.model.userResponse.CurrentUserResponse
 import com.google.firebase.auth.FirebaseUser
 
 internal fun FirebaseUser?.toCurrentUserResponse() = CurrentUserResponse(

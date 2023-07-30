@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="note_label_subject">Disciplina</string>
+    <string name="note_label_resume">Resumo</string>
+    <string name="note_label_exam">Prova</string>
+    <string name="note_label_homework">Trabalho</string>
+</resources>

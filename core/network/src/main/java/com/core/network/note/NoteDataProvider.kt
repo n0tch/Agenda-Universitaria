@@ -1,6 +1,5 @@
 package com.core.network.note
 
-import com.core.network.model.noteResponse.NoteLabelResponse
 import com.core.network.model.noteResponse.NoteResponse
 import kotlinx.coroutines.flow.Flow
 
@@ -13,4 +12,6 @@ interface NoteDataProvider {
     fun saveNoteLabel(noteLabel: String): Flow<String>
 
     fun getNoteLabels(): Flow<List<String?>>
+
+    fun fetchNotesBySubject(userId: String, subject: String): Flow<List<NoteResponse?>>
 }

@@ -1,7 +1,7 @@
 package com.core.network.register
 
 import com.core.network.model.userResponse.CurrentUserResponse
-import com.core.network.model.userResponse.toCurrentUserResponse
+import com.core.network.model.toCurrentUserResponse
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject

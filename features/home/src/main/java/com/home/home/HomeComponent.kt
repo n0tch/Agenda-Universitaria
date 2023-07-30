@@ -51,14 +51,18 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun HomeComponent(
+    screenList: List<String>,
     onNavigateToNote: (Note) -> Unit,
-    onNavigateToNotGraph: () -> Unit,
+    onNavigateToNoteGraph: () -> Unit,
+    navigateToScreen: (String) -> Unit,
     onLogout: () -> Unit
 ) {
     val viewModel: HomeViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    var name by remember { mutableStateOf("Empty") }
+
+    var name by remember { mutableStateOf("") }
     var photoUrl by remember { mutableStateOf("") }
+
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutine = rememberCoroutineScope()
 
@@ -87,7 +91,7 @@ fun HomeComponent(
     BasicDrawer(
         drawerState = drawerState,
         drawerContent = { /*TODO*/ },
-        screenContent = {  }
+        screenContent = { }
     )
 
     ModalNavigationDrawer(
@@ -97,9 +101,9 @@ fun HomeComponent(
             ModalDrawerSheet(modifier = Modifier) {
                 DrawerBody(
                     photoUrl = photoUrl,
-                    screensList = listOf("Notas", "Trabalhos", "Provas")
-                ) {
-                    //TODO: Navigate to screen
+                    screensList = screenList
+                ) { screenName ->
+                    navigateToScreen(screenName)
                 }
             }
         },
@@ -153,5 +157,11 @@ fun HomeComponent(
 @Preview
 @Composable
 fun HomeComponentPreview() {
-    HomeComponent(onNavigateToNote = {}, onNavigateToNotGraph = { }, onLogout = {})
+    HomeComponent(
+        listOf("A", "B", "C"),
+        onNavigateToNote = {},
+        onNavigateToNoteGraph = { },
+        onLogout = {},
+        navigateToScreen = {}
+    )
 }

@@ -9,14 +9,12 @@ import com.core.common.Result
 import com.core.domain.LoginUseCase
 import com.core.domain.NoteUseCase
 import com.core.domain.UserUseCase
-import com.example.model.CurrentUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -58,7 +56,7 @@ class HomeViewModel @Inject constructor(
 
                         is Result.Success -> {
                             it.data.forEach {
-                                Log.e("success", "${it.title} - ${it.body}")
+                                Log.e("success", "${it.id} - ${it.title} - ${it.body}")
                             }
                         }
                     }

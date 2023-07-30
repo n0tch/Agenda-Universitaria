@@ -64,5 +64,6 @@ dependencies {
     implementation(project(":features:authentication"))
     implementation(project(":features:home"))
     implementation(project(":features:note"))
+    implementation(project(":features:subject"))
     implementation(project(":core:model"))
 }

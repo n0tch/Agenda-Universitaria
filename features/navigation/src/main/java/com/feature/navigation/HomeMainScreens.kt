@@ -1,7 +1,12 @@
 package com.feature.navigation
 
-import com.feature.navigation.note.NoteScreens
+import com.feature.navigation.note.noteGraphRoute
+import com.feature.navigation.subject.subjectGraphRoute
 
 enum class HomeMainScreens(val label: String, val route: String) {
-    HOME_NOTE("Notas", NoteScreens.NOTE.route)
+    SUBJECT("Disciplinas", subjectGraphRoute),
+    NOTE("Notas", noteGraphRoute),
+    EXAMS("Provas", ""),
+    HOMEWORK("Trabalhos", ""),
+    NOTIFICATIONS("Notificações", "")
 }

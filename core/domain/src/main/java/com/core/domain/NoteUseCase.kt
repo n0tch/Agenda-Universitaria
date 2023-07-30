@@ -20,11 +20,19 @@ class NoteUseCase @Inject constructor(
     private val userRepository: UserRepository
 ) {
 
-    fun saveNote(title: String, description: String, label: String): Flow<Result<String>> = flow {
+    fun saveNote(
+        title: String,
+        description: String,
+        label: String,
+        subject: String
+    ): Flow<Result<String>> = flow {
         val currentUserId = userRepository.fetchCurrentUser().id
 
         noteRepository
-            .saveNote(currentUserId, Note(title = title, body = description, label = label))
+            .saveNote(
+                currentUserId,
+                Note(title = title, body = description, label = label, subject = subject)
+            )
             .flowOn(ioDispatcher)
             .catch { Result.Error(it as Exception) }
             .map { Result.Success(it) }
@@ -47,6 +55,16 @@ class NoteUseCase @Inject constructor(
     }
 
     fun getNoteLabels(): Flow<Result<List<String>>> = flow {
-        noteRepository.getNoteLabels().flowOn(ioDispatcher).map { Result.Success(it) }.collect{ emit(it) }
+        noteRepository.getNoteLabels().flowOn(ioDispatcher).map { Result.Success(it) }
+            .collect { emit(it) }
+    }
+
+    fun fetchNoteBySubject(subject: String): Flow<Result<List<Note>>> = flow {
+        val currentUserId = userRepository.fetchCurrentUser().id
+        noteRepository
+            .fetchNotesBySubject(currentUserId, subject)
+            .flowOn(ioDispatcher)
+            .map { Result.Success(it) }
+            .collect { emit(it) }
     }
 }

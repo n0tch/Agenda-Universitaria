@@ -7,7 +7,9 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -33,7 +35,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun FabMenu(
-    baseButton: FabItem = FabItem(Icons.Filled.ExpandMore, "More"),
+    iconButton: FabItem = FabItem(Icons.Filled.ExpandMore, "More"),
     items: List<FabItem>,
     onFabClicked: (FabItem) -> Unit
 ) {
@@ -57,7 +59,7 @@ fun FabMenu(
                     ) {
 
                         Text(text = fabItem.label)
-
+                        Spacer(Modifier.width(2.dp))
                         FloatingActionButton(
                             modifier = Modifier.padding(bottom = 2.dp),
                             onClick = { onFabClicked(fabItem) }) {
@@ -73,7 +75,7 @@ fun FabMenu(
                 rotation.animateTo(targetValue = if(expanded) 360f else 180f)
             }
         }) {
-            Icon(modifier = Modifier.rotate(rotation.value), imageVector = baseButton.icon, contentDescription = "icons")
+            Icon(modifier = Modifier.rotate(rotation.value), imageVector = iconButton.icon, contentDescription = "icons")
         }
     }
 }
@@ -82,7 +84,7 @@ fun FabMenu(
 @Composable
 fun FabMenuPreview() {
     FabMenu(
-        baseButton = FabItem(Icons.Filled.ExpandMore, "More"),
+        iconButton = FabItem(Icons.Filled.ExpandMore, "More"),
         items = listOf(
             FabItem(Icons.Filled.CameraAlt, "Camera"),
             FabItem(Icons.Filled.Photo, "Galeria")

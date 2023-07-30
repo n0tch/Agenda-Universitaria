@@ -7,10 +7,12 @@ import com.core.common.AppDispatcher
 import com.core.common.Dispatcher
 import com.core.common.Result
 import com.core.domain.NoteUseCase
+import com.core.domain.SubjectUseCase
 import com.example.model.Note
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,19 +20,21 @@ import javax.inject.Inject
 @HiltViewModel
 class NoteViewModel @Inject constructor(
     @Dispatcher(AppDispatcher.UI) private val uiDispatcher: CoroutineDispatcher,
-    private val noteUseCase: NoteUseCase
+    private val noteUseCase: NoteUseCase,
+    private val subjectUseCase: SubjectUseCase
 ): ViewModel() {
 
     init {
 //        saveNoteLabel()
-        getNoteLabels()
+//        getNoteLabels()
+        fetchSubjects()
     }
 
     val uiState: MutableStateFlow<NoteState> by lazy { MutableStateFlow(NoteState.NoteIdle) }
 
-    fun saveNote(title: String, description: String, label: String){
+    fun saveNote(title: String, description: String, label: String, subject: String){
         viewModelScope.launch {
-            noteUseCase.saveNote(title, description, label).onStart {
+            noteUseCase.saveNote(title, description, label, subject).onStart {
                 uiState.emit(NoteState.NoteIdle)
             }.collect {
                 when(it){
@@ -67,6 +71,17 @@ class NoteViewModel @Inject constructor(
                         uiState.emit(NoteState.NoteLabels(it.data))
                         Log.e("success", it.data.toString())
                     }
+                }
+            }
+        }
+    }
+
+    fun fetchSubjects(){
+        viewModelScope.launch{
+            subjectUseCase.getSubjects().flowOn(uiDispatcher).collect{
+                when(it){
+                    is Result.Error -> { Log.e(this::class.java.simpleName, it.exception.toString()) }
+                    is Result.Success -> uiState.emit(NoteState.SubjectList(it.data))
                 }
             }
         }

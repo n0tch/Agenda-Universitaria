@@ -86,6 +86,9 @@ dependencies {
 
     implementation(project(":features:navigation"))
     implementation(project(":core:designsystem"))
+    //TODO: remove this to another package
+    implementation(project(":core:domain"))
+    implementation(project(":core:common"))
 
     implementation(libs.core.ktx)
     implementation(libs.appcompat)

@@ -1,6 +1,7 @@
 package com.core.network.note
 
 import android.util.Log
+import com.core.network.helper.FirebaseDatabaseHelper
 import com.core.network.model.noteResponse.NoteLabelResponse
 import com.core.network.model.noteResponse.NoteResponse
 import com.google.firebase.database.FirebaseDatabase
@@ -11,28 +12,34 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class NoteDataProviderImp @Inject constructor(
-    private val firebaseDatabase: FirebaseDatabase
+    private val firebaseDatabase: FirebaseDatabase,
+    private val firebaseDatabaseHelper: FirebaseDatabaseHelper
 ) : NoteDataProvider {
+
     override fun saveNote(userId: String, note: NoteResponse): Flow<String> = flow {
+//        val noteId = firebaseDatabaseHelper.setData(
+//            path = "$userId/$NOTE_PATH/",
+//            data = note
+// )
         val dataRef = firebaseDatabase
             .reference
             .child("$userId/$NOTE_PATH/")
             .push()
 
         val noteId = dataRef.get().await().key ?: ""
-        dataRef.setValue(note).await()
+        dataRef.setValue(note.apply { id = noteId }).await()
         emit(noteId)
     }
 
     override fun fetchNotes(userId: String): Flow<List<NoteResponse?>> = flow {
-        val ref = firebaseDatabase
+        val items = firebaseDatabase
             .reference
-            .child(userId)
-            .child(NOTE_PATH)
+            .child("$userId/$NOTE_PATH")
             .get()
             .await()
+            .children
+            .mapNotNull { it.getValue(NoteResponse::class.java) }
 
-        val items = ref.children.map { it.getValue(NoteResponse::class.java) }
         emit(items)
     }
 
@@ -52,6 +59,22 @@ class NoteDataProviderImp @Inject constructor(
             .await()
 
         val items = ref.children.map { it.getValue(String::class.java) }
+        emit(items)
+    }
+
+    override fun fetchNotesBySubject(
+        userId: String,
+        subject: String
+    ): Flow<List<NoteResponse?>> = flow {
+        val ref = firebaseDatabase
+            .getReference("$userId/$NOTE_PATH/")
+            .orderByChild("subject")
+            .equalTo(subject)
+            .get()
+            .await()
+
+        val items = ref.children.map { it.getValue(NoteResponse::class.java) }
+        Log.e("auqeee", items.toString())
         emit(items)
     }
 
