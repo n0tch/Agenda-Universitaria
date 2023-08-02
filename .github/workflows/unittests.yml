@@ -9,6 +9,9 @@ jobs:
       - name: Checkout Project
         uses: actions/checkout@v2
 
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
       - name: SetUp Java JDK
         uses: actions/setup-java@v3.12.0
         with:
