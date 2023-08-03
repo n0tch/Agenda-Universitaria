@@ -1,4 +1,4 @@
-package com.features.note
+package com.features.note.newnote
 
 import android.os.Bundle
 import androidx.navigation.NavType

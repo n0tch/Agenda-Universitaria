@@ -9,4 +9,5 @@ interface SubjectDataProvider {
 
     fun fetchSubjects(userId: String): Flow<List<SubjectModel>>
 
+    fun deactivateSubjects(userId: String, subjectName: String): Flow<Boolean>
 }

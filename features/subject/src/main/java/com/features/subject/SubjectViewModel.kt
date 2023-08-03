@@ -6,6 +6,7 @@ import com.core.common.AppDispatcher
 import com.core.common.Dispatcher
 import com.core.common.Result
 import com.core.domain.SubjectUseCase
+import com.example.model.Subject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,10 +28,10 @@ class SubjectViewModel @Inject constructor(
 
     val uiState: MutableStateFlow<SubjectState> by lazy { MutableStateFlow(SubjectState.Idle) }
 
-    fun saveSubject(name: String) {
+    fun saveSubject(subject: Subject) {
         viewModelScope.launch {
             subjectUseCase
-                .saveSubject(name)
+                .saveSubject(subject)
                 .flowOn(uiDispatcher)
                 .onStart { uiState.emit(SubjectState.Loading) }
                 .catch { uiState.emit(SubjectState.Error(it as Exception)) }

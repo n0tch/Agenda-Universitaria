@@ -1,5 +1,6 @@
 package com.core.domain
 
+import android.util.Log
 import com.core.common.AppDispatcher
 import com.core.common.Dispatcher
 import com.core.common.Result
@@ -12,6 +13,8 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import javax.inject.Inject
 
 class NoteUseCase @Inject constructor(

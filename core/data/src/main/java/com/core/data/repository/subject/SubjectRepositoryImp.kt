@@ -23,4 +23,8 @@ class SubjectRepositoryImp @Inject constructor(
     override fun fetchSubjects(userId: String): Flow<List<Subject>> = flow {
         subjectDataProvider.fetchSubjects(userId).collect{ emit(it.toSubject()) }
     }
+
+    override fun deleteSubject(userId: String, subjectName: String): Flow<Boolean> = flow {
+        subjectDataProvider.deactivateSubjects(userId, subjectName).collect { emit(it) }
+    }
 }

@@ -6,7 +6,9 @@ import com.core.network.model.noteResponse.NoteLabelResponse
 import com.core.network.model.noteResponse.NoteResponse
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.GenericTypeIndicator
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -65,7 +67,7 @@ class NoteDataProviderImp @Inject constructor(
     override fun fetchNotesBySubject(
         userId: String,
         subject: String
-    ): Flow<List<NoteResponse?>> = flow {
+    ): Flow<List<NoteResponse?>> = callbackFlow {
         val ref = firebaseDatabase
             .getReference("$userId/$NOTE_PATH/")
             .orderByChild("subject")
@@ -74,8 +76,9 @@ class NoteDataProviderImp @Inject constructor(
             .await()
 
         val items = ref.children.map { it.getValue(NoteResponse::class.java) }
-        Log.e("auqeee", items.toString())
-        emit(items)
+        trySend(items)
+        close()
+        awaitClose()
     }
 
     companion object {

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.core.common.AppDispatcher
 import com.core.common.Dispatcher
 import com.core.common.Result
+import com.core.domain.HomeUseCase
 import com.core.domain.LoginUseCase
 import com.core.domain.NoteUseCase
 import com.core.domain.UserUseCase
@@ -15,6 +16,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.format.TextStyle
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,14 +27,28 @@ class HomeViewModel @Inject constructor(
     @Dispatcher(AppDispatcher.UI) private val uiDispatcher: CoroutineDispatcher,
     private val loginUseCase: LoginUseCase,
     private val userUseCase: UserUseCase,
-    private val noteUseCase: NoteUseCase
+    private val noteUseCase: NoteUseCase,
+    private val homeUseCase: HomeUseCase
 ) : ViewModel() {
 
     init {
         fetchCurrentUser()
+//        fetchTimetableByWeekDay()
     }
 
-    val uiState: MutableStateFlow<HomeState> by lazy { MutableStateFlow(HomeState.HomeIdle) }
+    val uiState: MutableStateFlow<HomeState> = MutableStateFlow(HomeState.HomeIdle)
+
+    fun fetchTimetableByWeekDay(){
+        val today = LocalDate.now().dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())
+        viewModelScope.launch {
+            homeUseCase.fetchTimetableByDay(today).collect {
+                when(it){
+                    is Result.Error -> {}
+                    is Result.Success -> {}
+                }
+            }
+        }
+    }
 
     fun fetchCurrentUser() {
         viewModelScope.launch(ioDispatcher) {

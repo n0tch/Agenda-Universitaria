@@ -28,14 +28,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.example.model.Subject
 
 @Composable
 fun SubjectAddDialog(
-    onSaveButton: (String) -> Unit,
+    onSaveButton: (Subject) -> Unit,
     onDismiss: () -> Unit
 ) {
 
     var subjectName by remember { mutableStateOf("") }
+    var placeName by remember { mutableStateOf("") }
+    var teacherName by remember { mutableStateOf("") }
 
     Dialog(onDismissRequest = { onDismiss() }) {
         Card(
@@ -56,11 +59,31 @@ fun SubjectAddDialog(
                 )
                 Spacer(Modifier.height(8.dp))
                 OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 4.dp),
                     value = subjectName,
                     singleLine = true,
                     onValueChange = { subjectName = it },
                     placeholder = { Text(text = "Nome da Disciplina") }
+                )
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 4.dp),
+                    value = placeName,
+                    singleLine = true,
+                    onValueChange = { placeName = it },
+                    placeholder = { Text(text = "Sala") }
+                )
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 4.dp),
+                    value = teacherName,
+                    singleLine = true,
+                    onValueChange = { teacherName = it },
+                    placeholder = { Text(text = "Professor") }
                 )
                 Spacer(Modifier.height(16.dp))
                 Row(
@@ -70,7 +93,17 @@ fun SubjectAddDialog(
                     OutlinedButton(onClick = { onDismiss() }) {
                         Text(text = "Cancelar")
                     }
-                    Button(onClick = { onSaveButton(subjectName) }) {
+                    Button(
+                        onClick = {
+                            onSaveButton(
+                                Subject(
+                                    name = subjectName,
+                                    place = placeName,
+                                    teacher = teacherName
+                                )
+                            )
+                        }
+                    ) {
                         Text(text = "Salvar")
                     }
                 }

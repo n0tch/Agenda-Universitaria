@@ -10,6 +10,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,7 +37,8 @@ fun SubjectDetailScreen(
     onBackPressed: () -> Unit,
     subjectName: String = "Test 1",
     notes: List<Note>,
-    onNoteClicked: (Note) -> Unit
+    onNoteClicked: (Note) -> Unit,
+    onDeleteButtonClicked: () -> Unit = {}
 ) {
 
     val scroll = rememberScrollState()
@@ -58,6 +60,13 @@ fun SubjectDetailScreen(
                         Icon(
                             imageVector = Icons.Filled.Search,
                             contentDescription = "Search button"
+                        )
+                    }
+
+                    IconButton(onClick = { onDeleteButtonClicked() }) {
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = "Delete button"
                         )
                     }
                 }
@@ -115,8 +124,7 @@ fun SubjectDetailScreenPreview() {
     SubjectDetailScreen(
         onBackPressed = {},
         "",
-        listOf(Note(title = "nota 1"), Note(title = "nota 2"))
-    ) {
-
-    }
+        listOf(Note(title = "nota 1"), Note(title = "nota 2")),
+        onNoteClicked = {},
+    )
 }

@@ -10,6 +10,7 @@ import com.core.domain.SubjectUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,6 +35,15 @@ class SubjectDetailViewModel @Inject constructor(
                         is Result.Success -> uiState.emit(SubjectDetailState.NoteList(it.data))
                     }
                 }
+        }
+    }
+
+    fun deleteSubject(subjectName: String) {
+        viewModelScope.launch {
+            subjectUseCase
+                .deleteSubjectName(subjectName)
+                .catch {  }
+                .collect {  }
         }
     }
 

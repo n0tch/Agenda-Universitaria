@@ -1,7 +1,8 @@
-package com.features.note
+package com.features.note.newnote
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import com.features.note.R
 
 enum class DefaultNoteEnum(
     @StringRes val label: Int,

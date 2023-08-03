@@ -1,5 +1,6 @@
 package com.feature.navigation.note
 
 enum class NoteScreens(val route: String) {
-    NOTE("new_note_route")
+    NOTE_LIST("note_list_route"),
+    NOTE("note_route")
 }

@@ -39,7 +39,7 @@ import com.example.model.Subject
 @Composable
 fun SubjectComponent(
     navController: NavController,
-    navigateToSubjectDetail: (String) -> Unit
+    navigateToSubjectDetail: (Subject) -> Unit
 ) {
 
     val viewModel: SubjectViewModel = hiltViewModel()
@@ -115,7 +115,7 @@ fun SubjectComponent(
             SubjectListComponent(
                 subjects = subjectList,
                 onCardClicked = { subject ->
-                    navigateToSubjectDetail(subject.name)
+                    navigateToSubjectDetail(subject)
                 }
             )
 

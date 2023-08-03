@@ -31,6 +31,7 @@ fun NavGraphBuilder.homeGraph(navController: NavController) {
                         HomeMainScreens.SUBJECT -> navController.navigateToSubjects()
                         HomeMainScreens.NOTE -> navController.navigateToNotes()
                         HomeMainScreens.EXAMS -> navController.navigate(SubjectScreens.EXAM.route)
+                        HomeMainScreens.TIMETABLE -> navController.navigate(SubjectScreens.TIMETABLE.route)
                         else -> {}
                     }
                 }

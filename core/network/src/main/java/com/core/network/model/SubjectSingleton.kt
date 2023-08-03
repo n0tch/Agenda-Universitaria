@@ -6,5 +6,5 @@ import javax.inject.Singleton
 
 @Singleton
 class SubjectSingleton @Inject constructor() {
-    var subjectList: List<SubjectModel>? = null
+    var subjectList: MutableList<SubjectModel>? = null
 }

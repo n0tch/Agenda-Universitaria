@@ -10,6 +10,8 @@ import com.core.network.register.RegisterDataProvider
 import com.core.network.register.RegisterDataProviderImp
 import com.core.network.subject.SubjectDataProvider
 import com.core.network.subject.SubjectDataProviderImp
+import com.core.network.timetable.TimetableDataProvider
+import com.core.network.timetable.TimetableDataProviderImp
 import com.core.network.user.UserDataProvider
 import com.core.network.user.UserDataProviderImp
 import dagger.Binds
@@ -50,4 +52,9 @@ internal abstract class NetworkModule {
     abstract fun bindsSubjectDataProvider(
         subjectDataProviderImp: SubjectDataProviderImp
     ): SubjectDataProvider
+
+    @Binds
+    abstract fun bindTimetableDataProvider(
+        timetableDataProviderImp: TimetableDataProviderImp
+    ): TimetableDataProvider
 }

@@ -1,4 +1,4 @@
-package com.home.home
+package com.features.note.home
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +16,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -23,8 +24,8 @@ import com.example.model.Note
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeNotesComponent(
-    onNoteClicked: (Note) -> Unit
+fun HomeNotesHeaderComponent(
+    onNoteClicked: (Note) -> Unit = {}
 ) {
     Column {
         Row(
@@ -67,4 +68,10 @@ fun HomeNotesComponent(
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun HomeNotesComponentPreview() {
+    HomeNotesHeaderComponent()
 }

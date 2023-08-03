@@ -1,7 +1,7 @@
 package com.features.subject.detail
 
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
@@ -13,6 +13,7 @@ import com.example.model.Note
 fun SubjectDetailComponent(
     onBackPressed: () -> Unit,
     subjectName: String,
+    subjectId: String,
     onNavigateToNote: (Note) -> Unit
 ) {
 
@@ -21,7 +22,9 @@ fun SubjectDetailComponent(
 
     var noteList: List<Note> = remember { mutableStateListOf() }
 
-    viewModel.fetchNotesBySubject(subjectName)
+    LaunchedEffect(key1 = Unit, block = {
+        viewModel.fetchNotesBySubject(subjectName)
+    })
 
     when(uiState){
         is SubjectDetailState.Error -> {}
@@ -36,6 +39,9 @@ fun SubjectDetailComponent(
         onBackPressed = { onBackPressed() },
         subjectName = subjectName,
         notes = noteList,
-        onNoteClicked = { onNavigateToNote(it) }
+        onNoteClicked = { onNavigateToNote(it) },
+        onDeleteButtonClicked = {
+            viewModel.deleteSubject(subjectId)
+        }
     )
 }

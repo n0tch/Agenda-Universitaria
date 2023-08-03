@@ -1,4 +1,4 @@
-package com.features.note
+package com.features.note.newnote
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -8,7 +8,6 @@ import com.core.common.Dispatcher
 import com.core.common.Result
 import com.core.domain.NoteUseCase
 import com.core.domain.SubjectUseCase
-import com.example.model.Note
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +17,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class NoteViewModel @Inject constructor(
+class NewNoteViewModel @Inject constructor(
     @Dispatcher(AppDispatcher.UI) private val uiDispatcher: CoroutineDispatcher,
     private val noteUseCase: NoteUseCase,
     private val subjectUseCase: SubjectUseCase

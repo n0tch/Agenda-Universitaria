@@ -1,4 +1,4 @@
-package com.features.note
+package com.features.note.newnote
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -15,7 +15,7 @@ import com.example.model.Subject
 @Composable
 fun NewNoteComponent(navController: NavController, note: Note = Note()) {
 
-    val viewModel: NoteViewModel = hiltViewModel()
+    val viewModel: NewNoteViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var save by remember { mutableStateOf(false) }
     val noteLabelList: List<DefaultNoteEnum> = DefaultNoteEnum.values().toList()

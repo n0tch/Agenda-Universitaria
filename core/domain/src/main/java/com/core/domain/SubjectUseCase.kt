@@ -20,10 +20,10 @@ class SubjectUseCase @Inject constructor(
     private val userRepository: UserRepository
 ) {
 
-    fun saveSubject(name: String): Flow<Result<String>> = flow {
+    fun saveSubject(subject: Subject): Flow<Result<String>> = flow {
         val userId = userRepository.fetchCurrentUser().id
         subjectRepository
-            .saveSubject(userId, Subject(name = name))
+            .saveSubject(userId, subject)
             .flowOn(ioDispatcher)
             .catch { emit(Result.Error(it as Exception)) }
             .map { Result.Success(it) }
@@ -38,5 +38,10 @@ class SubjectUseCase @Inject constructor(
             .catch { emit(Result.Error(it as Exception)) }
             .map { Result.Success(it) }
             .collect { emit(it) }
+    }
+
+    fun deleteSubjectName(subjectName: String): Flow<Boolean> = flow {
+        val userId = userRepository.fetchCurrentUser().id
+        subjectRepository.deleteSubject(userId, subjectName).collect { emit(it) }
     }
 }

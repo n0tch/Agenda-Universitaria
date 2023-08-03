@@ -1,5 +1,6 @@
 package com.core.network.helper
 
+import com.core.network.model.BaseModel
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -17,14 +18,14 @@ class FirebaseDatabaseHelper @Inject constructor (
         return dataRef.get().await().key ?: ""
     }
 
-    suspend fun <T>setData(path: String, data: T): String {
+    suspend fun <T: BaseModel>setData(path: String, data: T): String {
         val dataRef = firebaseDatabase
             .reference
             .child(path)
             .push()
 
         val dataId = dataRef.get().await().key ?: ""
-        dataRef.setValue(data).await()
+        dataRef.setValue(data.apply { id = dataId }).await()
         return dataId
     }
 

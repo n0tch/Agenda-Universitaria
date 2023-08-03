@@ -5,6 +5,9 @@ import com.example.model.Subject
 
 fun List<SubjectModel>.toSubject() = map {
     Subject(
+        id = it.id ?: "",
         name = it.name ?: "",
+        place = it.placeName ?: "",
+        teacher = it.teacherName ?: ""
     )
 }
