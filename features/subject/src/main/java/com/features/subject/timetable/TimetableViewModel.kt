@@ -13,7 +13,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TimetableViewModel @Inject constructor(
     private val timetableUseCase: TimetableUseCase
-): ViewModel() {
+) : ViewModel() {
 
     init {
         fetchTimeTable()
@@ -24,9 +24,10 @@ class TimetableViewModel @Inject constructor(
     @VisibleForTesting
     private fun fetchTimeTable() {
         viewModelScope.launch {
-            timetableUseCase.fetchTimeTable()
+            timetableUseCase
+                .fetchTimeTable()
                 .collect {
-                    when(it){
+                    when (it) {
                         is Result.Error -> {}
                         is Result.Success -> uiState.emit(TimetableState.Entries(it.data))
                     }

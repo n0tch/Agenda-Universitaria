@@ -1,6 +1,7 @@
 package com.features.note.newnote
 
 import android.util.Log
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.core.common.AppDispatcher
@@ -21,7 +22,7 @@ class NewNoteViewModel @Inject constructor(
     @Dispatcher(AppDispatcher.UI) private val uiDispatcher: CoroutineDispatcher,
     private val noteUseCase: NoteUseCase,
     private val subjectUseCase: SubjectUseCase
-): ViewModel() {
+) : ViewModel() {
 
     init {
 //        saveNoteLabel()
@@ -31,12 +32,12 @@ class NewNoteViewModel @Inject constructor(
 
     val uiState: MutableStateFlow<NoteState> by lazy { MutableStateFlow(NoteState.NoteIdle) }
 
-    fun saveNote(title: String, description: String, label: String, subject: String){
+    fun saveNote(title: String, description: String, label: String, subject: String) {
         viewModelScope.launch {
             noteUseCase.saveNote(title, description, label, subject).onStart {
                 uiState.emit(NoteState.NoteIdle)
             }.collect {
-                when(it){
+                when (it) {
                     is Result.Error -> uiState.emit(NoteState.NoteException(it.exception))
                     is Result.Success -> uiState.emit(NoteState.NoteSaved(it.data))
                 }
@@ -44,13 +45,14 @@ class NewNoteViewModel @Inject constructor(
         }
     }
 
-    fun saveNoteLabel(){
+    fun saveNoteLabel() {
         viewModelScope.launch {
             noteUseCase.saveNoteLabel().collect {
-                when(it){
+                when (it) {
                     is Result.Error -> {
                         Log.e("erro", it.exception.toString())
                     }
+
                     is Result.Success -> {
                         Log.e("success", it.data.toString())
                     }
@@ -62,10 +64,11 @@ class NewNoteViewModel @Inject constructor(
     private fun getNoteLabels() {
         viewModelScope.launch {
             noteUseCase.getNoteLabels().collect {
-                when(it){
+                when (it) {
                     is Result.Error -> {
                         Log.e("erro", it.exception.toString())
                     }
+
                     is Result.Success -> {
                         uiState.emit(NoteState.NoteLabels(it.data))
                         Log.e("success", it.data.toString())
@@ -75,14 +78,32 @@ class NewNoteViewModel @Inject constructor(
         }
     }
 
-    fun fetchSubjects(){
-        viewModelScope.launch{
-            subjectUseCase.getSubjects().flowOn(uiDispatcher).collect{
-                when(it){
-                    is Result.Error -> { Log.e(this::class.java.simpleName, it.exception.toString()) }
+    @VisibleForTesting
+    private fun fetchSubjects() {
+        viewModelScope.launch {
+            subjectUseCase.getSubjects().flowOn(uiDispatcher).collect {
+                when (it) {
+                    is Result.Error -> {
+                        Log.e(this::class.java.simpleName, it.exception.toString())
+                    }
+
                     is Result.Success -> uiState.emit(NoteState.SubjectList(it.data))
                 }
             }
+        }
+    }
+
+    fun fetchNote(noteId: String?) {
+        viewModelScope.launch {
+            noteUseCase
+                .fetchNoteById(noteId)
+                .flowOn(uiDispatcher)
+                .collect {
+                    when (it) {
+                        is Result.Error -> Log.e("erro", it.exception.toString())
+                        is Result.Success -> uiState.emit(NoteState.FetchNoteSuccess(it.data))
+                    }
+                }
         }
     }
 }

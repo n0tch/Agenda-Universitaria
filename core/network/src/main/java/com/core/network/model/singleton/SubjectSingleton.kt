@@ -1,4 +1,4 @@
-package com.core.network.model
+package com.core.network.model.singleton
 
 import com.core.network.model.subjectResponse.SubjectModel
 import javax.inject.Inject

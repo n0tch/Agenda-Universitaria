@@ -1,7 +1,7 @@
 package com.core.network.subject
 
 import com.core.network.helper.FirebaseDatabaseHelper
-import com.core.network.model.SubjectSingleton
+import com.core.network.model.singleton.SubjectSingleton
 import com.core.network.model.subjectResponse.SubjectModel
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.flow.Flow

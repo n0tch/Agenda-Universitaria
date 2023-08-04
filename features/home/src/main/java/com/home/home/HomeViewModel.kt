@@ -1,6 +1,7 @@
 package com.home.home
 
 import android.util.Log
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.core.common.AppDispatcher
@@ -23,7 +24,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    @Dispatcher(AppDispatcher.IO) private val ioDispatcher: CoroutineDispatcher,
     @Dispatcher(AppDispatcher.UI) private val uiDispatcher: CoroutineDispatcher,
     private val loginUseCase: LoginUseCase,
     private val userUseCase: UserUseCase,
@@ -50,8 +50,9 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun fetchCurrentUser() {
-        viewModelScope.launch(ioDispatcher) {
+    @VisibleForTesting
+    private fun fetchCurrentUser() {
+        viewModelScope.launch {
             userUseCase.fetchCurrentUser().flowOn(uiDispatcher).collect {
                 when (it) {
                     is Result.Error -> uiState.value = HomeState.HomeCurrentUserError(it.exception)

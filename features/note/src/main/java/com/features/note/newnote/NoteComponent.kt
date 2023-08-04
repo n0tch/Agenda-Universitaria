@@ -1,6 +1,7 @@
 package com.features.note.newnote
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -13,9 +14,9 @@ import com.example.model.Note
 import com.example.model.Subject
 
 @Composable
-fun NewNoteComponent(
+fun NoteComponent(
     navController: NavController,
-    noteId: String
+    noteId: String?
 ) {
 
     val viewModel: NewNoteViewModel = hiltViewModel()
@@ -23,6 +24,11 @@ fun NewNoteComponent(
     var save by remember { mutableStateOf(false) }
     val noteLabelList: List<DefaultNoteEnum> = DefaultNoteEnum.values().toList()
     var subjectList: List<Subject> = remember { mutableStateListOf() }
+    var note by remember { mutableStateOf(Note()) }
+
+    LaunchedEffect(key1 = Unit, block = {
+        viewModel.fetchNote(noteId)
+    })
 
     when (uiState) {
         is NoteState.NoteException -> {}
@@ -42,11 +48,14 @@ fun NewNoteComponent(
         is NoteState.SubjectList -> {
             subjectList = (uiState as NoteState.SubjectList).items
         }
+
+        is NoteState.FetchNoteSuccess -> {
+            note = (uiState as NoteState.FetchNoteSuccess).note
+        }
     }
 
-    //TODO: fetch note by id
     NewNoteScreen(
-        note = Note(),
+        note = note,
         saved = save,
         noteLabels = noteLabelList,
         subjects = subjectList,

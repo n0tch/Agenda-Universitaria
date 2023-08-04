@@ -118,19 +118,13 @@ fun NewNoteScreen(
                     }
                 },
             )
-        },
-        floatingActionButton = {
-            FabMenu(
-                items = listOf(),
-                onFabClicked = {}
-            )
-        },
-        bottomBar = {}
+        }
     ) { padding ->
         Column(
             Modifier
                 .padding(padding)
-                .fillMaxSize()) {
+                .fillMaxSize()
+        ) {
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = title,

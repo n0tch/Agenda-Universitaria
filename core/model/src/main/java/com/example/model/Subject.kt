@@ -7,4 +7,13 @@ data class Subject(
     val name: String = "",
     val place: String = "",
     val teacher: String = ""
-) : Serializable
+) : Serializable {
+    companion object {
+        fun getMock() = Subject(
+            id = "123",
+            name = "Direito",
+            place = "201",
+            teacher = "Kleber"
+        )
+    }
+}

@@ -1,4 +1,4 @@
-package com.features.note
+package com.features.note.list
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,9 +19,12 @@ import com.core.designsystem.components.row.GridLazyRow
 import com.example.model.Note
 
 @Composable
-fun NotesGrid(onNoteClicked: (Note) -> Unit) {
-    GridLazyRow(list = (1..20).toList()) {
-        NoteItemCard(Note(title = "Titule $it", body = "hsauis u iuhsa uihs aiuhisuahauuu auahsuahlksa asas"), onNoteClicked)
+fun NotesGrid(
+    notes: List<Note> = emptyList(),
+    onNoteClicked: (Note) -> Unit
+) {
+    GridLazyRow(list = notes) {
+        NoteItemCard(it, onNoteClicked)
     }
 }
 
@@ -47,5 +50,5 @@ fun NoteItemCard(item: Note, onNoteClicked: (Note) -> Unit) {
 @Preview
 @Composable
 fun NotesGripPreview() {
-    NotesGrid({ })
+    NotesGrid{}
 }

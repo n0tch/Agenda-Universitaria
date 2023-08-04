@@ -1,4 +1,4 @@
-package com.features.note.home
+package com.features.note.list
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

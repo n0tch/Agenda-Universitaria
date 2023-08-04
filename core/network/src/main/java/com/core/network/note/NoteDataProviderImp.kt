@@ -1,5 +1,6 @@
 package com.core.network.note
 
+import android.provider.ContactsContract
 import android.util.Log
 import com.core.network.helper.FirebaseDatabaseHelper
 import com.core.network.model.noteResponse.NoteLabelResponse
@@ -14,15 +15,10 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class NoteDataProviderImp @Inject constructor(
-    private val firebaseDatabase: FirebaseDatabase,
-    private val firebaseDatabaseHelper: FirebaseDatabaseHelper
+    private val firebaseDatabase: FirebaseDatabase
 ) : NoteDataProvider {
 
     override fun saveNote(userId: String, note: NoteResponse): Flow<String> = flow {
-//        val noteId = firebaseDatabaseHelper.setData(
-//            path = "$userId/$NOTE_PATH/",
-//            data = note
-// )
         val dataRef = firebaseDatabase
             .reference
             .child("$userId/$NOTE_PATH/")
@@ -79,6 +75,19 @@ class NoteDataProviderImp @Inject constructor(
         trySend(items)
         close()
         awaitClose()
+    }
+
+    override fun fetchNoteById(
+        userId: String,
+        noteId: String
+    ): Flow<NoteResponse?> = flow {
+        val item = firebaseDatabase
+            .getReference("$userId/$NOTE_PATH/$noteId")
+            .get()
+            .await()
+
+        val note = item.getValue(NoteResponse::class.java)
+        emit(note)
     }
 
     companion object {

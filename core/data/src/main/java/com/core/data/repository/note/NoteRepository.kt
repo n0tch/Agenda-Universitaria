@@ -15,4 +15,6 @@ interface NoteRepository {
     fun getNoteLabels(): Flow<List<String>>
 
     fun fetchNotesBySubject(userId: String, subject: String): Flow<List<Note>>
+
+    fun fetchNoteById(userId: String, noteId: String): Flow<Note>
 }

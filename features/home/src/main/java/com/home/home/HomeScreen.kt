@@ -1,59 +1,61 @@
 package com.home.home
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
-import coil.compose.AsyncImage
+import com.example.model.TimetableEntry
 
 @Composable
-fun HomeHeader(
-    userName: String,
+fun HomeScreen(
+    name: String,
     photoUrl: String,
-    onProfileClick: () -> Unit
+    timetable: List<TimetableEntry>,
+    onProfileClick: () -> Unit,
+    onFloatingActionButtonClicked: () -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
+    Scaffold(
+        modifier = Modifier,
+        topBar = {
+            HomeHeader(
+                userName = name,
+                photoUrl = photoUrl,
+                onProfileClick = onProfileClick
+            )
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = onFloatingActionButtonClicked) {
+                Icon(imageVector = Icons.Rounded.Add, contentDescription = "Add fab")
+            }
+        }
     ) {
-        ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
-            val (name, photo) = createRefs()
-
-            AsyncImage(
-                modifier = Modifier
-                    .constrainAs(photo) {
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                    }
-                    .size(48.dp)
-                    .clip(CircleShape)
-                    .clickable { onProfileClick() },
-                model = photoUrl,
-                contentDescription = "profile image",
-                contentScale = ContentScale.Crop
-            )
-
+        Column(Modifier.padding(it)) {
             Text(
-                modifier = Modifier
-                    .constrainAs(name) {
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                        end.linkTo(parent.end)
-                    },
-                text = "Suas Notas, $userName"
+                modifier = Modifier.fillMaxWidth(),
+                text = "Confira a sua agenda",
+                textAlign = TextAlign.Center
             )
+
+            HomePager(count = timetable.size,homePagerContent = {
+                TimetableListComponent(timetableEntries = timetable)
+            })
+            //"Confira a sua agenda para amanha, terça feira dia 26/10/2023
+            //"Confira a sua agenda para quarta feira  dia 26/10/2023
+
+            //Cards com as aulas do dia -> clicando vai para o detalhe da disciplina
+
+            //provas (do dia || proximos eventos) slide automatically
+            //trabalhos (do dia || proximos eventos) slide automatically
+            //notificações
         }
     }
 }
@@ -61,5 +63,10 @@ fun HomeHeader(
 @Preview
 @Composable
 fun HomeScreenPreview() {
-    HomeHeader("asas", "") {}
+    HomeScreen(
+        name = "my name",
+        photoUrl = "",
+        timetable = listOf(),
+        onProfileClick = {},
+        onFloatingActionButtonClicked = {})
 }

@@ -70,4 +70,17 @@ class NoteUseCase @Inject constructor(
             .map { Result.Success(it) }
             .collect { emit(it) }
     }
+
+    fun fetchNoteById(noteId: String?): Flow<Result<Note>> = flow {
+        if(noteId.isNullOrEmpty()){
+            emit(Result.Success(Note()))
+        } else {
+            val currentUserId = userRepository.fetchCurrentUser().id
+            noteRepository.fetchNoteById(currentUserId, noteId)
+                .flowOn(ioDispatcher)
+                .catch { emit(Result.Error(it as Exception)) }
+                .map { Result.Success(it) }
+                .collect{ emit(it) }
+        }
+    }
 }

@@ -1,19 +1,15 @@
 package com.home.home
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -23,9 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.core.designsystem.components.ToastComponent
-import com.core.designsystem.components.drawer.BasicDrawer
-import com.core.designsystem.components.row.PillLazyRow
-import com.example.model.Note
+import com.example.model.TimetableEntry
 import com.home.home.drawer.DrawerBody
 import kotlinx.coroutines.launch
 
@@ -43,6 +37,22 @@ fun HomeComponent(
 
     var name by remember { mutableStateOf("") }
     var photoUrl by remember { mutableStateOf("") }
+    var timetable: List<TimetableEntry> = remember {
+        mutableStateListOf(
+            TimetableEntry(
+                weekDays = listOf("segunda", "terca"),
+                startTime = "10:00",
+                endTime = "12:00",
+                subjectId = "Direito"
+            ),
+            TimetableEntry(
+                weekDays = listOf("segunda", "terca"),
+                startTime = "13:00",
+                endTime = "15:00",
+                subjectId = "Filosofia"
+            )
+        )
+    }
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutine = rememberCoroutineScope()
@@ -83,31 +93,25 @@ fun HomeComponent(
             }
         },
         content = {
-            Scaffold(
-                modifier = Modifier,
-                topBar = {
-                    HomeHeader(
-                        userName = name,
-                        photoUrl = photoUrl,
-                        onProfileClick = {
-                            if (drawerState.isOpen) {
-                                coroutine.launch { drawerState.close() }
-                            } else {
-                                coroutine.launch { drawerState.open() }
-                            }
-                        }
-                    )
-                },
-
-                floatingActionButton = {
-                    FloatingActionButton(onClick = { viewModel.fetchTimetableByWeekDay() }) {
-                        Icon(imageVector = Icons.Rounded.Add, contentDescription = "Add fab")
-                    }
-                }
+            Column(
+                modifier = Modifier
+                    .wrapContentHeight()
+//                    .verticalScroll(rememberScrollState())
             ) {
-                Column(Modifier.padding(it)) {
-
-                }
+                HomeScreen(
+                    name = name,
+                    photoUrl = photoUrl,
+                    timetable = timetable,
+                    onProfileClick = {
+                        if (drawerState.isOpen) {
+                            coroutine.launch { drawerState.close() }
+                        } else {
+                            coroutine.launch { drawerState.open() }
+                        }
+                    },
+                    onFloatingActionButtonClicked = {
+                        viewModel.fetchTimetableByWeekDay()
+                    })
             }
         })
 }

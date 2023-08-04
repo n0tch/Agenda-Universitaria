@@ -7,6 +7,7 @@ import com.example.model.Note
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import javax.inject.Inject
 
 class NoteRepositoryImp @Inject constructor(
@@ -45,5 +46,9 @@ class NoteRepositoryImp @Inject constructor(
             .fetchNotesBySubject(userId, subject)
             .map { it.mapNotNull { it?.toNote() } }
             .collect { emit(it) }
+    }
+
+    override fun fetchNoteById(userId: String, noteId: String): Flow<Note> = flow {
+        noteDataProvider.fetchNoteById(userId, noteId).mapNotNull { it?.toNote() }.collect { emit(it) }
     }
 }

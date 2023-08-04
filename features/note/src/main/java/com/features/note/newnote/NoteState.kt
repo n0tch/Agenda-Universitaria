@@ -1,5 +1,6 @@
 package com.features.note.newnote
 
+import com.example.model.Note
 import com.example.model.Subject
 
 sealed class NoteState {
@@ -9,4 +10,5 @@ sealed class NoteState {
     class NoteException(val exception: Exception) : NoteState()
     class NoteLabels(val labels: List<String>) : NoteState()
     class SubjectList(val items: List<Subject>) : NoteState()
+    class FetchNoteSuccess(val note: Note) : NoteState()
 }
