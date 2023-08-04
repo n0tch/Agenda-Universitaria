@@ -60,9 +60,7 @@ dependencies {
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
-    implementation(project(":core:common"))
     implementation(project(":core:domain"))
-    implementation(project(":core:model"))
     implementation(project(":core:designsystem"))
 
     implementation(libs.androidx.lifecycle.runTime.ktx)

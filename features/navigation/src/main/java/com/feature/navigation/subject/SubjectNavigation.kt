@@ -4,7 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.feature.navigation.note.navigateToNotesWithItem
+import com.feature.navigation.note.NoteScreens
 import com.features.subject.SubjectComponent
 import com.features.subject.detail.SubjectDetailComponent
 import com.features.subject.exam.ExamComponent
@@ -19,8 +19,8 @@ fun NavGraphBuilder.subjectGraph(navController: NavController) {
         composable(route = SubjectScreens.SUBJECTS.route) {
             SubjectComponent(
                 navController = navController,
-                navigateToSubjectDetail = {
-                    navController.navigate(SubjectScreens.SUBJECT_DETAIL.route + "/${it.name}/${it.id}")
+                navigateToSubjectDetail = { name, id ->
+                    navController.navigate(SubjectScreens.SUBJECT_DETAIL.route + "/${name}/${id}")
                 }
             )
         }
@@ -32,7 +32,7 @@ fun NavGraphBuilder.subjectGraph(navController: NavController) {
                 onBackPressed = { navController.popBackStack() },
                 subjectName = subjectName,
                 subjectId = subjectId,
-                onNavigateToNote = { note -> navController.navigateToNotesWithItem(note) }
+                onNavigateToNote = { noteId -> navController.navigate(NoteScreens.NOTE.route + "/{$noteId}") }
             )
         }
 

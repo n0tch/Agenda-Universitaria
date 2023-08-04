@@ -13,18 +13,24 @@ import com.example.model.Note
 import com.example.model.Subject
 
 @Composable
-fun NewNoteComponent(navController: NavController, note: Note = Note()) {
+fun NewNoteComponent(
+    navController: NavController,
+    noteId: String
+) {
 
     val viewModel: NewNoteViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var save by remember { mutableStateOf(false) }
     val noteLabelList: List<DefaultNoteEnum> = DefaultNoteEnum.values().toList()
-    var subjectList: List<Subject> = remember{ mutableStateListOf() }
+    var subjectList: List<Subject> = remember { mutableStateListOf() }
 
     when (uiState) {
         is NoteState.NoteException -> {}
         NoteState.NoteIdle -> {}
-        NoteState.NoteLoading -> { save = false }
+        NoteState.NoteLoading -> {
+            save = false
+        }
+
         is NoteState.NoteSaved -> {
             save = true
         }
@@ -38,8 +44,9 @@ fun NewNoteComponent(navController: NavController, note: Note = Note()) {
         }
     }
 
+    //TODO: fetch note by id
     NewNoteScreen(
-        note = note,
+        note = Note(),
         saved = save,
         noteLabels = noteLabelList,
         subjects = subjectList,

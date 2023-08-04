@@ -4,7 +4,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.example.model.Note
 import com.features.note.home.NoteComponent
 import com.features.note.newnote.NewNoteComponent
 
@@ -13,13 +12,9 @@ const val NOTE_ITEM_ARGUMENT = "note"
 
 fun NavGraphBuilder.noteNavGraph(navController: NavController) {
     navigation(route = noteGraphRoute, startDestination = NoteScreens.NOTE_LIST.route) {
-        composable(route = NoteScreens.NOTE.route) {
-            val note = navController
-                .previousBackStackEntry
-                ?.savedStateHandle
-                ?.get<Note>(NOTE_ITEM_ARGUMENT)
-
-            NewNoteComponent(navController = navController, note = note ?: Note())
+        composable(route = NoteScreens.NOTE.route + "/{id}") { backStackEntry ->
+            val noteId = backStackEntry.arguments?.getString("id") ?: ""
+            NewNoteComponent(navController = navController, noteId)
         }
 
         composable(route = NoteScreens.NOTE_LIST.route) {
@@ -32,12 +27,4 @@ fun NavGraphBuilder.noteNavGraph(navController: NavController) {
 
 fun NavController.navigateToNotes() {
     navigate(noteGraphRoute)
-}
-
-fun NavController.navigateToNotesWithItem(note: Note){
-    currentBackStackEntry?.savedStateHandle?.set(
-        key = NOTE_ITEM_ARGUMENT,
-        value = note
-    )
-    navigate(NoteScreens.NOTE.route)
 }

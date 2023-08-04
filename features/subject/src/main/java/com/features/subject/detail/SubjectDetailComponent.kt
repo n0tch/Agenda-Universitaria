@@ -14,7 +14,7 @@ fun SubjectDetailComponent(
     onBackPressed: () -> Unit,
     subjectName: String,
     subjectId: String,
-    onNavigateToNote: (Note) -> Unit
+    onNavigateToNote: (String) -> Unit
 ) {
 
     val viewModel: SubjectDetailViewModel = hiltViewModel()
@@ -39,7 +39,7 @@ fun SubjectDetailComponent(
         onBackPressed = { onBackPressed() },
         subjectName = subjectName,
         notes = noteList,
-        onNoteClicked = { onNavigateToNote(it) },
+        onNoteClicked = { onNavigateToNote(it.id) },
         onDeleteButtonClicked = {
             viewModel.deleteSubject(subjectId)
         }

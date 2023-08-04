@@ -86,9 +86,8 @@ dependencies {
 
     implementation(project(":features:navigation"))
     implementation(project(":core:designsystem"))
-    //TODO: remove this to another package
+    //TODO: remove this to another package when remove onborading from app
     implementation(project(":core:domain"))
-    implementation(project(":core:common"))
 
     implementation(libs.core.ktx)
     implementation(libs.appcompat)

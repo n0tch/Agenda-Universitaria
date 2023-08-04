@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeComponent(
     screenList: List<String>,
-    onNavigateToNote: (Note) -> Unit,
+    onNavigateToNote: (String) -> Unit,
     onNavigateToNoteGraph: () -> Unit,
     navigateToScreen: (String) -> Unit,
     onLogout: () -> Unit
