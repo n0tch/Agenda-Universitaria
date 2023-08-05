@@ -1,3 +1,8 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import org.codehaus.groovy.runtime.DefaultGroovyMethods.each
+import java.io.FileInputStream
+import java.util.Properties
+
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.android.application)
@@ -8,6 +13,13 @@ plugins {
     id("com.google.gms.google-services")
 }
 
+val properties = Properties().apply {
+    load(FileInputStream("${project.rootDir}/version.properties"))
+    forEach { prop ->
+        project.ext.set(prop.key?.toString() ?: "", prop.value)
+    }
+}
+
 android {
     namespace = "com.example.agendauniversitaria"
     compileSdk = libs.versions.compileSdk.get().toInt()
@@ -16,8 +28,8 @@ android {
         applicationId = "com.example.agendauniversitaria"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.compileSdk.get().toInt()
-        versionCode = libs.versions.versionCode.get().toInt()
-        versionName = libs.versions.versionName.get()
+        versionCode = getVersionCode()
+        versionName = getVersionName()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -26,12 +38,16 @@ android {
     }
 
     buildTypes {
-        release {
+        getByName("release") {
             isMinifyEnabled = false
             proguardFiles(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
                     "proguard-rules.pro"
             )
+        }
+
+        getByName("debug"){
+
         }
     }
     compileOptions {
@@ -99,4 +115,16 @@ dependencies {
 
 kapt {
     correctErrorTypes = true
+}
+
+fun getVersionCode(): Int {
+    val major = ext.get("majorVersion").toString().toInt()
+    val minor = ext.get("minorVersion").toString().toInt()
+    val patch = ext.get("patchVersion").toString().toInt()
+
+    return (major * 10000) + (minor * 100) + patch
+}
+
+fun getVersionName(): String {
+    return "${ext.get("majorVersion")}.${ext.get("minorVersion")}.${ext.get("patchVersion")}"
 }
