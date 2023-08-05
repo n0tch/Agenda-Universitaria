@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout Project
         uses: actions/checkout@v2
+        with:
+          ref: dev
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
