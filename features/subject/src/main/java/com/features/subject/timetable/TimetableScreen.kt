@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.model.TimetableEntry
-import com.features.subject.timetable.newentry.NewTimetableViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
