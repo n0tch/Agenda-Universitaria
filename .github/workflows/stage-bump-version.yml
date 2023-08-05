@@ -1,0 +1,25 @@
+name: CI bump version
+
+on:
+  pull_request:
+    branches:
+      - 'stage'
+jobs:
+  build:
+    name: Ci bump version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v2
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: SetUp Java JDK
+        uses: actions/setup-java@v3.12.0
+        with:
+          distribution: corretto
+          java-version: 17
+      - name: Bump version
+        id: bump_version
+        uses: oflynned/android-version-bump@master
