@@ -1,7 +1,6 @@
 package com.core.data.repository.note
 
-import com.core.data.extension.toNote
-import com.core.data.extension.toNoteResponse
+import com.core.data.mapper.NoteMapper
 import com.core.network.note.NoteDataProvider
 import com.example.model.Note
 import kotlinx.coroutines.flow.Flow
@@ -12,18 +11,21 @@ import javax.inject.Inject
 
 class NoteRepositoryImp @Inject constructor(
     private val noteDataProvider: NoteDataProvider,
-
-    ) : NoteRepository {
+    private val noteMapper: NoteMapper
+) : NoteRepository {
     override fun saveNote(userId: String, note: Note): Flow<String> = flow {
-        noteDataProvider.saveNote(userId, note.toNoteResponse()).collect {
-            emit(it)
-        }
+        noteDataProvider
+            .saveNote(userId, noteMapper.mapToResponse(note))
+            .mapNotNull { it.id }
+            .collect {
+                emit(it)
+            }
     }
 
     override fun fetchNotes(userId: String): Flow<List<Note>> = flow {
         noteDataProvider.fetchNotes(userId)
             .map { noteResponseList ->
-                noteResponseList.mapNotNull { it?.toNote() }
+                noteResponseList.mapNotNull { noteMapper.mapToDomain(it) }
             }.collect {
                 emit(it)
             }
@@ -44,11 +46,12 @@ class NoteRepositoryImp @Inject constructor(
     override fun fetchNotesBySubject(userId: String, subject: String): Flow<List<Note>> = flow {
         noteDataProvider
             .fetchNotesBySubject(userId, subject)
-            .map { it.mapNotNull { it?.toNote() } }
+            .map { notesResponse -> noteMapper.mapListToDomain(notesResponse) }
             .collect { emit(it) }
     }
 
     override fun fetchNoteById(userId: String, noteId: String): Flow<Note> = flow {
-        noteDataProvider.fetchNoteById(userId, noteId).mapNotNull { it?.toNote() }.collect { emit(it) }
+        noteDataProvider.fetchNoteById(userId, noteId).mapNotNull { noteMapper.mapToDomain(it) }
+            .collect { emit(it) }
     }
 }

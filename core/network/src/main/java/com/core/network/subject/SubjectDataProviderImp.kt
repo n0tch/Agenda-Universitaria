@@ -2,41 +2,34 @@ package com.core.network.subject
 
 import com.core.network.helper.FirebaseDatabaseHelper
 import com.core.network.model.singleton.SubjectSingleton
-import com.core.network.model.subjectResponse.SubjectModel
-import com.google.firebase.database.FirebaseDatabase
+import com.core.network.model.subjectResponse.SubjectResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class SubjectDataProviderImp @Inject constructor(
-    private val firebaseDatabase: FirebaseDatabase,
     private val firebaseDatabaseHelper: FirebaseDatabaseHelper,
     private val subjectSingleton: SubjectSingleton
 ) : SubjectDataProvider {
 
-    override fun saveSubject(userId: String, subject: SubjectModel): Flow<String> = flow {
+    override fun saveSubject(userId: String, subject: SubjectResponse): Flow<String> = flow {
         val subjectId = firebaseDatabaseHelper.setData("$userId/$SUBJECT_PATH/", data = subject)
         subjectSingleton.subjectList?.add(subject)
-        emit(subjectId)
+        emit(subjectId.id ?: "")
     }
 
-    override fun fetchSubjects(userId: String): Flow<List<SubjectModel>> = flow {
+    override fun fetchSubjects(userId: String): Flow<List<SubjectResponse>> = flow {
         subjectSingleton.subjectList?.let {
             emit(it)
         } ?: run {
-            val items = firebaseDatabaseHelper.getData<SubjectModel>(path = "$userId/$SUBJECT_PATH")
+            val items = firebaseDatabaseHelper.getDataList<SubjectResponse>(path = "$userId/$SUBJECT_PATH")
             subjectSingleton.subjectList?.apply { clear() }?.addAll(items)
             emit(items)
         }
     }
 
     override fun deactivateSubjects(userId: String, subjectName: String): Flow<Boolean> = flow {
-        firebaseDatabase
-            .getReference("$userId/$SUBJECT_PATH/$subjectName")
-            .removeValue()
-            .await()
-
+        firebaseDatabaseHelper.deleteData("$userId/$SUBJECT_PATH/$subjectName")
         emit(true)
     }
 

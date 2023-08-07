@@ -56,12 +56,14 @@ fun TimetableListComponentPreview() {
     TimetableListComponent(
         timetableEntries = listOf(
             TimetableEntry(
+                id = "",
                 weekDays = listOf("segunda", "terca"),
                 startTime = "10:00",
                 endTime = "12:00",
                 subjectId = "Direito"
             ),
             TimetableEntry(
+                id = "",
                 weekDays = listOf("segunda", "terca"),
                 startTime = "13:00",
                 endTime = "15:00",

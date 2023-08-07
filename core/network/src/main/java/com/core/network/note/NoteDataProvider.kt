@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface NoteDataProvider {
 
-    fun saveNote(userId: String, note: NoteResponse): Flow<String>
+    fun saveNote(userId: String, note: NoteResponse): Flow<NoteResponse>
 
     fun fetchNotes(userId: String): Flow<List<NoteResponse?>>
 

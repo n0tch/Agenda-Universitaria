@@ -1,5 +1,7 @@
 package com.core.data.di
 
+import com.core.data.repository.exam.ExamRepository
+import com.core.data.repository.exam.ExamRepositoryImp
 import com.core.data.repository.login.LoginRepository
 import com.core.data.repository.login.LoginRepositoryImp
 import com.core.data.repository.note.NoteRepository
@@ -42,5 +44,8 @@ abstract class DataRepositoryModule {
     abstract fun bindsSubjectRepository(repository: SubjectRepositoryImp): SubjectRepository
 
     @Binds
-    abstract fun bindTimetableRepository(repository: TimetableRepositoryImp): TimetableRepository
+    abstract fun bindsTimetableRepository(repository: TimetableRepositoryImp): TimetableRepository
+
+    @Binds
+    abstract fun bindsExamRepository(repository: ExamRepositoryImp): ExamRepository
 }

@@ -86,6 +86,7 @@ fun NewTimetableScreen(
         OutlinedButton(modifier = Modifier.fillMaxWidth(), onClick = {
             onSaveButtonClicked(
                 TimetableEntry(
+                    id = "",
                     weekDays = selectedWeekDays,
                     subjectId = subjects.find { it.name == subject }?.id ?: "",
                     startTime = "${timePickerState.hour}:${timePickerState.minute}",

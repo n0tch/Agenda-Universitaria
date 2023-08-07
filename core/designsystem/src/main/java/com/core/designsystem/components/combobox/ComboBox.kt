@@ -29,10 +29,9 @@ fun ComboBox(
     var expanded by remember { mutableStateOf(false) }
     var textSelected by remember { mutableStateOf(initialText) }
 
-    Column(modifier) {
-
+    Column(modifier.fillMaxWidth()) {
         OutlinedTextField(
-            modifier = Modifier,
+            modifier = modifier.fillMaxWidth(),
             value = textSelected,
             onValueChange = {},
             readOnly = true,

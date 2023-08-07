@@ -15,18 +15,13 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class NoteDataProviderImp @Inject constructor(
-    private val firebaseDatabase: FirebaseDatabase
+    private val firebaseDatabase: FirebaseDatabase,
+    private val firebaseDatabaseHelper: FirebaseDatabaseHelper
 ) : NoteDataProvider {
 
-    override fun saveNote(userId: String, note: NoteResponse): Flow<String> = flow {
-        val dataRef = firebaseDatabase
-            .reference
-            .child("$userId/$NOTE_PATH/")
-            .push()
-
-        val noteId = dataRef.get().await().key ?: ""
-        dataRef.setValue(note.apply { id = noteId }).await()
-        emit(noteId)
+    override fun saveNote(userId: String, note: NoteResponse): Flow<NoteResponse> = flow {
+        val note = firebaseDatabaseHelper.setData("$userId/$NOTE_PATH/", note)
+        emit(note)
     }
 
     override fun fetchNotes(userId: String): Flow<List<NoteResponse?>> = flow {

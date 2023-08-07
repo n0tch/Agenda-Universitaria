@@ -70,6 +70,7 @@ compose_activity = { module = "androidx.activity:activity-compose", version.ref 
 compose_runtime = { module = "androidx.compose.runtime:runtime", version.ref = "compose" }
 compose_navigation = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
 compose_contraints = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "composeContraints" }
+compose_livedata = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "compose" }
 
 #Hilt
 hilt_android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
@@ -107,7 +108,8 @@ compose = [
     "compose.icons",
     "compose.activity",
     "compose.navigation",
-    "compose.contraints"
+    "compose.contraints",
+    "compose.livedata"
 ]
 hilt = ["hilt.android", "hilt.navigation"]
 

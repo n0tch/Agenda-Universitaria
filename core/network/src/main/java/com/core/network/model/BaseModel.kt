@@ -1,3 +1,3 @@
 package com.core.network.model
 
-open class BaseModel(var id: String? = "")
+open class BaseModel(open var id: String? = "")

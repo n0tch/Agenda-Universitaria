@@ -97,6 +97,7 @@ fun SubjectAddDialog(
                         onClick = {
                             onSaveButton(
                                 Subject(
+                                    id = "",
                                     name = subjectName,
                                     place = placeName,
                                     teacher = teacherName

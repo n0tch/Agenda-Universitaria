@@ -40,12 +40,14 @@ fun HomeComponent(
     var timetable: List<TimetableEntry> = remember {
         mutableStateListOf(
             TimetableEntry(
+                id = "",
                 weekDays = listOf("segunda", "terca"),
                 startTime = "10:00",
                 endTime = "12:00",
                 subjectId = "Direito"
             ),
             TimetableEntry(
+                id = "",
                 weekDays = listOf("segunda", "terca"),
                 startTime = "13:00",
                 endTime = "15:00",
@@ -88,6 +90,7 @@ fun HomeComponent(
                     photoUrl = photoUrl,
                     screensList = screenList
                 ) { screenName ->
+                    coroutine.launch { drawerState.close() }
                     navigateToScreen(screenName)
                 }
             }

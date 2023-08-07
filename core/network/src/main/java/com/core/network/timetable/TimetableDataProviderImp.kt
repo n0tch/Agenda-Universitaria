@@ -12,28 +12,29 @@ import javax.inject.Inject
 
 class TimetableDataProviderImp @Inject constructor(
     private val timetableSingleton: TimetableSingleton,
-    private val firebaseDatabase: FirebaseDatabase,
     private val firebaseDatabaseHelper: FirebaseDatabaseHelper
 ): TimetableDataProvider {
 
     override fun saveTimetableEntry(userId: String, timetableResponse: TimetableResponse): Flow<String>  = flow {
-        val timetableEntryId = firebaseDatabaseHelper.setData( "$userId/$TIMETABLE_PATH/", timetableResponse)
-        emit(timetableEntryId)
+        val timetableEntry = firebaseDatabaseHelper.setData( "$userId/$TIMETABLE_PATH/", timetableResponse)
+        emit(timetableEntry.id ?: "")
     }
 
     override fun fetchTimetables(userId: String): Flow<List<TimetableResponse>> = flow {
         timetableSingleton.timetableList?.let {
             emit(it)
         } ?: run {
-            val items = firebaseDatabaseHelper.getData<TimetableResponse>("$userId/$TIMETABLE_PATH")
+            val items = firebaseDatabaseHelper.getDataList<TimetableResponse>("$userId/$TIMETABLE_PATH")
             timetableSingleton.timetableList = items
             emit(items)
         }
     }
 
+    //TODO: Fix this
     override fun fetchTimetableByDay(userId: String, dayWeekName: String): Flow<String> = flow {
-        val items = firebaseDatabase.reference.child("$userId/$TIMETABLE_PATH/").get().await()
-        Log.e("fetchTimetableByDay", items.toString())
+        val items = firebaseDatabaseHelper.getDataList<TimetableResponse>("$userId/$TIMETABLE_PATH/")
+//        val items = firebaseDatabase.reference.child("$userId/$TIMETABLE_PATH/").get().await()
+//        Log.e("fetchTimetableByDay", items.toString())
         emit("nice")
     }
 

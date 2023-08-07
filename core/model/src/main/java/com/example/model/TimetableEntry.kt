@@ -5,6 +5,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class TimetableEntry(
+    var id: String,
     val weekDays: List<String>,
     val startTime: String,
     val endTime: String,

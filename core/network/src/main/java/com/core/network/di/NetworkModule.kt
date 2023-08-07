@@ -1,5 +1,7 @@
 package com.core.network.di
 
+import com.core.network.exam.ExamDataProvideImp
+import com.core.network.exam.ExamDataProvider
 import com.core.network.login.LoginDataProvider
 import com.core.network.login.LoginDataProviderImp
 import com.core.network.note.NoteDataProvider
@@ -57,4 +59,9 @@ internal abstract class NetworkModule {
     abstract fun bindTimetableDataProvider(
         timetableDataProviderImp: TimetableDataProviderImp
     ): TimetableDataProvider
+
+    @Binds
+    abstract fun bindExamDataProvider(
+        examDataProviderImp: ExamDataProvideImp
+    ): ExamDataProvider
 }

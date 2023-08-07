@@ -86,5 +86,5 @@ fun ScheduleCard(item: TimetableEntry) {
 @Preview
 @Composable
 fun ScheduleCardPreview() {
-    ScheduleCard(TimetableEntry(listOf("Segunda", "Quarta"), "19:00", "20:40", "ATP"))
+    ScheduleCard(TimetableEntry(id = "",listOf("Segunda", "Quarta"), "19:00", "20:40", "ATP"))
 }

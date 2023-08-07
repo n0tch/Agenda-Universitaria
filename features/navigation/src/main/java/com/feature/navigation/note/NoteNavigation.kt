@@ -21,9 +21,24 @@ fun NavGraphBuilder.noteNavGraph(navController: NavController) {
                 navController.navigate(NoteScreens.NOTE.route + "/$noteId")
             })
         }
+
+        composable(route = NoteScreens.NOTE_LIST_WITH_RESULT.route){
+            NoteListComponent(
+                onNavigateToNote = {},
+                shouldReturnSelectedNotes = true,
+                onNotesSelected = {
+                    navController.previousBackStackEntry?.savedStateHandle?.set("note_list", it)
+                    navController.popBackStack()
+                },
+            )
+        }
     }
 }
 
 fun NavController.navigateToNotes() {
     navigate(noteGraphRoute)
+}
+
+fun NavController.navigateToNoteWithResult() {
+    navigate(NoteScreens.NOTE_LIST_WITH_RESULT.route)
 }

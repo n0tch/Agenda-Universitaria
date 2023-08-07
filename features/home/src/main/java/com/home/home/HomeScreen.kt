@@ -48,6 +48,8 @@ fun HomeScreen(
             HomePager(count = timetable.size,homePagerContent = {
                 TimetableListComponent(timetableEntries = timetable)
             })
+
+//            UpcomingEventsList()
             //"Confira a sua agenda para amanha, terça feira dia 26/10/2023
             //"Confira a sua agenda para quarta feira  dia 26/10/2023
 

@@ -20,29 +20,31 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.core.designsystem.components.LoadingView
 import com.core.designsystem.components.card.CardForward
-import com.example.model.Exam
-import com.features.subject.timetable.TimeTableComponent
+import com.example.model.event.Exam
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExamScreen(
-    exams: List<Exam> = listOf(Exam("Prova 1", 10L, ""), Exam("Prova 1", 10L, ""))
+    isLoading: Boolean = false,
+    exams: List<Exam> = listOf(),
+    onFabClicked: (String?) -> Unit,
+    onBackClicked: () -> Unit,
 ) {
-
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(text = "Provas") },
                 navigationIcon = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { onBackClicked() }) {
                         Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "back")
                     }
                 },
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { /*TODO*/ }) {
+            FloatingActionButton(onClick = { onFabClicked(null) }) {
                 Icon(imageVector = Icons.Filled.Add, contentDescription = "Add Timetable entry")
             }
         }
@@ -52,7 +54,6 @@ fun ExamScreen(
                 .padding(paddingValues)
                 .padding(horizontal = 12.dp)
                 .fillMaxSize()
-//                .verticalScroll(rememberScrollState())
         ) {
             LazyColumn(modifier = Modifier.fillMaxSize(), content = {
                 items(exams) { exam ->
@@ -62,11 +63,15 @@ fun ExamScreen(
                             .padding(bottom = 4.dp)
                             .padding(horizontal = 6.dp),
                         title = exam.name,
-                        body = "",
+                        body = "${exam.subjectId} \n${exam.relatedNotes.size} notas relacionadas",
                         onClick = {}
                     )
                 }
             })
+        }
+
+        if(isLoading){
+            LoadingView()
         }
     }
 }
@@ -74,5 +79,20 @@ fun ExamScreen(
 @Preview
 @Composable
 fun ExamScreenPreview() {
-    ExamScreen()
+    ExamScreen(
+        exams= listOf(Exam.getMock()),
+        onFabClicked = {},
+        onBackClicked = {}
+    )
+}
+
+@Preview
+@Composable
+fun ExamScreenLoadingPreview() {
+    ExamScreen(
+        isLoading = true,
+        exams= listOf(Exam.getMock()),
+        onFabClicked = {},
+        onBackClicked = {}
+    )
 }
