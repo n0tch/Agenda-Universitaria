@@ -1,28 +1,38 @@
 package com.core.data.repository.subject
 
 import com.core.data.mapper.SubjectMapper
-import com.core.network.subject.SubjectDataProvider
+import com.core.database.subject.SubjectDao
 import com.example.model.Subject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class SubjectRepositoryImp @Inject constructor(
-    private val subjectDataProvider: SubjectDataProvider,
+    private val subjectDao: SubjectDao,
     private val subjectMapper: SubjectMapper
 ): SubjectRepository {
 
     override fun saveSubject(userId: String, subject: Subject): Flow<String> = flow {
-        subjectDataProvider.saveSubject(userId, subjectMapper.mapToResponse(subject)).collect {
-            emit(it)
-        }
+        subjectDao
+            .saveSubject(subjectMapper.mapToDatabaseModel(subject))
+            .collect { subject -> emit(subject?.id ?: "") }
     }
 
     override fun fetchSubjects(userId: String): Flow<List<Subject>> = flow {
-        subjectDataProvider.fetchSubjects(userId).collect{ emit(subjectMapper.mapListToDomain(it)) }
+        subjectDao
+            .fetchSubjects()
+            .map{
+                it.map { subject ->
+                    Subject(subject.id, subject.name, subject.place, subject.teacher)
+                }
+            }
+            .collect{ emit(it) }
     }
 
     override fun deleteSubject(userId: String, subjectName: String): Flow<Boolean> = flow {
-        subjectDataProvider.deactivateSubjects(userId, subjectName).collect { emit(it) }
+        subjectDao
+            .deleteSubject(subjectName)
+            .collect { emit(it) }
     }
 }

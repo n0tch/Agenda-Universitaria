@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/core/common" />
             <option value="$PROJECT_DIR$/core/data" />
+            <option value="$PROJECT_DIR$/core/database" />
             <option value="$PROJECT_DIR$/core/designsystem" />
             <option value="$PROJECT_DIR$/core/domain" />
             <option value="$PROJECT_DIR$/core/localstorage" />
@@ -22,10 +23,12 @@
             <option value="$PROJECT_DIR$/core/network" />
             <option value="$PROJECT_DIR$/features" />
             <option value="$PROJECT_DIR$/features/authentication" />
+            <option value="$PROJECT_DIR$/features/exam" />
             <option value="$PROJECT_DIR$/features/home" />
             <option value="$PROJECT_DIR$/features/navigation" />
             <option value="$PROJECT_DIR$/features/note" />
             <option value="$PROJECT_DIR$/features/subject" />
+            <option value="$PROJECT_DIR$/features/timetable" />
           </set>
         </option>
       </GradleProjectSettings>

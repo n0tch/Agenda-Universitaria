@@ -1,19 +1,20 @@
 package com.home.home
 
 import android.util.Log
-import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.core.common.AppDispatcher
 import com.core.common.Dispatcher
 import com.core.common.Result
+import com.core.domain.ExamUseCase
 import com.core.domain.HomeUseCase
 import com.core.domain.LoginUseCase
-import com.core.domain.NoteUseCase
 import com.core.domain.UserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
@@ -27,16 +28,17 @@ class HomeViewModel @Inject constructor(
     @Dispatcher(AppDispatcher.UI) private val uiDispatcher: CoroutineDispatcher,
     private val loginUseCase: LoginUseCase,
     private val userUseCase: UserUseCase,
-    private val noteUseCase: NoteUseCase,
-    private val homeUseCase: HomeUseCase
+    private val homeUseCase: HomeUseCase,
+    private val examUseCase: ExamUseCase
 ) : ViewModel() {
 
-    init {
-        fetchCurrentUser()
-//        fetchTimetableByWeekDay()
-    }
-
     val uiState: MutableStateFlow<HomeState> = MutableStateFlow(HomeState.HomeIdle)
+
+    private val _currentUserState: MutableStateFlow<CurrentUserState> = MutableStateFlow(CurrentUserState())
+    val currentUserState: StateFlow<CurrentUserState> = _currentUserState.asStateFlow()
+
+    private val _examsState: MutableStateFlow<ExamsState> = MutableStateFlow(ExamsState())
+    val examsState: StateFlow<ExamsState> = _examsState.asStateFlow()
 
     fun fetchTimetableByWeekDay(){
         val today = LocalDate.now().dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())
@@ -50,36 +52,24 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    @VisibleForTesting
-    private fun fetchCurrentUser() {
+    fun fetchCurrentUser() {
         viewModelScope.launch {
             userUseCase.fetchCurrentUser().flowOn(uiDispatcher).collect {
                 when (it) {
-                    is Result.Error -> uiState.value = HomeState.HomeCurrentUserError(it.exception)
-                    is Result.Success -> uiState.value = HomeState.HomeCurrentUser(it.data)
-                }
-            }
-        }
-    }
-
-    fun fetchNotes() {
-        viewModelScope.launch {
-            noteUseCase.fetchNotes()
-                .flowOn(uiDispatcher)
-                .onStart { }
-                .collect {
-                    when (it) {
-                        is Result.Error -> {
-                            Log.e("error", it.exception.toString())
-                        }
-
-                        is Result.Success -> {
-                            it.data.forEach {
-                                Log.e("success", "${it.id} - ${it.title} - ${it.body}")
-                            }
-                        }
+                    is Result.Error -> {
+                        _currentUserState.emit(CurrentUserState(exception = it.exception))
+                    }
+                    is Result.Success -> {
+                        _currentUserState.emit(
+                            CurrentUserState(
+                                username = it.data.userName,
+                                photoUrl = it.data.photoUrl,
+                                email = it.data.email
+                            )
+                        )
                     }
                 }
+            }
         }
     }
 
@@ -97,4 +87,23 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun fetchNextExams() {
+        viewModelScope.launch {
+            examUseCase.fetchNextExams()
+                .flowOn(uiDispatcher)
+                .collect {
+                    when(it){
+                        is Result.Error -> {
+                            _examsState.emit(ExamsState(exception = it.exception))
+                            uiState.emit(HomeState.Error(it.exception))
+                        }
+                        is Result.Success -> {
+                            _examsState.emit(ExamsState(nextExams = it.data))
+                            Log.e("next exams", it.data.toString())
+                            uiState.emit(HomeState.HomeNextExams(it.data))
+                        }
+                    }
+                }
+        }
+    }
 }

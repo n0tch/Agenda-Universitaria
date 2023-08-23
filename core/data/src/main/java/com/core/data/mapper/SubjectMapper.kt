@@ -1,5 +1,6 @@
 package com.core.data.mapper
 
+import com.core.database.databaseModel.SubjectDatabaseModel
 import com.core.network.model.subjectResponse.SubjectResponse
 import com.example.model.Subject
 
@@ -21,5 +22,12 @@ class SubjectMapper {
         name = subject.name,
         placeName = subject.place,
         teacherName = subject.teacher
+    )
+
+    fun mapToDatabaseModel(subject: Subject) = SubjectDatabaseModel(
+        id = subject.id,
+        name = subject.name,
+        place = subject.place,
+        teacher = subject.teacher
     )
 }

@@ -10,10 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -34,9 +32,14 @@ fun HomeComponent(
 
     val viewModel: HomeViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val currentUserState by viewModel.currentUserState.collectAsStateWithLifecycle()
+    val examsState by viewModel.examsState.collectAsStateWithLifecycle()
 
-    var name by remember { mutableStateOf("") }
-    var photoUrl by remember { mutableStateOf("") }
+    LaunchedEffect(key1 = Unit, block = {
+        viewModel.fetchCurrentUser()
+        viewModel.fetchNextExams()
+    })
+
     var timetable: List<TimetableEntry> = remember {
         mutableStateListOf(
             TimetableEntry(
@@ -59,27 +62,33 @@ fun HomeComponent(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutine = rememberCoroutineScope()
 
-    when (uiState) {
-        is HomeState.HomeCurrentUser -> {
-            LaunchedEffect(key1 = name, block = {
-                name = (uiState as HomeState.HomeCurrentUser).currentUser.userName
-                photoUrl = (uiState as HomeState.HomeCurrentUser).currentUser.photoUrl
-            })
+    when{
+        currentUserState.exception != null -> {
+            ToastComponent(message = "Erro ao buscar user")
         }
-
-        HomeState.HomeIdle -> {}
-        is HomeState.HomeCurrentUserError ->
-            ToastComponent(message = (uiState as HomeState.HomeCurrentUserError).exception.message.toString())
-
-        is LogoutState.LogoutError ->
-            ToastComponent(message = (uiState as LogoutState.LogoutError).exception.message.toString())
-
-        is LogoutState.LogoutSuccess -> {
-            LaunchedEffect(key1 = Unit, block = {
-                onLogout()
-            })
+        examsState.exception != null -> {
+            ToastComponent(message = "Erro ao buscar exams")
         }
     }
+//    when (uiState) {
+//        is HomeState.HomeCurrentUser -> {}
+//
+//        HomeState.HomeIdle -> {}
+//        is HomeState.HomeCurrentUserError ->
+//            ToastComponent(message = (uiState as HomeState.HomeCurrentUserError).exception.message.toString())
+//
+//        is LogoutState.LogoutError ->
+//            ToastComponent(message = (uiState as LogoutState.LogoutError).exception.message.toString())
+//
+//        is LogoutState.LogoutSuccess -> {
+//            LaunchedEffect(key1 = Unit, block = {
+//                onLogout()
+//            })
+//        }
+//
+//        is HomeState.Error -> {}
+//        is HomeState.HomeNextExams -> {}
+//    }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -87,7 +96,7 @@ fun HomeComponent(
         drawerContent = {
             ModalDrawerSheet(modifier = Modifier) {
                 DrawerBody(
-                    photoUrl = photoUrl,
+                    photoUrl = currentUserState.photoUrl,
                     screensList = screenList
                 ) { screenName ->
                     coroutine.launch { drawerState.close() }
@@ -99,11 +108,9 @@ fun HomeComponent(
             Column(
                 modifier = Modifier
                     .wrapContentHeight()
-//                    .verticalScroll(rememberScrollState())
             ) {
                 HomeScreen(
-                    name = name,
-                    photoUrl = photoUrl,
+                    currentUserState = currentUserState,
                     timetable = timetable,
                     onProfileClick = {
                         if (drawerState.isOpen) {
@@ -112,6 +119,7 @@ fun HomeComponent(
                             coroutine.launch { drawerState.open() }
                         }
                     },
+                    nextExams = examsState.nextExams,
                     onFloatingActionButtonClicked = {
                         viewModel.fetchTimetableByWeekDay()
                     })

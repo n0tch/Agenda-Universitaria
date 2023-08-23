@@ -1,6 +1,8 @@
 package com.example.model.event
 
 import com.example.model.ScheduledEvent
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class Exam(
     val relatedNotes: List<String>,
@@ -8,17 +10,22 @@ class Exam(
     override val id: String,
     override val subjectId: String,
     override val name: String,
-    override val date: Long,
+    override val date: LocalDateTime,
     override val color: Int = 1
 ) : ScheduledEvent() {
-    companion object{
+
+    fun getFormattedDate(): String = DateTimeFormatter
+        .ofPattern("dd/MM/yyyy")
+        .format(date)
+
+    companion object {
         fun getMock() = Exam(
             relatedNotes = listOf(),
             score = 1.2F,
             id = "",
             subjectId = "",
             name = "",
-            date = 1L,
+            date = LocalDateTime.now(),
             color = 1
         )
     }

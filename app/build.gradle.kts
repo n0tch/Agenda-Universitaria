@@ -1,5 +1,3 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
-import org.codehaus.groovy.runtime.DefaultGroovyMethods.each
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -63,7 +61,7 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.get()
     }
-    packagingOptions {
+    packaging {
         resources {
             excludes.addAll(
                     listOf(

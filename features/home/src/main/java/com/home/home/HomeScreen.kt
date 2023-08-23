@@ -3,6 +3,8 @@ package com.home.home
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.FloatingActionButton
@@ -13,12 +15,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import com.core.designsystem.components.card.CardForward
 import com.example.model.TimetableEntry
+import com.example.model.event.Exam
 
 @Composable
 fun HomeScreen(
-    name: String,
-    photoUrl: String,
+    currentUserState: CurrentUserState,
+    nextExams: List<Exam>,
     timetable: List<TimetableEntry>,
     onProfileClick: () -> Unit,
     onFloatingActionButtonClicked: () -> Unit
@@ -27,8 +31,8 @@ fun HomeScreen(
         modifier = Modifier,
         topBar = {
             HomeHeader(
-                userName = name,
-                photoUrl = photoUrl,
+                userName = currentUserState.username,
+                photoUrl = currentUserState.photoUrl,
                 onProfileClick = onProfileClick
             )
         },
@@ -49,6 +53,16 @@ fun HomeScreen(
                 TimetableListComponent(timetableEntries = timetable)
             })
 
+            LazyColumn{
+
+                item{
+                    Text(text = "Proximas provas")
+                }
+
+                items(nextExams){ exam ->
+                    CardForward(title = exam.name, body = exam.date.toString(), onClick = {})
+                }
+            }
 //            UpcomingEventsList()
             //"Confira a sua agenda para amanha, terça feira dia 26/10/2023
             //"Confira a sua agenda para quarta feira  dia 26/10/2023
@@ -66,8 +80,8 @@ fun HomeScreen(
 @Composable
 fun HomeScreenPreview() {
     HomeScreen(
-        name = "my name",
-        photoUrl = "",
+        currentUserState = CurrentUserState(),
+        nextExams = listOf(),
         timetable = listOf(),
         onProfileClick = {},
         onFloatingActionButtonClicked = {})

@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 class ExamUseCase @Inject constructor(
@@ -45,5 +46,14 @@ class ExamUseCase @Inject constructor(
             .catch { emit(Result.Error(it as Exception)) }
             .map { Result.Success(it) }
             .collect { emit(it) }
+    }
+
+    fun fetchNextExams(fromDateTime: LocalDateTime = LocalDateTime.now()): Flow<Result<List<Exam>>> = flow {
+        examRepository
+            .fetchNextExams(fromDateTime)
+            .flowOn(ioDispatcher)
+            .catch { emit(Result.Error(it as Exception)) }
+            .map { Result.Success(it) }
+            .collect{ emit(it) }
     }
 }

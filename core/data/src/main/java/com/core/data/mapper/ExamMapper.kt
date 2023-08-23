@@ -1,28 +1,28 @@
 package com.core.data.mapper
 
-import com.core.network.model.examResponse.ExamResponse
+import com.core.database.databaseModel.ExamDataModel
 import com.example.model.event.Exam
+import java.time.LocalDateTime
 
 class ExamMapper {
-    fun mapToDomain(examResponse: ExamResponse?): Exam = Exam(
-        name = examResponse?.name ?: "",
-        date = examResponse?.date ?: 0L,
-        subjectId = examResponse?.subjectId ?: "",
-        relatedNotes = examResponse?.relatedNotes?.map { it } ?: emptyList(),
-        score = examResponse?.score ?: 0F,
-        id = examResponse?.id ?: ""
-    )
 
-    fun mapListToDomain(examListResponse: List<ExamResponse?>?) = examListResponse?.mapNotNull {
-        mapToDomain(it)
-    } ?: emptyList()
-
-    fun mapToResponse(exam: Exam): ExamResponse = ExamResponse(
+    fun mapToDatabaseModel(exam: Exam) = ExamDataModel(
         id = exam.id,
         name = exam.name,
-        subjectId = exam.subjectId,
-        relatedNotes = exam.relatedNotes,
         score = exam.score,
+        color = exam.color,
+        subjectId = exam.subjectId,
+        subjectNotes = exam.relatedNotes,
         date = exam.date
+    )
+
+    fun mapToDomain(exam: ExamDataModel?) = Exam(
+        id = exam?.id ?: "",
+        name = exam?.name ?: "",
+        score = exam?.score ?: 0F,
+        color = exam?.color ?: 1,
+        subjectId = exam?.subjectId ?: "",
+        relatedNotes = exam?.subjectNotes ?: emptyList(),
+        date = exam?.date ?: LocalDateTime.now()
     )
 }

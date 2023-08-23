@@ -10,7 +10,6 @@ android {
 
     defaultConfig {
         minSdk = 26
-        targetSdk = 33
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -38,7 +37,7 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.get()
     }
-    packagingOptions {
+    packaging {
         resources {
             excludes.addAll(
                 listOf(
@@ -65,4 +64,6 @@ dependencies {
     implementation(project(":features:home"))
     implementation(project(":features:note"))
     implementation(project(":features:subject"))
+    implementation(project(":features:exam"))
+    implementation(project(":features:timetable"))
 }

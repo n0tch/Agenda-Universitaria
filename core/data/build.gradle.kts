@@ -12,7 +12,6 @@ android {
 
     defaultConfig {
         minSdk = 26
-        targetSdk = 33
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -41,6 +40,7 @@ dependencies {
     implementation(project(":core:network"))
     implementation(project(":core:common"))
     implementation(project(":core:model"))
+    implementation(project(":core:database"))
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
