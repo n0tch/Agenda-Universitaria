@@ -1,20 +1,21 @@
 package com.core.data.repository.note
 
 import com.example.model.Note
-import com.example.model.NoteLabel
-import kotlinx.coroutines.flow.Flow
+import com.example.model.NoteCompound
 
 interface NoteRepository {
 
-    fun saveNote(userId: String, note: Note): Flow<String>
+    suspend fun saveNote(note: Note): Note
 
-    fun fetchNotes(userId: String): Flow<List<Note>>
+    suspend fun fetchNotes(): List<Note>
 
-    fun saveNoteLabel(noteLabel: String): Flow<String>
+    suspend fun fetchNotesBySubject(subjectId: Int): List<Note>
 
-    fun getNoteLabels(): Flow<List<String>>
+    suspend fun fetchNoteById(noteId: Int): NoteCompound
 
-    fun fetchNotesBySubject(userId: String, subject: String): Flow<List<Note>>
+    suspend fun searchNote(query: String): List<Note>
 
-    fun fetchNoteById(userId: String, noteId: String): Flow<Note>
+    suspend fun deleteNote(note: Note): Boolean
+
+    suspend fun saveNoteImagePaths(noteId: Int, images: List<String>)
 }

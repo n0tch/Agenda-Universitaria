@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class LoginRepositoryImp @Inject constructor(
+internal class LoginRepositoryImp @Inject constructor(
     private val loginDataProvider: LoginDataProvider
 ) : LoginRepository {
 

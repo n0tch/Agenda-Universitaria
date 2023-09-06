@@ -35,6 +35,7 @@ import com.core.designsystem.components.LoadingView
 import com.core.designsystem.components.alert.BasicAlertDialog
 import com.core.designsystem.components.combobox.ComboBox
 import com.example.model.Subject
+import com.example.model.event.Exam
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,8 +44,7 @@ fun ExamDetailScreen(
     subjects: List<Subject>,
     relatedNotes: List<String> = emptyList(),
     onAddNotes: () -> Unit = {},
-    examState: ExamState,
-    onSaveExam: () -> Unit = {}
+    onSaveExam: (Exam) -> Unit = {}
 ) {
 
     val datePickerState = rememberDatePickerState()
@@ -91,7 +91,7 @@ fun ExamDetailScreen(
             value = examScore,
             onValueChange = {
                 examScore = it
-                examState.score = it
+//                examState.score = it
             },
             label = { Text("Nota") }
         )
@@ -101,22 +101,22 @@ fun ExamDetailScreen(
             value = examTitle,
             onValueChange = {
                 examTitle = it
-                examState.title = it
+//                examState.title = it
             },
             label = { Text("Titulo") }
         )
 
         OutlinedButton(
             onClick = {
-                examState.apply {
-                    this.date = datePickerState.selectedDateMillis
-                    this.relatedNotes.addAll(relatedNotes)
-                    this.title = title
-                    this.score = score
-                    this.subject = subject
-                }
-
-                onSaveExam()
+                onSaveExam(
+                    Exam(
+                        score = examScore.toFloat(),
+                        name = examTitle,
+                        date= datePickerState.selectedDateMillis ?: 0,
+                        subjectId = subjects.first { it.name == subject }.id,
+                        relatedNotes = emptyList(),
+                    )
+                )
             }
         ) {
             Text("save exam")
@@ -157,7 +157,7 @@ fun ExamDetailScreenPreview() {
         subjects = listOf(),
         relatedNotes = listOf("abc", "edf"),
         onAddNotes = {},
-        examState = ExamState()
+//        examState = ExamState()
     )
 }
 
@@ -169,6 +169,6 @@ fun ExamDetailScreenLoadingPreview() {
         subjects = listOf(),
         relatedNotes = listOf("abc", "edf"),
         onAddNotes = {},
-        examState = ExamState()
+//        examState = ExamState()
     )
 }

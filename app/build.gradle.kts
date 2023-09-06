@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.detekt)
     id("kotlin-parcelize")
     id("com.google.gms.google-services")
 }
@@ -96,7 +97,6 @@ dependencies {
 
     implementation(libs.data.store)
     implementation(libs.gson)
-    implementation("androidx.appcompat:appcompat:1.6.1")
 
     implementation(project(":features:navigation"))
     implementation(project(":core:designsystem"))

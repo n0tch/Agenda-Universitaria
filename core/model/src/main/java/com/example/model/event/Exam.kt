@@ -1,32 +1,28 @@
 package com.example.model.event
 
 import com.example.model.ScheduledEvent
+import java.time.Instant
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-class Exam(
+data class Exam(
     val relatedNotes: List<String>,
     val score: Float,
-    override val id: String,
-    override val subjectId: String,
+    override val id: Int = 0,
+    override val subjectId: Int,
     override val name: String,
-    override val date: LocalDateTime,
-    override val color: Int = 1
+    override val date: Long,
 ) : ScheduledEvent() {
-
-    fun getFormattedDate(): String = DateTimeFormatter
-        .ofPattern("dd/MM/yyyy")
-        .format(date)
 
     companion object {
         fun getMock() = Exam(
             relatedNotes = listOf(),
             score = 1.2F,
-            id = "",
-            subjectId = "",
+            id = 1,
+            subjectId = 1,
             name = "",
-            date = LocalDateTime.now(),
-            color = 1
+            date = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
         )
     }
 }

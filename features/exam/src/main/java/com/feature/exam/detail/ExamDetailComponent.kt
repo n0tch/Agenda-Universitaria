@@ -31,7 +31,6 @@ fun ExamDetailComponent(
 
     val viewModel: ExamDetailViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val examState by viewModel.examState.collectAsStateWithLifecycle().apply { value.id = examId }
 
     var relatedNotes: List<String> = remember { mutableStateListOf() }
 
@@ -66,8 +65,8 @@ fun ExamDetailComponent(
                 subjects = uiState.subjects,//subjects,
                 relatedNotes = relatedNotes,
                 onAddNotes = { navigateToNotesWithResult() },
-                examState = examState,
-                onSaveExam = { viewModel.saveExam() }
+//                examState = examState,
+                onSaveExam = { exam -> viewModel.saveExam(exam) }
             )
         }
     }

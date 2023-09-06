@@ -1,11 +1,9 @@
 package com.features.subject.detail
 
-import com.example.model.Note
-import java.lang.Exception
+import com.example.model.SubjectCompound
 
-sealed class SubjectDetailState{
-    object Loading: SubjectDetailState()
-    object Idle: SubjectDetailState()
-    class Error(val exception: Exception): SubjectDetailState()
-    class NoteList(val items: List<Note>): SubjectDetailState()
-}
+data class SubjectDetailState(
+    val isLoading: Boolean = false,
+    val subjectCompound: SubjectCompound = SubjectCompound(null, emptyList(), emptyList()),
+    val exception: Exception? = null
+)

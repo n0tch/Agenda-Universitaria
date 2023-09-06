@@ -2,10 +2,14 @@ package com.core.data.di
 
 import com.core.data.repository.exam.ExamRepository
 import com.core.data.repository.exam.ExamRepositoryImp
+import com.core.data.repository.label.LabelRepository
+import com.core.data.repository.label.LabelRepositoryImp
 import com.core.data.repository.login.LoginRepository
 import com.core.data.repository.login.LoginRepositoryImp
 import com.core.data.repository.note.NoteRepository
 import com.core.data.repository.note.NoteRepositoryImp
+import com.core.data.repository.notemedia.NoteMediaRepository
+import com.core.data.repository.notemedia.NoteMediaRepositoryImp
 import com.core.data.repository.profile.ProfileRepository
 import com.core.data.repository.profile.ProfileRepositoryImp
 import com.core.data.repository.register.RegisterRepository
@@ -23,7 +27,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class DataRepositoryModule {
+internal abstract class DataRepositoryModule {
 
     @Binds
     abstract fun bindsLoginRepository(repository: LoginRepositoryImp): LoginRepository
@@ -48,4 +52,10 @@ abstract class DataRepositoryModule {
 
     @Binds
     abstract fun bindsExamRepository(repository: ExamRepositoryImp): ExamRepository
+
+    @Binds
+    abstract fun bindsLabelRepository(repository: LabelRepositoryImp): LabelRepository
+
+    @Binds
+    abstract fun bindNoteMediaRepository(repository: NoteMediaRepositoryImp): NoteMediaRepository
 }

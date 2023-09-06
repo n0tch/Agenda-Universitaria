@@ -16,11 +16,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.model.TimetableEntry
+import com.core.designsystem.extensions.localized
+import com.core.designsystem.extensions.toMinuteAndSecond
+import com.example.model.Timetable
+import java.time.DayOfWeek
 
 @Composable
 fun TimetableListComponent(
-    timetableEntries: List<TimetableEntry> = emptyList()
+    dayOfWeek: DayOfWeek = DayOfWeek.MONDAY,
+    timetableEntries: List<Timetable> = listOf()
 ) {
     Card(
         modifier = Modifier
@@ -32,20 +36,23 @@ fun TimetableListComponent(
                 modifier = Modifier
                     .padding(vertical = 12.dp)
                     .fillMaxWidth(),
-                text = "Hoje, segunda feira dia 26/10/2023",
+                text = dayOfWeek.localized(),
                 fontSize = 18.sp,
                 textAlign = TextAlign.Center
             )
 
             LazyColumn {
                 items(timetableEntries) {
-                    Text(text = it.startTime)
-                    Text(text = it.endTime)
-                    Text(text = it.subjectId)
+                    Text(text = it.startTime.toMinuteAndSecond())
+                    Text(text = it.endTime.toMinuteAndSecond())
+                    Text(text = it.subject?.name ?: "")
                     Spacer(Modifier.height(4.dp))
                     Divider()
                 }
             }
+
+            if(timetableEntries.isEmpty())
+                Text("Sem eventos para ${dayOfWeek.localized()}")
         }
     }
 }
@@ -53,22 +60,5 @@ fun TimetableListComponent(
 @Preview
 @Composable
 fun TimetableListComponentPreview() {
-    TimetableListComponent(
-        timetableEntries = listOf(
-            TimetableEntry(
-                id = "",
-                weekDays = listOf("segunda", "terca"),
-                startTime = "10:00",
-                endTime = "12:00",
-                subjectId = "Direito"
-            ),
-            TimetableEntry(
-                id = "",
-                weekDays = listOf("segunda", "terca"),
-                startTime = "13:00",
-                endTime = "15:00",
-                subjectId = "Filosofia"
-            )
-        )
-    )
+    TimetableListComponent()
 }

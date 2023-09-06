@@ -5,7 +5,7 @@ import com.core.network.register.RegisterDataProvider
 import com.example.model.CurrentUser
 import javax.inject.Inject
 
-class RegisterRepositoryImp @Inject constructor(
+internal class RegisterRepositoryImp @Inject constructor(
     private val registerDataProvider: RegisterDataProvider
 ) : RegisterRepository {
     override suspend fun signupWithUserCredentials(

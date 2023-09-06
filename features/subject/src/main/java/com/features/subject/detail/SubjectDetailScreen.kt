@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
@@ -24,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.core.designsystem.components.Pill
 import com.core.designsystem.components.row.GridLazyRow
 import com.example.model.Note
+import com.example.model.event.Exam
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,12 +31,10 @@ fun SubjectDetailScreen(
     onBackPressed: () -> Unit,
     subjectName: String = "Test 1",
     notes: List<Note>,
+    exams: List<Exam>,
     onNoteClicked: (Note) -> Unit,
     onDeleteButtonClicked: () -> Unit = {}
 ) {
-
-    val scroll = rememberScrollState()
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -77,15 +75,15 @@ fun SubjectDetailScreen(
 
             Text(modifier = Modifier.padding(horizontal = 8.dp), text = "Provas")
 
-            GridLazyRow(list = notes) { note ->
-                NoteItemCard(item = note, onNoteClicked = { onNoteClicked(note) })
+            GridLazyRow(list = exams) { exam ->
+                ExamItemCard(item = exam, onExamClicked = {/* onNoteClicked(note)*/ })
             }
 
-            Text(modifier = Modifier.padding(horizontal = 8.dp), text = "Notificações")
-
-            GridLazyRow(list = notes) { note ->
+//            Text(modifier = Modifier.padding(horizontal = 8.dp), text = "Notificações")
+//
+//            GridLazyRow(list = notes) { note ->
 //                NoteItemCard(item = note, onNoteClicked = { onNoteClicked(note) })
-            }
+//            }
         }
     }
 }
@@ -100,7 +98,27 @@ fun NoteItemCard(item: Note, onNoteClicked: (Note) -> Unit) {
 
             Spacer(Modifier.height(4.dp))
 
-            Pill(item.label, Color.Blue.copy(0.4f))
+            Pill("change thiss", Color.Blue.copy(0.4f))
+
+//            Row {
+//
+//                Pill("Resumo", Color.Yellow.copy(0.4f))
+////                Pill("Trabalho", Green.copy(0.4f))
+//            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ExamItemCard(item: Exam, onExamClicked: (Exam) -> Unit) {
+    Card(onClick = { onExamClicked(item) }) {
+        Column(Modifier.padding(8.dp)) {
+            Text(text = item.name, maxLines = 2)
+
+            Spacer(Modifier.height(4.dp))
+
+            Pill("change thiss", Color.Blue.copy(0.4f))
 
 //            Row {
 //
@@ -117,7 +135,8 @@ fun SubjectDetailScreenPreview() {
     SubjectDetailScreen(
         onBackPressed = {},
         "",
-        listOf(Note(title = "nota 1"), Note(title = "nota 2")),
+        listOf(),
+        listOf(),
         onNoteClicked = {},
     )
 }

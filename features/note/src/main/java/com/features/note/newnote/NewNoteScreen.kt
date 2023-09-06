@@ -1,14 +1,20 @@
 package com.features.note.newnote
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,24 +25,31 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import com.core.designsystem.components.alert.BasicAlertDialog
 import com.core.designsystem.components.combobox.ComboBox
+import com.core.designsystem.components.fab.FabItem
 import com.core.designsystem.components.fab.FabMenu
+import com.core.designsystem.components.photopicker.imageAndVideoContract
+import com.core.designsystem.components.photopicker.multiplePhotoPicker
+import com.example.model.Label
 import com.example.model.Note
 import com.example.model.Subject
+import com.features.note.NewNoteButtons
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,28 +57,35 @@ import kotlinx.coroutines.launch
 fun NewNoteScreen(
     note: Note,
     saved: Boolean,
-    noteLabels: List<DefaultNoteEnum>,
+    noteLabels: List<Label>,
     subjects: List<Subject>,
-    onSaveClicked: (String, String, String, String) -> Unit,
-    onBackClicked: () -> Unit
+    onSaveClicked: (Note, List<String>) -> Unit,
+    onBackClicked: () -> Unit,
+    onSaveLabel: (Label) -> Unit = {}
 ) {
 
-    val context = LocalContext.current
     val snackBar = SnackbarHostState()
     val coroutineScope = rememberCoroutineScope()
 
     var displayMenu by remember { mutableStateOf(false) }
+    var openLabelDialog by remember { mutableStateOf(false) }
 
     var title by remember { mutableStateOf(note.title) }
     var description by remember { mutableStateOf(note.body) }
-    var subject by remember { mutableStateOf(note.subject) }
+    var subject by remember {
+        mutableStateOf(subjects.firstOrNull() ?: Subject(1, "", "", ""))
+    }
+    var labelText by remember { mutableStateOf("") }
+    val photos: MutableList<Uri> = remember { mutableStateListOf() }
+
+    val photoPicker = multiplePhotoPicker(onPhotosPicked = { photos.addAll(it) })
 
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackBar) },
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = note.title.ifEmpty { "Nova Nota" })
+                    Text(text = title.ifEmpty { "Nova Nota" })
                 },
                 navigationIcon = {
                     IconButton(onClick = { onBackClicked() }) {
@@ -75,10 +95,13 @@ fun NewNoteScreen(
                 actions = {
                     IconButton(onClick = {
                         onSaveClicked(
-                            title,
-                            description,
-                            context.getString(noteLabels.first { it.isSelected }.label),
-                            subject
+                            Note(
+                                title = title,
+                                body = description,
+//                                labels = emptyList(),
+                                subjectId = subject.id
+                            ),
+                            photos.map { it.toString() }
                         )
                     }) {
                         Icon(imageVector = Icons.Filled.Check, contentDescription = "Save Button")
@@ -92,31 +115,41 @@ fun NewNoteScreen(
                     DropdownMenu(
                         expanded = displayMenu,
                         onDismissRequest = { displayMenu = false }) {
-                        noteLabels.forEach { noteEnum ->
+                        noteLabels.forEach { label ->
                             DropdownMenuItem(
                                 text = {
                                     Row(verticalAlignment = CenterVertically) {
-                                        Icon(
-                                            painter = painterResource(id = noteEnum.icon),
-                                            contentDescription = "sajisa"
-                                        )
                                         Text(
                                             modifier = Modifier.padding(start = 2.dp),
-                                            text = stringResource(id = noteEnum.label)
+                                            text = label.name
                                         )
                                     }
                                 },
                                 onClick = {
-                                    noteLabels.map {
-                                        it.apply { isSelected = false }
-                                    }.first {
-                                        it == noteEnum
-                                    }.isSelected = true
+
                                 }
                             )
                         }
                     }
                 },
+            )
+        },
+        floatingActionButton = {
+            FabMenu(
+                items = listOf(
+                    FabItem(NewNoteButtons.CAMERA.icon, NewNoteButtons.CAMERA.label),
+                    FabItem(NewNoteButtons.TAG.icon, NewNoteButtons.TAG.label),
+                ),
+                onFabClicked = {
+                    when (it.icon) {
+                        NewNoteButtons.CAMERA.icon -> {
+                            photoPicker.launch(imageAndVideoContract)
+                        }
+                        NewNoteButtons.TAG.icon -> {
+                            openLabelDialog = true
+                        }
+                    }
+                }
             )
         }
     ) { padding ->
@@ -136,13 +169,24 @@ fun NewNoteScreen(
                 onValueChange = { description = it }
             )
             ComboBox(
-                initialText = subject,
+                initialText = subjects.firstOrNull()?.name ?: "",
                 modifier = Modifier.fillMaxWidth(),
                 items = subjects.map { it.name },
-                onOptionClicked = {
-                    subject = it
+                onOptionClicked = { subjectName ->
+                    subject = subjects.first { subjectName == it.name }
                 }
             )
+
+            LazyRow {
+                items(photos){
+                    AsyncImage(
+                        modifier = Modifier.size(128.dp),
+                        model = it,
+                        contentDescription = "",
+                        contentScale = ContentScale.Crop
+                    )
+                }
+            }
         }
 
         LaunchedEffect(key1 = saved, block = {
@@ -150,5 +194,18 @@ fun NewNoteScreen(
                 coroutineScope.launch { snackBar.showSnackbar(message = "Saved") }
             }
         })
+
+        if (openLabelDialog) {
+            BasicAlertDialog(
+                onDismiss = { openLabelDialog = false }
+            ) {
+                Card(Modifier.padding(4.dp)) {
+                    TextField(value = labelText, onValueChange = { labelText = it })
+                    Button(onClick = { onSaveLabel(Label(name = labelText)) }) {
+                        Text(text = "Salvar")
+                    }
+                }
+            }
+        }
     }
 }

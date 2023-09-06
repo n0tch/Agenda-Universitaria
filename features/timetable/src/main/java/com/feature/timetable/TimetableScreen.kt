@@ -15,12 +15,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.model.TimetableEntry
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,15 +28,6 @@ fun TimetableScreen(
 
     val viewModel: TimetableViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    var timetableEntries: List<TimetableEntry> = remember {
-        mutableStateListOf()
-    }
-
-    when(uiState){
-        is TimetableState.Entries -> { timetableEntries = (uiState as TimetableState.Entries).items }
-        TimetableState.Idle -> {}
-    }
 
     Scaffold(
         topBar = {
@@ -63,7 +51,10 @@ fun TimetableScreen(
                 .padding(paddingValues)
                 .fillMaxSize()
         ) {
-            TimeTableComponent(timetableEntries = timetableEntries)
+            TimeTableComponent(
+                timetableEntries = uiState.items,
+                onWeekDayClicked = { viewModel.fetchTimetableByDay(it) }
+            )
         }
     }
 }

@@ -13,7 +13,7 @@ fun NavGraphBuilder.noteNavGraph(navController: NavController) {
     navigation(route = noteGraphRoute, startDestination = NoteScreens.NOTE_LIST.route) {
         composable(route = NoteScreens.NOTE.route + "/{id}") { backStackEntry ->
             val noteId = backStackEntry.arguments?.getString("id")
-            NoteComponent(navController = navController, noteId = noteId)
+            NoteComponent(navController = navController, noteId = noteId?.toIntOrNull())
         }
 
         composable(route = NoteScreens.NOTE_LIST.route) {

@@ -1,11 +1,8 @@
 package com.example.model
 
-import java.time.LocalDateTime
-
 abstract class ScheduledEvent{
-    abstract val id: String
-    abstract val subjectId: String
+    abstract val id: Int?
+    abstract val subjectId: Int
     abstract val name: String
-    abstract val date: LocalDateTime
-    abstract val color: Int
+    abstract val date: Long
 }

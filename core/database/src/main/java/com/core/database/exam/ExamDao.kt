@@ -1,18 +1,25 @@
 package com.core.database.exam
 
-import com.core.database.databaseModel.ExamDataModel
-import kotlinx.coroutines.flow.Flow
-import java.time.LocalDateTime
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
 
+@Dao
 interface ExamDao {
 
-    fun saveExam(exam: ExamDataModel): Flow<ExamDataModel>
+    @Insert
+    suspend fun saveExam(examEntity: ExamEntity)
 
-    fun fetchExams(): Flow<List<ExamDataModel>>
+    @Delete
+    fun deleteExam(examEntity: ExamEntity)
 
-    fun deleteExam(examId: String): Flow<Boolean>
+    @Query("SELECT * FROM exams")
+    suspend fun fetchExams(): List<ExamEntity>
 
-    fun fetchExamById(examId: String): Flow<ExamDataModel>
+    @Query("SELECT * FROM exams WHERE exams.examId = :examId")
+    suspend fun fetchExamById(examId: Int): ExamEntity
 
-    fun fetchNextExams(fromLocalDate: LocalDateTime = LocalDateTime.now()): Flow<List<ExamDataModel>>
+    @Query("SELECT * FROM exams WHERE exams.date > :fromDateInMillis")
+    suspend fun fetchNextExams(fromDateInMillis: Long): List<ExamEntity>
 }

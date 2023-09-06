@@ -8,12 +8,15 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,11 +25,13 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.example.model.Note
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeNotesHeaderComponent(
-    onNoteClicked: (Note) -> Unit = {}
+    onNoteClicked: (Note) -> Unit = {},
+    onSearch: (String) -> Unit = {}
 ) {
+    var searchText by remember { mutableStateOf("") }
+
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -45,8 +50,11 @@ fun HomeNotesHeaderComponent(
                         width = Dimension.preferredWrapContent
                     }
                     .padding(8.dp),
-                    value = "",
-                    onValueChange = {},
+                    value = searchText,
+                    onValueChange = {
+                        searchText = it
+                        onSearch(searchText)
+                    },
                     placeholder = {
                         Text(text = "Buscar notas")
                     },

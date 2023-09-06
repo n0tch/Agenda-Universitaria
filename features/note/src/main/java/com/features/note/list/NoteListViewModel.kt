@@ -6,6 +6,7 @@ import com.core.common.AppDispatcher
 import com.core.common.Dispatcher
 import com.core.common.Result
 import com.core.domain.NoteUseCase
+import com.example.model.Note
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,17 +24,49 @@ class NoteListViewModel @Inject constructor(
         fetchNotes()
     }
 
-    val uiState: MutableStateFlow<NoteListState> by lazy { MutableStateFlow(NoteListState.Idle) }
+    val uiState: MutableStateFlow<NoteState> by lazy { MutableStateFlow(NoteState()) }
 
     fun fetchNotes() {
         viewModelScope.launch {
-            noteUseCase.fetchNotes().flowOn(uiDispatcher).collect {
-                when(it){
-                    is Result.Error -> uiState.emit(NoteListState.Error(it.exception))
-                    is Result.Success -> uiState.emit(NoteListState.NoteList(it.data))
+            noteUseCase
+                .fetchNotes()
+                .flowOn(uiDispatcher)
+                .collect {
+                    when (it) {
+                        is Result.Error -> uiState.emit(NoteState(exception = it.exception))
+                        is Result.Success -> uiState.emit(NoteState(notes = it.data))
+                    }
                 }
-            }
         }
     }
 
+    fun searchNote(query: String){
+        viewModelScope.launch {
+            noteUseCase
+                .searchNotes(query)
+                .flowOn(uiDispatcher)
+                .collect {
+                    when(it){
+                        is Result.Error -> uiState.emit(NoteState(exception = it.exception))
+                        is Result.Success -> uiState.emit(NoteState(notes = it.data))
+                    }
+                }
+        }
+    }
+
+    fun deleteNote(note: Note) {
+        viewModelScope.launch {
+            noteUseCase
+                .deleteNote(note)
+                .flowOn(uiDispatcher)
+                .collect {
+                    when(it){
+                        is Result.Error -> uiState.emit(NoteState(exception = it.exception))
+                        is Result.Success -> {
+                            uiState.emit(NoteState(notes = uiState.value.notes.filterNot { it.id == note.id }))
+                        }
+                    }
+                }
+        }
+    }
 }

@@ -13,7 +13,7 @@ fun ScheduledEventHolder(
     scheduledEvent: ScheduledEvent
 ) {
     OutlinedCard {
-        Text(text = scheduledEvent.id)
+        Text(text = scheduledEvent.id.toString())
         Text(text = scheduledEvent.name)
         if(scheduledEvent is Exam){
 

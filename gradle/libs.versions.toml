@@ -42,8 +42,8 @@ coilVersion = "2.3.0"
 #Data Store
 dataStore = "1.0.0"
 
-#Gson
 gson = "2.9.0"
+jsonKotlin = "1.3.2"
 core-ktx = "1.10.1"
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
@@ -51,11 +51,17 @@ espresso-core = "3.5.1"
 appcompat = "1.6.1"
 material = "1.9.0"
 
-#Realm
-realm = "1.10.0"
+#Database
+roomVersion = "2.5.2"
 
 #detekt
 detekt = "1.23.1"
+
+#tests
+mockk = "1.13.7"
+turbine = "0.7.0"
+kotlin-coroutine-tests = "1.5.0"
+jupyter-version = "5.8.2"
 
 [libraries]
 
@@ -105,8 +111,19 @@ androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+json-Kotlin = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "jsonKotlin" }
 
-realm = { module = "io.realm.kotlin:library-base", version.ref = "realm" }
+#Database
+room = { module = "androidx.room:room-runtime", version.ref = "roomVersion" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomVersion" }
+room-testing = { module = "androidx.room:room-testing", version.ref = "roomVersion" }
+room-coroutine = { module = "androidx.room:room-ktx", version.ref = "roomVersion" }
+
+#tests
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+turbune = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
+coroutine-tests = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlin-coroutine-tests" }
+jupyter = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "jupyter-version"}
 
 [bundles]
 compose = [
@@ -128,5 +145,4 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
-realm = { id = "io.realm.kotlin", version.ref = "realm" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }

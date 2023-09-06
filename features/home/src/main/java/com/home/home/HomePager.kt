@@ -10,23 +10,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.model.Timetable
+import java.time.DayOfWeek
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomePager(
-    count: Int,
-    homePagerContent: @Composable () -> Unit = {}
+    timetableMap: Map<DayOfWeek, List<Timetable>> = emptyMap(),
+    homePagerContent: @Composable (DayOfWeek, List<Timetable>) -> Unit = { _, _ ->}
 ) {
     val pagerState = rememberPagerState()
 
     Column(modifier = Modifier.fillMaxWidth()) {
         HorizontalPager(
-            pageCount = count,
+            pageCount = timetableMap.size,
             state = pagerState,
             beyondBoundsPageCount = 1,
             contentPadding = PaddingValues(horizontal = 24.dp)
-        ) {
-            homePagerContent()
+        ) { page ->
+            val dayOfWeek = DayOfWeek.of(page + 1)
+            homePagerContent(dayOfWeek, timetableMap[dayOfWeek] ?: emptyList())
         }
     }
 }
@@ -34,5 +37,5 @@ fun HomePager(
 @Preview
 @Composable
 fun HomePagerPreview() {
-    HomePager(count = 1)
+    HomePager()
 }

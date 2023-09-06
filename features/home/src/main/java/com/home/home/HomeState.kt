@@ -1,15 +1,13 @@
 package com.home.home
 
-import com.example.model.CurrentUser
+import com.example.model.Timetable
 import com.example.model.event.Exam
+import java.time.DayOfWeek
 
-sealed class HomeState {
-    class HomeCurrentUser(val currentUser: CurrentUser): HomeState()
-    object HomeIdle: HomeState()
-    class HomeCurrentUserError(val exception: Exception): HomeState()
-    class HomeNextExams(val exams: List<Exam>): HomeState()
-    class Error(val exception: Exception): HomeState()
-}
+data class HomeTimetableState(
+    val items: Map<DayOfWeek, List<Timetable>> = mapOf(),
+    val exception: Exception? = null
+)
 
 data class CurrentUserState(
     val username: String = "",
@@ -23,7 +21,7 @@ data class ExamsState(
     val exception: Exception? = null
 )
 
-sealed class LogoutState: HomeState(){
-    class LogoutError(val exception: Exception): LogoutState()
-    class LogoutSuccess(val isLoggedOut: Boolean) : LogoutState()
-}
+data class LogoutState(
+    val logoutSuccess: Boolean = false,
+    val exception: Exception? = null
+)

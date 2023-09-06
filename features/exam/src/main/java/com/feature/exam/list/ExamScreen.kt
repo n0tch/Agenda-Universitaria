@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.core.designsystem.components.LoadingView
 import com.core.designsystem.components.card.CardForward
+import com.core.designsystem.extensions.toDayMonthYear
 import com.example.model.event.Exam
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,7 +64,7 @@ fun ExamScreen(
                             .padding(bottom = 4.dp)
                             .padding(horizontal = 6.dp),
                         title = exam.name,
-                        body = "${exam.getFormattedDate()} ${exam.subjectId} \n${exam.relatedNotes.size} notas relacionadas",
+                        body = "${exam.date.toDayMonthYear()} ${exam.subjectId} \n${exam.relatedNotes.size} notas relacionadas",
                         onClick = {}
                     )
                 }

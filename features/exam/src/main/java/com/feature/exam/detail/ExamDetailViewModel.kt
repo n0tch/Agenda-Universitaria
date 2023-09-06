@@ -8,6 +8,7 @@ import com.core.common.AppDispatcher
 import com.core.common.Dispatcher
 import com.core.domain.ExamUseCase
 import com.core.domain.SubjectUseCase
+import com.example.model.event.Exam
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,13 +34,12 @@ class ExamDetailViewModel @Inject constructor(
     ) }
 
     val uiState: StateFlow<ExamDetailState> = _uiState
-    val examState: MutableStateFlow<ExamState> by lazy { MutableStateFlow(ExamState()) }
 
     @VisibleForTesting
     private fun fetchSubjects() {
         viewModelScope.launch {
             subjectUseCase
-                .getSubjects()
+                .fetchSubjects()
                 .flowOn(uiDispatcher)
 //                .onStart { _uiState.emit(ExamDetailState(loading = true)) }
                 .collect {
@@ -53,10 +53,10 @@ class ExamDetailViewModel @Inject constructor(
         }
     }
 
-    fun saveExam() {
+    fun saveExam(exam: Exam) {
         viewModelScope.launch {
             examUseCase
-                .saveExam(examState.value.toModel())
+                .saveExam(exam)
                 .onStart { _uiState.emit(ExamDetailState(loading = true)) }
                 .collect {
                     when (it) {

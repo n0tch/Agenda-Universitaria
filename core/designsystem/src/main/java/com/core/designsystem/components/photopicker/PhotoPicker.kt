@@ -6,10 +6,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 
 @Composable
 fun photoPicker(
@@ -22,3 +18,17 @@ fun photoPicker(
         }
     )
 }
+
+@Composable
+fun multiplePhotoPicker(
+    onPhotosPicked: (List<Uri>) -> Unit
+): ManagedActivityResultLauncher<PickVisualMediaRequest, List<Uri>> {
+    return rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickMultipleVisualMedia(),
+        onResult = {
+            onPhotosPicked(it)
+        }
+    )
+}
+
+val imageAndVideoContract = PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)

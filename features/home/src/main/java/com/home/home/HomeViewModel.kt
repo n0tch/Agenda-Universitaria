@@ -16,11 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.format.TextStyle
-import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,33 +28,50 @@ class HomeViewModel @Inject constructor(
     private val examUseCase: ExamUseCase
 ) : ViewModel() {
 
-    val uiState: MutableStateFlow<HomeState> = MutableStateFlow(HomeState.HomeIdle)
-
-    private val _currentUserState: MutableStateFlow<CurrentUserState> = MutableStateFlow(CurrentUserState())
+    private val _currentUserState: MutableStateFlow<CurrentUserState> =
+        MutableStateFlow(CurrentUserState())
     val currentUserState: StateFlow<CurrentUserState> = _currentUserState.asStateFlow()
 
-    private val _examsState: MutableStateFlow<ExamsState> = MutableStateFlow(ExamsState())
+    private val _examsState: MutableStateFlow<ExamsState> =
+        MutableStateFlow(ExamsState())
     val examsState: StateFlow<ExamsState> = _examsState.asStateFlow()
 
-    fun fetchTimetableByWeekDay(){
-        val today = LocalDate.now().dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())
+    private val _logoutState: MutableStateFlow<LogoutState> =
+        MutableStateFlow(LogoutState())
+    val logoutState: StateFlow<LogoutState> = _logoutState.asStateFlow()
+
+    private val _timetableState: MutableStateFlow<HomeTimetableState> =
+        MutableStateFlow(HomeTimetableState())
+    val timetableState: StateFlow<HomeTimetableState> = _timetableState.asStateFlow()
+
+    fun fetchTimetableByWeekDay() {
         viewModelScope.launch {
-            homeUseCase.fetchTimetableByDay(today).collect {
-                when(it){
-                    is Result.Error -> {}
-                    is Result.Success -> {}
+            homeUseCase
+                .fetchWeeklyTimeTable()
+                .flowOn(uiDispatcher)
+                .collect {
+                    when (it) {
+                        is Result.Error ->
+                            _timetableState.emit(HomeTimetableState(exception = it.exception))
+
+                        is Result.Success ->
+                            _timetableState.emit(HomeTimetableState(items = it.data))
+                    }
                 }
-            }
         }
     }
 
     fun fetchCurrentUser() {
         viewModelScope.launch {
-            userUseCase.fetchCurrentUser().flowOn(uiDispatcher).collect {
+            userUseCase
+                .fetchCurrentUser()
+                .flowOn(uiDispatcher)
+                .collect {
                 when (it) {
                     is Result.Error -> {
                         _currentUserState.emit(CurrentUserState(exception = it.exception))
                     }
+
                     is Result.Success -> {
                         _currentUserState.emit(
                             CurrentUserState(
@@ -77,11 +90,10 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             loginUseCase.logout()
                 .flowOn(uiDispatcher)
-                .onStart { uiState.emit(HomeState.HomeIdle) }
                 .collect {
                     when (it) {
-                        is Result.Error -> uiState.emit(LogoutState.LogoutError(it.exception))
-                        is Result.Success -> uiState.emit(LogoutState.LogoutSuccess(it.data))
+                        is Result.Error -> _logoutState.emit(LogoutState(exception = it.exception))
+                        is Result.Success -> _logoutState.emit(LogoutState(logoutSuccess = it.data))
                     }
                 }
         }
@@ -92,15 +104,14 @@ class HomeViewModel @Inject constructor(
             examUseCase.fetchNextExams()
                 .flowOn(uiDispatcher)
                 .collect {
-                    when(it){
+                    when (it) {
                         is Result.Error -> {
                             _examsState.emit(ExamsState(exception = it.exception))
-                            uiState.emit(HomeState.Error(it.exception))
                         }
+
                         is Result.Success -> {
-                            _examsState.emit(ExamsState(nextExams = it.data))
                             Log.e("next exams", it.data.toString())
-                            uiState.emit(HomeState.HomeNextExams(it.data))
+                            _examsState.emit(ExamsState(nextExams = it.data))
                         }
                     }
                 }

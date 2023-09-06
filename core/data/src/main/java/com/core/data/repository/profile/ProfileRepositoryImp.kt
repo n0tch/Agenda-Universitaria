@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-class ProfileRepositoryImp @Inject constructor(
+internal class ProfileRepositoryImp @Inject constructor(
     @Dispatcher(AppDispatcher.IO) private val ioDispatcher: CoroutineDispatcher,
     private val profileDataProvider: ProfileDataProvider
 ) : ProfileRepository {

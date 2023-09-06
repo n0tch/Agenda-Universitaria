@@ -13,26 +13,22 @@ import androidx.compose.ui.unit.dp
 import java.time.DayOfWeek
 import java.time.format.TextStyle
 import java.util.Locale
-import kotlin.random.Random
 
 @Composable
 fun DayOfWeekHeader(
     weekDays: Array<DayOfWeek> = DayOfWeek.values(),
-    onClick: (String) -> Unit = {}
+    onClick: (DayOfWeek) -> Unit = {}
 ) {
 
     Column(modifier = Modifier.fillMaxWidth()) {
 
         LazyRow(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            items(weekDays) {
+            items(weekDays) { dayOfWeek ->
                 DayCard(
                     modifier = Modifier.padding(horizontal = 2.dp),
                     isSelected = false,
-                    text = it.getDisplayName(TextStyle.FULL, Locale.getDefault()),
-                    indicatorCount = Random.nextInt(4),
-                    onClick = {
-                        onClick(it)
-                    }
+                    text = dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()),
+                    onClick = { onClick(dayOfWeek) }
                 )
             }
         }

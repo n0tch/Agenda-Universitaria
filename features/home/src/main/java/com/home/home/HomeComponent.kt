@@ -9,15 +9,12 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.core.designsystem.components.ToastComponent
-import com.example.model.TimetableEntry
 import com.home.home.drawer.DrawerBody
 import kotlinx.coroutines.launch
 
@@ -31,33 +28,16 @@ fun HomeComponent(
 ) {
 
     val viewModel: HomeViewModel = hiltViewModel()
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     val currentUserState by viewModel.currentUserState.collectAsStateWithLifecycle()
     val examsState by viewModel.examsState.collectAsStateWithLifecycle()
+    val timetableState by viewModel.timetableState.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit, block = {
         viewModel.fetchCurrentUser()
         viewModel.fetchNextExams()
+        viewModel.fetchTimetableByWeekDay()
     })
-
-    var timetable: List<TimetableEntry> = remember {
-        mutableStateListOf(
-            TimetableEntry(
-                id = "",
-                weekDays = listOf("segunda", "terca"),
-                startTime = "10:00",
-                endTime = "12:00",
-                subjectId = "Direito"
-            ),
-            TimetableEntry(
-                id = "",
-                weekDays = listOf("segunda", "terca"),
-                startTime = "13:00",
-                endTime = "15:00",
-                subjectId = "Filosofia"
-            )
-        )
-    }
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutine = rememberCoroutineScope()
@@ -70,25 +50,6 @@ fun HomeComponent(
             ToastComponent(message = "Erro ao buscar exams")
         }
     }
-//    when (uiState) {
-//        is HomeState.HomeCurrentUser -> {}
-//
-//        HomeState.HomeIdle -> {}
-//        is HomeState.HomeCurrentUserError ->
-//            ToastComponent(message = (uiState as HomeState.HomeCurrentUserError).exception.message.toString())
-//
-//        is LogoutState.LogoutError ->
-//            ToastComponent(message = (uiState as LogoutState.LogoutError).exception.message.toString())
-//
-//        is LogoutState.LogoutSuccess -> {
-//            LaunchedEffect(key1 = Unit, block = {
-//                onLogout()
-//            })
-//        }
-//
-//        is HomeState.Error -> {}
-//        is HomeState.HomeNextExams -> {}
-//    }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -111,7 +72,7 @@ fun HomeComponent(
             ) {
                 HomeScreen(
                     currentUserState = currentUserState,
-                    timetable = timetable,
+                    timetable = timetableState.items,
                     onProfileClick = {
                         if (drawerState.isOpen) {
                             coroutine.launch { drawerState.close() }

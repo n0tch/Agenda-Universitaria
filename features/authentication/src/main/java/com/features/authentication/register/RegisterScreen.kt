@@ -1,8 +1,6 @@
 package com.features.authentication.register
 
 import android.net.Uri
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -36,10 +34,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.core.designsystem.components.LoadingView
+import com.core.designsystem.components.photopicker.imageAndVideoContract
 import com.core.designsystem.components.photopicker.photoPicker
 import com.core.designsystem.ui.LightBlue
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
     isLoading: Boolean,
@@ -74,7 +72,7 @@ fun RegisterScreen(
                     .border(2.dp, Color.Black, RoundedCornerShape(16.dp))
                     .clip(RoundedCornerShape(16.dp))
                     .clickable {
-                        photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                        photoPicker.launch(imageAndVideoContract)
                     },
                 model = profileUri,
                 contentScale = ContentScale.Crop,

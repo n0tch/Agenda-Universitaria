@@ -1,14 +1,20 @@
 package com.features.note.newnote
 
-import com.example.model.Note
+import com.example.model.Label
+import com.example.model.NoteCompound
 import com.example.model.Subject
 
-sealed class NoteState {
-    object NoteIdle : NoteState()
-    object NoteLoading : NoteState()
-    class NoteSaved(val noteId: String) : NoteState()
-    class NoteException(val exception: Exception) : NoteState()
-    class NoteLabels(val labels: List<String>) : NoteState()
-    class SubjectList(val items: List<Subject>) : NoteState()
-    class FetchNoteSuccess(val note: Note) : NoteState()
-}
+data class NoteState(
+    val isLoading: Boolean = false,
+    val noteCompound: NoteCompound = NoteCompound(),
+    val noteSaved: Boolean = false,
+    val exception: Exception? = null
+)
+
+data class LabelState(
+    val labels: List<Label> = emptyList(),
+)
+
+data class SubjectsState(
+    val subjects: List<Subject> = emptyList()
+)

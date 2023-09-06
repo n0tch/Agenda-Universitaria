@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.core.domain.SubjectUseCase
 import com.core.domain.TimetableUseCase
 import com.core.common.Result
-import com.example.model.TimetableEntry
+import com.example.model.Timetable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -25,7 +25,7 @@ class NewTimetableViewModel @Inject constructor(
 
     val uiState: MutableStateFlow<NewTimetableState> by lazy { MutableStateFlow(NewTimetableState.Idle) }
 
-    fun saveTimetable(entry: TimetableEntry) {
+    fun saveTimetable(entry: Timetable) {
         viewModelScope.launch {
             timetableUseCase.saveTimetableEntry(entry).collect { Log.e("asas", "sssssss") }
         }
@@ -34,7 +34,7 @@ class NewTimetableViewModel @Inject constructor(
     @VisibleForTesting
     private fun fetchSubjects() {
         viewModelScope.launch {
-            subjectUseCase.getSubjects().collect {
+            subjectUseCase.fetchSubjects().collect {
                 when (it) {
                     is Result.Error -> {}
                     is Result.Success -> uiState.emit(NewTimetableState.Subjects(it.data))

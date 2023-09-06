@@ -1,11 +1,21 @@
 package com.core.database.timetable
 
-import com.core.database.databaseModel.TimetableDatabaseModel
-import kotlinx.coroutines.flow.Flow
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
 
+@Dao
 interface TimetableDao {
 
-    fun saveTimetable(): Flow<Boolean>
+    @Insert
+    suspend fun saveTimetable(timetableEntity: TimetableEntity)
 
-    fun fetchTimetable(): Flow<Map<String, List<TimetableDatabaseModel>>>
+    @Query("SELECT * FROM timetables")
+    suspend fun fetchTimetable(): List<TimetableEntity>
+
+    @Query("SELECT * FROM timetables GROUP BY timetables.weekDay")
+    suspend fun fetchTimetableGroupedByWeekDay(): List<TimetableEntity>
+
+    @Query("SELECT * FROM timetables WHERE timetables.weekDay = :weekDay")
+    suspend fun fetchTimetableByWeekDay(weekDay: String): List<TimetableEntity>
 }

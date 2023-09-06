@@ -12,7 +12,6 @@ import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -21,19 +20,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.core.designsystem.components.alert.BasicAlertDialog
 import com.core.designsystem.components.combobox.ComboBox
 import com.example.model.Subject
-import com.example.model.TimetableEntry
+import com.example.model.Timetable
 import com.feature.timetable.WeekChip
 import java.time.DayOfWeek
 import java.time.format.TextStyle
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun NewTimetableScreen(
     subjects: List<Subject> = emptyList(),
-    onSaveButtonClicked: (TimetableEntry) -> Unit
+    onSaveButtonClicked: (Timetable) -> Unit
 ) {
-    val selectedWeekDays = remember { mutableStateListOf<String>() }
+    var selectedWeekDays by remember { mutableStateOf(DayOfWeek.MONDAY) }
     var subject by remember { mutableStateOf("") }
 
     var startTimerPicker by remember { mutableStateOf(false) }
@@ -47,23 +47,6 @@ fun NewTimetableScreen(
     Column {
         Text("Selecione o(s) dia(s) da aula")
 
-        FlowRow {
-            DayOfWeek.values().forEach {
-                WeekChip(
-                    text = it.getDisplayName(
-                        TextStyle.FULL,
-                        Locale.getDefault()
-                    )
-                ) { text, selected ->
-                    if (selected) {
-                        selectedWeekDays.add(text)
-                    } else {
-                        selectedWeekDays.remove(text)
-                    }
-                }
-            }
-        }
-
         ComboBox(
             initialText = "",
             modifier = Modifier.fillMaxWidth(),
@@ -72,6 +55,24 @@ fun NewTimetableScreen(
                 subject = it
             }
         )
+
+        FlowRow {
+            DayOfWeek.values().forEach { weekDay ->
+                WeekChip(
+                    text = weekDay.getDisplayName(
+                        TextStyle.FULL,
+                        Locale.getDefault()
+                    )
+                ) { text, selected ->
+                    if (selected) {
+                        selectedWeekDays = weekDay
+                    } else {
+//                        selectedWeekDays.remove(weekDay)
+                    }
+                }
+            }
+        }
+
         Row {
             OutlinedButton(
                 onClick = { startTimerPicker = true }
@@ -85,12 +86,12 @@ fun NewTimetableScreen(
 
         OutlinedButton(modifier = Modifier.fillMaxWidth(), onClick = {
             onSaveButtonClicked(
-                TimetableEntry(
-                    id = "",
-                    weekDays = selectedWeekDays,
-                    subjectId = subjects.find { it.name == subject }?.id ?: "",
-                    startTime = "${timePickerState.hour}:${timePickerState.minute}",
-                    endTime = "${endTimePickerState.hour}:${endTimePickerState.minute}"
+                Timetable(
+                    weekDay = selectedWeekDays.name,
+                    //TODO remove thissss
+                    subject = subjects.find { it.name == subject }!!,
+                    startTime = convertSelectedTime(timePickerState.hour, timePickerState.minute),
+                    endTime = convertSelectedTime(endTimePickerState.hour, endTimePickerState.minute),
                 )
             )
         }) {
@@ -107,6 +108,12 @@ fun NewTimetableScreen(
             TimePicker(state = endTimePickerState)
         }
     }
+}
+
+fun convertSelectedTime(hour: Int, minute: Int): Long {
+    val h = TimeUnit.HOURS.toMillis(hour.toLong())
+    val m = TimeUnit.MINUTES.toMillis(minute.toLong())
+    return h + m
 }
 
 @Preview

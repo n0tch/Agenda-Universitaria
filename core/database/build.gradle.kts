@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt)
-    alias(libs.plugins.realm)
 }
 
 android {
@@ -41,6 +40,7 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)
+    implementation(libs.gson)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -49,6 +49,12 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
 
-    //realm
-    implementation(libs.realm)
+    //database
+    implementation(libs.room)
+    implementation(libs.room.coroutine)
+    annotationProcessor(libs.room.compiler)
+    kapt(libs.room.compiler)
+    testImplementation(libs.room.testing)
+
+    testImplementation(libs.mockk)
 }

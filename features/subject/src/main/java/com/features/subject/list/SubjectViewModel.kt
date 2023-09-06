@@ -10,6 +10,8 @@ import com.example.model.Subject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onStart
@@ -26,19 +28,25 @@ class SubjectViewModel @Inject constructor(
         fetchSubjects()
     }
 
-    val uiState: MutableStateFlow<SubjectState> by lazy { MutableStateFlow(SubjectState.Idle) }
+    private val _uiState: MutableStateFlow<SubjectState> by lazy {
+        MutableStateFlow(SubjectState())
+    }
+
+    val uiState: StateFlow<SubjectState> = _uiState.asStateFlow()
 
     fun saveSubject(subject: Subject) {
         viewModelScope.launch {
             subjectUseCase
                 .saveSubject(subject)
                 .flowOn(uiDispatcher)
-                .onStart { uiState.emit(SubjectState.Loading) }
-                .catch { uiState.emit(SubjectState.Error(it as Exception)) }
+                .onStart { _uiState.emit(SubjectState(isLoading = true)) }
+                .catch { _uiState.emit(SubjectState(exception = it as Exception)) }
                 .collect {
                     when (it) {
-                        is Result.Error -> uiState.emit(SubjectState.Error(it.exception))
-                        is Result.Success -> uiState.emit(SubjectState.SavedSuccess(it.data))
+                        is Result.Error ->
+                            _uiState.emit(SubjectState(exception = it.exception))
+                        is Result.Success ->
+                            _uiState.emit(SubjectState(subjectId = it.data.id))
                     }
                 }
         }
@@ -47,13 +55,15 @@ class SubjectViewModel @Inject constructor(
     fun fetchSubjects(){
         viewModelScope.launch {
             subjectUseCase
-                .getSubjects()
+                .fetchSubjects()
                 .flowOn(uiDispatcher)
-                .catch { uiState.emit(SubjectState.Error(it as Exception)) }
+                .catch { _uiState.emit(SubjectState(exception = it as Exception)) }
                 .collect {
                     when(it){
-                        is Result.Error -> uiState.emit(SubjectState.Error(it.exception))
-                        is Result.Success -> uiState.emit(SubjectState.FetchSuccess(it.data))
+                        is Result.Error ->
+                            _uiState.emit(SubjectState(exception = it.exception))
+                        is Result.Success ->
+                            _uiState.emit(SubjectState(subjects = it.data))
                     }
                 }
         }

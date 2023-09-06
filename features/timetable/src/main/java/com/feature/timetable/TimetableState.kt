@@ -1,8 +1,9 @@
 package com.feature.timetable
 
-import com.example.model.TimetableEntry
+import com.example.model.Timetable
 
-sealed class TimetableState {
-    object Idle: TimetableState()
-    class Entries(val items: List<TimetableEntry>) : TimetableState()
-}
+data class TimetableState(
+    val isLoading: Boolean = false,
+    val exception: Exception? = null,
+    val items: List<Timetable> = listOf()
+)

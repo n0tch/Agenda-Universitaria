@@ -16,14 +16,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.core.designsystem.components.card.CardForward
-import com.example.model.TimetableEntry
+import com.core.designsystem.extensions.toDayMonthYear
+import com.example.model.Timetable
 import com.example.model.event.Exam
+import java.time.DayOfWeek
 
 @Composable
 fun HomeScreen(
     currentUserState: CurrentUserState,
     nextExams: List<Exam>,
-    timetable: List<TimetableEntry>,
+    timetable: Map<DayOfWeek, List<Timetable>>,
     onProfileClick: () -> Unit,
     onFloatingActionButtonClicked: () -> Unit
 ) {
@@ -49,8 +51,8 @@ fun HomeScreen(
                 textAlign = TextAlign.Center
             )
 
-            HomePager(count = timetable.size,homePagerContent = {
-                TimetableListComponent(timetableEntries = timetable)
+            HomePager(timetableMap = timetable, homePagerContent = { dayOfWeek, entries ->
+                TimetableListComponent(dayOfWeek = dayOfWeek, timetableEntries = entries)
             })
 
             LazyColumn{
@@ -60,7 +62,7 @@ fun HomeScreen(
                 }
 
                 items(nextExams){ exam ->
-                    CardForward(title = exam.name, body = exam.date.toString(), onClick = {})
+                    CardForward(title = exam.name, body = exam.date.toDayMonthYear(), onClick = {})
                 }
             }
 //            UpcomingEventsList()
@@ -82,7 +84,7 @@ fun HomeScreenPreview() {
     HomeScreen(
         currentUserState = CurrentUserState(),
         nextExams = listOf(),
-        timetable = listOf(),
+        timetable = mapOf(),
         onProfileClick = {},
         onFloatingActionButtonClicked = {})
 }

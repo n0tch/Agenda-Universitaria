@@ -15,7 +15,7 @@ fun NavGraphBuilder.subjectGraph(navController: NavController) {
     navigation(route = subjectGraphRoute, startDestination = SubjectScreens.SUBJECTS.route) {
         composable(route = SubjectScreens.SUBJECTS.route) {
             SubjectComponent(
-                navController = navController,
+                onBackPressed = { navController.popBackStack() },
                 navigateToSubjectDetail = { name, id ->
                     navController.navigate(SubjectScreens.SUBJECT_DETAIL.route + "/${name}/${id}")
                 }
@@ -24,11 +24,11 @@ fun NavGraphBuilder.subjectGraph(navController: NavController) {
 
         composable(route = SubjectScreens.SUBJECT_DETAIL.route + "/{name}/{id}") { backStackEntry ->
             val subjectName = backStackEntry.arguments?.getString("name") ?: ""
-            val subjectId = backStackEntry.arguments?.getString("id") ?: ""
+            val subjectId = backStackEntry.arguments?.getString("id")
             SubjectDetailComponent(
                 onBackPressed = { navController.popBackStack() },
                 subjectName = subjectName,
-                subjectId = subjectId,
+                subjectId = subjectId?.toIntOrNull() ?: -1,
                 onNavigateToNote = { noteId -> navController.navigate(NoteScreens.NOTE.route + "/$noteId") }
             )
         }

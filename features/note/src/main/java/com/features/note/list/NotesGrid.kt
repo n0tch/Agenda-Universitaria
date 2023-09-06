@@ -1,7 +1,6 @@
 package com.features.note.list
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,9 +10,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,16 +36,27 @@ import com.example.model.Note
 fun NotesGrid(
     notes: List<Note> = emptyList(),
     onNoteClicked: (Note) -> Unit = {},
-    onNoteSelected: (Note) -> Unit = {}
+    onNoteSelected: (Note) -> Unit = {},
+    onDeleteClicked: (Note) -> Unit = {}
 ) {
     GridLazyRow(list = notes) {
-        NoteItemCard(item = it, onNoteClicked = onNoteClicked, onNoteSelected = onNoteSelected)
+        NoteItemCard(
+            item = it,
+            onNoteClicked = onNoteClicked,
+            onNoteSelected = onNoteSelected,
+            onDeleteClicked = onDeleteClicked
+        )
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun NoteItemCard(item: Note, onNoteClicked: (Note) -> Unit, onNoteSelected: (Note) -> Unit) {
+fun NoteItemCard(
+    item: Note,
+    onNoteClicked: (Note) -> Unit,
+    onNoteSelected: (Note) -> Unit,
+    onDeleteClicked: (Note) -> Unit
+) {
     var enableSelection by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier.combinedClickable(
@@ -67,6 +80,9 @@ fun NoteItemCard(item: Note, onNoteClicked: (Note) -> Unit, onNoteSelected: (Not
                 if(enableSelection){
                     Checkbox(checked = true, onCheckedChange = {})
                 }
+                IconButton(onClick = { onDeleteClicked(item) }){
+                    Icon(imageVector = Icons.Filled.Delete, contentDescription = "Add Label")
+                }
             }
             Text(text = item.body)
 
@@ -84,22 +100,5 @@ fun NoteItemCard(item: Note, onNoteClicked: (Note) -> Unit, onNoteSelected: (Not
 @Preview
 @Composable
 fun NotesGripPreview() {
-    NotesGrid(
-        listOf(
-            Note(
-                id = "1",
-                title = "Titulo",
-                body = "Descrição",
-                label = "label",
-                subject = "Direito"
-            ),
-            Note(
-                id = "1",
-                title = "Titulo",
-                body = "Descrição",
-                label = "label",
-                subject = "Direito"
-            )
-        )
-    ) {}
+    NotesGrid(listOf()) {}
 }

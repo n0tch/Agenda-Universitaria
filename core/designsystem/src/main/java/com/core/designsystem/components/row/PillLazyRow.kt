@@ -6,6 +6,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +23,11 @@ fun PillLazyRow(pillList: List<String>) {
     LazyRow(modifier = Modifier.padding(start = 8.dp)) {
         items(pillList) {
             PillItem(it, Color.Gray.copy(alpha = .4f))
+        }
+        item{
+            IconButton(onClick = {}){
+                Icon(imageVector = Icons.Filled.Add, contentDescription = "Add Label")
+            }
         }
     }
 }

@@ -14,10 +14,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import com.example.model.TimetableEntry
+import com.core.designsystem.extensions.toMinuteAndSecond
+import com.example.model.Subject
+import com.example.model.Timetable
+import java.time.DayOfWeek
 
 @Composable
-fun ScheduleCard(item: TimetableEntry) {
+fun ScheduleCard(item: Timetable) {
     Card(modifier = Modifier
         .fillMaxWidth()
         .padding(4.dp)) {
@@ -34,7 +37,7 @@ fun ScheduleCard(item: TimetableEntry) {
                         top.linkTo(parent.top)
                         start.linkTo(parent.start)
                     },
-                    text = item.startTime
+                    text = item.startTime.toMinuteAndSecond()
                 )
 
                 Text(
@@ -42,7 +45,7 @@ fun ScheduleCard(item: TimetableEntry) {
                         start.linkTo(parent.start)
                         top.linkTo(startRef.bottom)
                     },
-                    text = item.endTime
+                    text = item.endTime.toMinuteAndSecond()
                 )
 
                 Text(
@@ -50,7 +53,7 @@ fun ScheduleCard(item: TimetableEntry) {
                         top.linkTo(endRef.bottom)
                         start.linkTo(parent.start)
                     },
-                    text = "item.teacherName"
+                    text = item.subject?.teacher ?: ""
                 )
 
                 Text(
@@ -62,7 +65,7 @@ fun ScheduleCard(item: TimetableEntry) {
                         width = Dimension.wrapContent
                         verticalChainWeight = 0f
                     },
-                    text = "item.subject",
+                    text = item.subject?.name ?: "",
                     textAlign = TextAlign.Center,
                 )
 
@@ -73,7 +76,7 @@ fun ScheduleCard(item: TimetableEntry) {
                         end.linkTo(subjectRef.end)
                         bottom.linkTo(parent.bottom)
                     },
-                    text = "item.placeName"
+                    text = item.subject?.place ?: ""
                 )
             }
         }
@@ -83,5 +86,5 @@ fun ScheduleCard(item: TimetableEntry) {
 @Preview
 @Composable
 fun ScheduleCardPreview() {
-    ScheduleCard(TimetableEntry(id = "",listOf("Segunda", "Quarta"), "19:00", "20:40", "ATP"))
+    ScheduleCard(Timetable(id = 1, DayOfWeek.MONDAY.name, 19L, 20L, Subject.getMock()))
 }
