@@ -1,7 +1,11 @@
 package com.core.data.repository.label
 
+import com.core.data.repository.note.toNote
+import com.core.data.repository.note.toNoteCompound
 import com.core.database.label.LabelDao
 import com.example.model.Label
+import com.example.model.Note
+import com.example.model.NoteCompound
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

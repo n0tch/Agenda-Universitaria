@@ -5,9 +5,11 @@ import com.core.common.AppDispatcher
 import com.core.common.Dispatcher
 import com.core.common.Result
 import com.core.data.repository.label.LabelRepository
+import com.core.data.repository.note.NoteLabelRepository
 import com.core.data.repository.note.NoteRepository
 import com.core.data.repository.notemedia.NoteMediaRepository
 import com.core.data.repository.subject.SubjectRepository
+import com.example.model.Label
 import com.example.model.Note
 import com.example.model.NoteCompound
 import kotlinx.coroutines.CoroutineDispatcher
@@ -22,21 +24,26 @@ class NoteUseCase @Inject constructor(
     private val noteRepository: NoteRepository,
     private val subjectRepository: SubjectRepository,
     private val labelRepository: LabelRepository,
+    private val noteLabelRepository: NoteLabelRepository,
     private val noteMediaRepository: NoteMediaRepository
 ) {
 
     fun saveNote(
         note: Note,
-        uriPaths: List<String>
+        uriPaths: List<String>,
+        labels: List<Label>
     ): Flow<Result<String>> = flow<Result<String>> {
+
         val savedNote = noteRepository.saveNote(note)
-        noteMediaRepository.saveNoteMedia(savedNote.id, uriPaths)
+        val media = noteMediaRepository.saveNoteMedias(savedNote.id, uriPaths)
+        noteLabelRepository.saveNoteLabels(savedNote.id, labels.map { it.id })
+
         emit(Result.Success(savedNote.id.toString()))
     }.flowOn(ioDispatcher).catch {
         emit(Result.Error(it as Exception))
     }
 
-    fun fetchNotes(): Flow<Result<List<Note>>> = flow<Result<List<Note>>> {
+    fun fetchNotes(): Flow<Result<List<NoteCompound>>> = flow<Result<List<NoteCompound>>> {
         val notes = noteRepository.fetchNotes()
         emit(Result.Success(notes))
     }.flowOn(ioDispatcher).catch {
@@ -44,7 +51,7 @@ class NoteUseCase @Inject constructor(
         emit(Result.Error(it as Exception))
     }
 
-    fun searchNotes(query: String): Flow<Result<List<Note>>> = flow<Result<List<Note>>> {
+    fun searchNotes(query: String): Flow<Result<List<NoteCompound>>> = flow<Result<List<NoteCompound>>> {
         val notes = noteRepository.searchNote(query)
         emit(Result.Success(notes))
     }.flowOn(ioDispatcher).catch {
@@ -69,6 +76,13 @@ class NoteUseCase @Inject constructor(
             val noteCompound = noteRepository.fetchNoteById(noteId)
             emit(Result.Success(noteCompound))
         }
+    }.flowOn(ioDispatcher).catch {
+        emit(Result.Error(it as Exception))
+    }
+
+    suspend fun fetchNotesByLabel(label: Label): Flow<Result<List<NoteCompound>>> = flow<Result<List<NoteCompound>>>{
+        val notes = noteRepository.fetchNotesByLabelId(label.id)
+        emit(Result.Success(notes))
     }.flowOn(ioDispatcher).catch {
         emit(Result.Error(it as Exception))
     }

@@ -14,6 +14,7 @@ import com.core.database.label.LabelEntity
 import com.core.database.media.NoteMediaDao
 import com.core.database.media.MediaEntity
 import com.core.database.note.relations.NoteLabelCrossRef
+import com.core.database.note.relations.NoteLabelDao
 import com.core.database.note.relations.NoteMediaCrossRef
 import com.core.database.subject.SubjectDao
 import com.core.database.subject.SubjectEntity
@@ -43,4 +44,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun timetableDao(): TimetableDao
     abstract fun examDao(): ExamDao
     abstract fun noteMediaDao(): NoteMediaDao
+    abstract fun noteLabelDao(): NoteLabelDao
 }

@@ -18,17 +18,16 @@ fun SubjectDetailComponent(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit, block = {
-        viewModel.fetchSubjectCompound(subjectId)
+        viewModel.fetchSubject(subjectId)
     })
 
     SubjectDetailScreen(
         onBackPressed = { onBackPressed() },
         subjectName = subjectName,
-        notes = uiState.subjectCompound.notes,
-        exams = uiState.subjectCompound.exams,
+        subject = uiState.subjectCompound,
         onNoteClicked = { onNavigateToNote(it.id) },
         onDeleteButtonClicked = {
-            viewModel.deleteSubject(subjectId)
+            viewModel.deleteSubject(uiState.subjectCompound.subject)
         }
     )
 }

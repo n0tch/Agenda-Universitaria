@@ -44,9 +44,9 @@ class NewNoteViewModel @Inject constructor(
     private val _subjectsState: MutableStateFlow<SubjectsState> by lazy { MutableStateFlow(SubjectsState()) }
     val subjectsState: StateFlow<SubjectsState> = _subjectsState.asStateFlow()
 
-    fun saveNote(note: Note, uriPaths: List<String>) {
+    fun saveNote(note: Note, uriPaths: List<String>, labels: List<Label>) {
         viewModelScope.launch {
-            noteUseCase.saveNote(note, uriPaths).onStart {
+            noteUseCase.saveNote(note, uriPaths, labels).onStart {
                 _uiState.emit(NoteState(isLoading = true))
             }.collect {
                 when (it) {

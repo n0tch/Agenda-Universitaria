@@ -27,7 +27,7 @@ internal class TimetableRepositoryImp @Inject constructor(
     ): Flow<Map<String, List<Timetable>>> = flow {
         val timetables = timetableDao.fetchTimetable().map { entity ->
             val subject = subjectDao.fetchSubjectById(entity.subjectId)
-            entity.toTimetable(subject?.toSubject())
+            entity.toTimetable(subject.subject.toSubject())
         }.groupBy { it.weekDay }
 
         emit(timetables)
@@ -38,7 +38,7 @@ internal class TimetableRepositoryImp @Inject constructor(
     ): Flow<List<Timetable>> = flow {
         val timetable = timetableDao.fetchTimetableByWeekDay(weekDay.name).map { entity ->
             val subjectEntity = subjectDao.fetchSubjectById(entity.subjectId)
-            entity.toTimetable(subjectEntity?.toSubject())
+            entity.toTimetable(subjectEntity.subject.toSubject())
         }
 
         emit(timetable)
@@ -49,7 +49,7 @@ internal class TimetableRepositoryImp @Inject constructor(
         DayOfWeek.values().forEach { dayOfWeek ->
             val timetable = timetableDao.fetchTimetableByWeekDay(dayOfWeek.name).map { entity ->
                 val subjectEntity = subjectDao.fetchSubjectById(entity.subjectId)
-                entity.toTimetable(subjectEntity?.toSubject())
+                entity.toTimetable(subjectEntity.subject.toSubject())
             }
 
             timetables[dayOfWeek] = timetable

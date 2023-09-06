@@ -1,5 +1,6 @@
 package com.core.domain
 
+import android.util.Log
 import com.core.common.AppDispatcher
 import com.core.common.Dispatcher
 import com.core.common.Result
@@ -32,6 +33,10 @@ class LabelUseCase @Inject constructor(
         labelRepository
             .fetchNoteLabels()
             .flowOn(ioDispatcher)
+            .catch {
+                Log.e("fetchNoteLabels", "${it.message}")
+                emit(Result.Error(it as Exception))
+            }
             .map { Result.Success(it) }
             .collect { emit(it) }
     }

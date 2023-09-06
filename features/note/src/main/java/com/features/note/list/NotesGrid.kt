@@ -31,10 +31,11 @@ import androidx.compose.ui.unit.dp
 import com.core.designsystem.components.Pill
 import com.core.designsystem.components.row.GridLazyRow
 import com.example.model.Note
+import com.example.model.NoteCompound
 
 @Composable
 fun NotesGrid(
-    notes: List<Note> = emptyList(),
+    notes: List<NoteCompound> = emptyList(),
     onNoteClicked: (Note) -> Unit = {},
     onNoteSelected: (Note) -> Unit = {},
     onDeleteClicked: (Note) -> Unit = {}
@@ -52,7 +53,7 @@ fun NotesGrid(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun NoteItemCard(
-    item: Note,
+    item: NoteCompound,
     onNoteClicked: (Note) -> Unit,
     onNoteSelected: (Note) -> Unit,
     onDeleteClicked: (Note) -> Unit
@@ -60,9 +61,9 @@ fun NoteItemCard(
     var enableSelection by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier.combinedClickable(
-            onClick = { onNoteClicked(item) },
+            onClick = { onNoteClicked(item.note) },
             onLongClick = {
-                onNoteSelected(item)
+                onNoteSelected(item.note)
                 enableSelection = enableSelection.not()
             }
         )
@@ -76,22 +77,24 @@ fun NoteItemCard(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = item.title, maxLines = 2)
+                Text(text = item.note.title, maxLines = 2)
                 if(enableSelection){
                     Checkbox(checked = true, onCheckedChange = {})
                 }
-                IconButton(onClick = { onDeleteClicked(item) }){
+                IconButton(onClick = { onDeleteClicked(item.note) }){
                     Icon(imageVector = Icons.Filled.Delete, contentDescription = "Add Label")
                 }
             }
-            Text(text = item.body)
+            Text(text = item.note.body)
 
             Spacer(Modifier.height(4.dp))
 
+            Pill(item.subject.name, Yellow.copy(0.4f))
+
             Row {
-                Pill("Prova", Blue.copy(0.4f))
-                Pill("Resumo", Yellow.copy(0.4f))
-//                Pill("Trabalho", Green.copy(0.4f))
+                item.labels.forEach {
+                    Pill(it.name, Blue.copy(0.4f))
+                }
             }
         }
     }

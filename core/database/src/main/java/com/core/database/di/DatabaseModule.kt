@@ -6,6 +6,7 @@ import com.core.database.exam.ExamDao
 import com.core.database.note.NoteDao
 import com.core.database.label.LabelDao
 import com.core.database.media.NoteMediaDao
+import com.core.database.note.relations.NoteLabelDao
 import com.core.database.subject.SubjectDao
 import com.core.database.timetable.TimetableDao
 import dagger.Module
@@ -49,6 +50,9 @@ class DatabaseModule {
 
     @Provides
     fun providesNoteMediaDao(room: AppDatabase): NoteMediaDao = room.noteMediaDao()
+
+    @Provides
+    fun providesNoteLabelDao(room: AppDatabase): NoteLabelDao = room.noteLabelDao()
 
     companion object{
         const val APP_DATABASE_NAME = "agenda_universitaria"

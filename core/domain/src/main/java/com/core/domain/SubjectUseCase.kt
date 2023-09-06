@@ -20,37 +20,28 @@ class SubjectUseCase @Inject constructor(
     private val subjectRepository: SubjectRepository,
 ) {
 
-    fun saveSubject(subject: Subject): Flow<Result<Subject>> = flow {
-        subjectRepository
-            .saveSubject(subject)
-            .flowOn(ioDispatcher)
-            .catch {
-                Log.e("saveSubject", it.message.toString())
-                emit(Result.Error(it as Exception))
-            }
-            .map { Result.Success(it) }
-            .collect { emit(it) }
+    fun saveSubject(subject: Subject): Flow<Result<Subject>> = flow<Result<Subject>> {
+        val subject = subjectRepository.saveSubject(subject)
+        emit(Result.Success(subject))
+    }.flowOn(ioDispatcher).catch {
+        Log.e("saveSubject", it.message.toString())
+        emit(Result.Error(it as Exception))
     }
 
-    fun fetchSubjects(): Flow<Result<List<Subject>>> = flow {
-        subjectRepository
-            .fetchSubjects()
-            .flowOn(ioDispatcher)
-            .catch { emit(Result.Error(it as Exception)) }
-            .map { Result.Success(it) }
-            .collect { emit(it) }
-    }
+    fun fetchSubjects(): Flow<Result<List<Subject>>> = flow<Result<List<Subject>>> {
+        val subjects = subjectRepository.fetchSubjects()
+        emit(Result.Success(subjects))
+    }.flowOn(ioDispatcher).catch { emit(Result.Error(it as Exception)) }
 
-    fun fetchSubjectCompound(subjectId: Int): Flow<Result<SubjectCompound>> = flow {
-        subjectRepository
-            .fetchSubjectCompound(subjectId)
-            .flowOn(ioDispatcher)
-            .catch { emit(Result.Error(it as Exception)) }
-            .map { Result.Success(it) }
-            .collect { emit(it) }
-    }
+    fun fetchSubject(subjectId: Int): Flow<Result<SubjectCompound>> = flow<Result<SubjectCompound>> {
+        val subject = subjectRepository.fetchSubjectById(subjectId)
+        emit(Result.Success(subject))
+    }.flowOn(ioDispatcher)
+        .catch { emit(Result.Error(it as Exception)) }
 
-    fun deleteSubjectName(subjectId: Int): Flow<Boolean> = flow {
-        subjectRepository.deleteSubject(subjectId).collect { emit(it) }
-    }
+    fun deleteSubjectName(subject: Subject): Flow<Result<Boolean>> = flow<Result<Boolean>> {
+        val deleted = subjectRepository.deleteSubject(subject)
+        emit(Result.Success(deleted))
+    }.flowOn(ioDispatcher)
+        .catch { emit(Result.Error(it as Exception)) }
 }

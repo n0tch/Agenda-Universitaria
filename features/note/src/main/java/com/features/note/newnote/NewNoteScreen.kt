@@ -59,7 +59,7 @@ fun NewNoteScreen(
     saved: Boolean,
     noteLabels: List<Label>,
     subjects: List<Subject>,
-    onSaveClicked: (Note, List<String>) -> Unit,
+    onSaveClicked: (note: Note, mediaList: List<String>, labels: List<Label>) -> Unit,
     onBackClicked: () -> Unit,
     onSaveLabel: (Label) -> Unit = {}
 ) {
@@ -77,6 +77,8 @@ fun NewNoteScreen(
     }
     var labelText by remember { mutableStateOf("") }
     val photos: MutableList<Uri> = remember { mutableStateListOf() }
+
+    var selectedLabel by remember { mutableStateOf(Label()) }
 
     val photoPicker = multiplePhotoPicker(onPhotosPicked = { photos.addAll(it) })
 
@@ -98,10 +100,10 @@ fun NewNoteScreen(
                             Note(
                                 title = title,
                                 body = description,
-//                                labels = emptyList(),
                                 subjectId = subject.id
                             ),
-                            photos.map { it.toString() }
+                            photos.map { it.toString() },
+                            listOf(selectedLabel)
                         )
                     }) {
                         Icon(imageVector = Icons.Filled.Check, contentDescription = "Save Button")
@@ -126,7 +128,7 @@ fun NewNoteScreen(
                                     }
                                 },
                                 onClick = {
-
+                                    selectedLabel = label
                                 }
                             )
                         }
@@ -136,10 +138,7 @@ fun NewNoteScreen(
         },
         floatingActionButton = {
             FabMenu(
-                items = listOf(
-                    FabItem(NewNoteButtons.CAMERA.icon, NewNoteButtons.CAMERA.label),
-                    FabItem(NewNoteButtons.TAG.icon, NewNoteButtons.TAG.label),
-                ),
+                items = NewNoteButtons.values().map { FabItem(it.icon, it.label) },
                 onFabClicked = {
                     when (it.icon) {
                         NewNoteButtons.CAMERA.icon -> {

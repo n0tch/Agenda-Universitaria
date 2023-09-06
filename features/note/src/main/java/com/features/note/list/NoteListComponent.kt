@@ -13,9 +13,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.core.designsystem.components.row.PillItem
 import com.core.designsystem.components.row.PillLazyRow
 import com.example.model.Note
 
@@ -28,6 +30,7 @@ fun NoteListComponent(
 
     val viewModel: NoteListViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val labelState by viewModel.labelState.collectAsStateWithLifecycle()
     val selectedNotes: MutableList<Note> = mutableListOf()
 
     Scaffold(
@@ -48,20 +51,13 @@ fun NoteListComponent(
                 }
             )
             PillLazyRow(
-                pillList = listOf(
-                    "Prova",
-                    "Trabalho",
-                    "Resumo",
-                    "Prova",
-                    "Trabalho",
-                    "Resumo",
-                    "Prova",
-                    "Trabalho",
-                    "Resumo",
-                    "Prova",
-                    "Trabalho",
-                    "Resumo",
-                )
+                pillList = labelState.labels,
+                content = {label ->
+                    PillItem(label.name, Color.LightGray)
+                },
+                onClick = { label ->
+                    viewModel.searchNotesByLabel(label)
+                }
             )
             NotesGrid(
                 notes = uiState.notes,

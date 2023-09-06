@@ -2,17 +2,14 @@ package com.core.data.repository.subject
 
 import com.example.model.Subject
 import com.example.model.SubjectCompound
-import kotlinx.coroutines.flow.Flow
 
 interface SubjectRepository {
 
-    fun saveSubject(subject: Subject): Flow<Subject>
+    suspend fun saveSubject(subject: Subject): Subject
 
-    fun fetchSubjects(): Flow<List<Subject>>
+    suspend fun fetchSubjects(): List<Subject>
 
-    suspend fun fetchSubjectById(subjectId: Int): Subject
+    suspend fun fetchSubjectById(subjectId: Int): SubjectCompound
 
-    fun fetchSubjectCompound(subjectId: Int): Flow<SubjectCompound>
-
-    fun deleteSubject(subjectId: Int): Flow<Boolean>
+    suspend fun deleteSubject(subject: Subject): Boolean
 }

@@ -8,5 +8,6 @@ internal fun Label.toEntity() = LabelEntity(
 )
 
 internal fun LabelEntity.toLabel() = Label(
+    id = labelId,
     name = name ?: "",
 )

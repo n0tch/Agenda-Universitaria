@@ -1,6 +1,7 @@
 package com.core.designsystem.components.row
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
@@ -19,10 +20,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun PillLazyRow(pillList: List<String>) {
+fun <T>PillLazyRow(
+    pillList: List<T> = emptyList(),
+    content: @Composable (T) -> Unit = {},
+    onClick: (T) -> Unit = {}
+) {
     LazyRow(modifier = Modifier.padding(start = 8.dp)) {
         items(pillList) {
-            PillItem(it, Color.Gray.copy(alpha = .4f))
+//            PillItem(it, Color.Gray.copy(alpha = .4f))
+            Box(Modifier.clickable { onClick(it) }) {
+                content(it)
+            }
         }
         item{
             IconButton(onClick = {}){
@@ -50,5 +58,7 @@ fun PillItem(name: String, color: Color) {
 @Preview
 @Composable
 fun PillLazyRowPreview() {
-    PillLazyRow(listOf("1", "2", "3"))
+    PillLazyRow(listOf("1", "2", "3"), content = {
+        PillItem(it, Color.Yellow)
+    }, onClick = {})
 }

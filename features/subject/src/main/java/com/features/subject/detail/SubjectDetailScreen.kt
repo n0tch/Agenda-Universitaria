@@ -23,6 +23,8 @@ import androidx.compose.ui.unit.dp
 import com.core.designsystem.components.Pill
 import com.core.designsystem.components.row.GridLazyRow
 import com.example.model.Note
+import com.example.model.NoteCompound
+import com.example.model.SubjectCompound
 import com.example.model.event.Exam
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,8 +32,7 @@ import com.example.model.event.Exam
 fun SubjectDetailScreen(
     onBackPressed: () -> Unit,
     subjectName: String = "Test 1",
-    notes: List<Note>,
-    exams: List<Exam>,
+    subject: SubjectCompound,
     onNoteClicked: (Note) -> Unit,
     onDeleteButtonClicked: () -> Unit = {}
 ) {
@@ -69,13 +70,13 @@ fun SubjectDetailScreen(
 
             Text(modifier = Modifier.padding(horizontal = 8.dp), text = "Notas")
 
-            GridLazyRow(list = notes) { note ->
+            GridLazyRow(list = subject.notes) { note ->
                 NoteItemCard(item = note, onNoteClicked = { onNoteClicked(note) })
             }
 
             Text(modifier = Modifier.padding(horizontal = 8.dp), text = "Provas")
 
-            GridLazyRow(list = exams) { exam ->
+            GridLazyRow(list = subject.exams) { exam ->
                 ExamItemCard(item = exam, onExamClicked = {/* onNoteClicked(note)*/ })
             }
 
@@ -134,9 +135,7 @@ fun ExamItemCard(item: Exam, onExamClicked: (Exam) -> Unit) {
 fun SubjectDetailScreenPreview() {
     SubjectDetailScreen(
         onBackPressed = {},
-        "",
-        listOf(),
-        listOf(),
+        subject = SubjectCompound(),
         onNoteClicked = {},
     )
 }

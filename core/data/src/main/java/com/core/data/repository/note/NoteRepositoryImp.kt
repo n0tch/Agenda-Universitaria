@@ -14,10 +14,8 @@ internal class NoteRepositoryImp @Inject constructor(
         return note.copy(id = noteId.toInt())
     }
 
-    override suspend fun fetchNotes(): List<Note> {
-        return noteDao
-            .fetchCompoundNotes()
-            .map { it.toNote() }
+    override suspend fun fetchNotes(): List<NoteCompound> {
+        return noteDao.fetchCompoundNotes().map { it.toNoteCompound() }
     }
 
     override suspend fun fetchNotesBySubject(subjectId: Int): List<Note> {
@@ -30,8 +28,8 @@ internal class NoteRepositoryImp @Inject constructor(
         return noteDao.fetchNoteWithLabelsAndSubject(noteId).toNoteCompound()
     }
 
-    override suspend fun searchNote(query: String): List<Note> {
-        return noteDao.searchNoteByQuery(query).map { it.toNote() }
+    override suspend fun searchNote(query: String): List<NoteCompound> {
+        return noteDao.searchNoteByQuery(query).map { it.toNoteCompound() }
     }
 
     override suspend fun deleteNote(note: Note): Boolean {
@@ -41,5 +39,9 @@ internal class NoteRepositoryImp @Inject constructor(
 
     override suspend fun saveNoteImagePaths(noteId: Int, images: List<String>) {
         TODO("Not yet implemented")
+    }
+
+    override suspend fun fetchNotesByLabelId(labelId: Int): List<NoteCompound> {
+        return noteDao.fetchNotesByLabelId(labelId).map { it.toNoteCompound() }
     }
 }

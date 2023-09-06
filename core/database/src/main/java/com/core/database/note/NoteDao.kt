@@ -27,10 +27,10 @@ interface NoteDao {
     suspend fun fetchNotesBySubjectId(): List<NoteEntity>
 
     @Query("SELECT * FROM notes WHERE title LIKE '%' || :query || '%'")
-    suspend fun searchNoteByQuery(query: String): List<NoteEntity>
+    suspend fun searchNoteByQuery(query: String): List<NoteWithLabelWithMediaAndSubject>
 
     @Query("SELECT * FROM notes")
-    suspend fun fetchCompoundNotes(): List<NoteEntity>
+    suspend fun fetchCompoundNotes(): List<NoteWithLabelWithMediaAndSubject>
 
     @Transaction
     @Query("SELECT * FROM notes WHERE notes.noteId = :noteId")
@@ -39,4 +39,8 @@ interface NoteDao {
     @Transaction
     @Query("SELECT * FROM notes")
     suspend fun fetchAllNoteCompound(): List<NoteWithLabelWithMediaAndSubject>
+
+    @Transaction
+    @Query("SELECT * FROM notes WHERE notes.noteId in (SELECT noteId FROM notelabelcrossref WHERE notelabelcrossref.labelId = :labelId)")
+    suspend fun fetchNotesByLabelId(labelId: Int): List<NoteWithLabelWithMediaAndSubject>
 }

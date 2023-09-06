@@ -6,6 +6,8 @@ import com.core.data.repository.label.LabelRepository
 import com.core.data.repository.label.LabelRepositoryImp
 import com.core.data.repository.login.LoginRepository
 import com.core.data.repository.login.LoginRepositoryImp
+import com.core.data.repository.note.NoteLabelRepository
+import com.core.data.repository.note.NoteLabelRepositoryImp
 import com.core.data.repository.note.NoteRepository
 import com.core.data.repository.note.NoteRepositoryImp
 import com.core.data.repository.notemedia.NoteMediaRepository
@@ -58,4 +60,7 @@ internal abstract class DataRepositoryModule {
 
     @Binds
     abstract fun bindNoteMediaRepository(repository: NoteMediaRepositoryImp): NoteMediaRepository
+
+    @Binds
+    abstract fun bindNoteLabelRepository(repository: NoteLabelRepositoryImp): NoteLabelRepository
 }

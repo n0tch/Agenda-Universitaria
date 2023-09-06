@@ -8,7 +8,7 @@ class NoteMediaRepositoryImp @Inject constructor(
     private val noteMediaDao: NoteMediaDao
 ): NoteMediaRepository {
 
-    override suspend fun saveNoteMedia(noteId: Int, mediasUri: List<String>) {
+    override suspend fun saveNoteMedias(noteId: Int, mediasUri: List<String>) {
         val medias = mediasUri.map { MediaEntity(noteId = noteId, uriPath = it) }
         noteMediaDao.saveNoteMedia(medias)
     }

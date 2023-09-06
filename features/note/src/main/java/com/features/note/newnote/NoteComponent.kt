@@ -27,8 +27,8 @@ fun NoteComponent(
         saved = uiState.noteSaved,
         noteLabels = labelState.labels,
         subjects = subjectState.subjects,
-        onSaveClicked = { note, uriPaths ->
-            viewModel.saveNote(note, uriPaths)
+        onSaveClicked = { note, uriPaths, labels ->
+            viewModel.saveNote(note, uriPaths, labels)
         },
         onBackClicked = {
             navController.popBackStack()
