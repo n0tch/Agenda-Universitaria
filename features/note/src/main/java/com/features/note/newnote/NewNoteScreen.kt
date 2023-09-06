@@ -58,6 +58,7 @@ fun NewNoteScreen(
     note: Note,
     saved: Boolean,
     noteLabels: List<Label>,
+    medias: List<String>,
     subjects: List<Subject>,
     onSaveClicked: (note: Note, mediaList: List<String>, labels: List<Label>) -> Unit,
     onBackClicked: () -> Unit,
@@ -177,7 +178,7 @@ fun NewNoteScreen(
             )
 
             LazyRow {
-                items(photos){
+                items(medias.map { Uri.parse(it) }){
                     AsyncImage(
                         modifier = Modifier.size(128.dp),
                         model = it,

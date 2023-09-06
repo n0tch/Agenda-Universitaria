@@ -1,16 +1,17 @@
 package com.core.data.repository.timetable
 
 import com.example.model.Timetable
+import com.example.model.TimetableCompound
 import kotlinx.coroutines.flow.Flow
 import java.time.DayOfWeek
 
 interface TimetableRepository {
 
-    fun saveTimetableEntry(userId: String, timetable: Timetable): Flow<Timetable>
+    suspend fun saveTimetableEntry(timetable: Timetable): Timetable
 
-    fun fetchTimetable(userId: String): Flow<Map<String, List<Timetable>>>
+    suspend fun fetchTimetable(): Map<String, List<TimetableCompound>>
 
-    fun fetchTimetableByDay(weekDay: DayOfWeek): Flow<List<Timetable>>
+    suspend fun fetchTimetableByDay(weekDay: DayOfWeek): List<TimetableCompound>
 
-    fun fetchWeeklyTimetable(): Flow<Map<DayOfWeek, List<Timetable>>>
+    suspend fun fetchWeeklyTimetable(): Map<DayOfWeek, List<TimetableCompound>>
 }

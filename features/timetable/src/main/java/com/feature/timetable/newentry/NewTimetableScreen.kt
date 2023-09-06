@@ -89,7 +89,7 @@ fun NewTimetableScreen(
                 Timetable(
                     weekDay = selectedWeekDays.name,
                     //TODO remove thissss
-                    subject = subjects.find { it.name == subject }!!,
+                    subjectId = subjects.find { it.name == subject }?.id ?: 0,
                     startTime = convertSelectedTime(timePickerState.hour, timePickerState.minute),
                     endTime = convertSelectedTime(endTimePickerState.hour, endTimePickerState.minute),
                 )

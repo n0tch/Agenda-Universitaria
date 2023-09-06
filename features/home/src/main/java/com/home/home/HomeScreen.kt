@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.core.designsystem.components.card.CardForward
 import com.core.designsystem.extensions.toDayMonthYear
 import com.example.model.Timetable
+import com.example.model.TimetableCompound
 import com.example.model.event.Exam
 import java.time.DayOfWeek
 
@@ -25,7 +26,7 @@ import java.time.DayOfWeek
 fun HomeScreen(
     currentUserState: CurrentUserState,
     nextExams: List<Exam>,
-    timetable: Map<DayOfWeek, List<Timetable>>,
+    timetable: Map<DayOfWeek, List<TimetableCompound>>,
     onProfileClick: () -> Unit,
     onFloatingActionButtonClicked: () -> Unit
 ) {

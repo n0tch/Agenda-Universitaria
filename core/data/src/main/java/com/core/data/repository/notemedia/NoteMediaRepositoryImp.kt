@@ -1,5 +1,6 @@
 package com.core.data.repository.notemedia
 
+import android.util.Log
 import com.core.database.media.NoteMediaDao
 import com.core.database.media.MediaEntity
 import javax.inject.Inject
@@ -10,7 +11,8 @@ class NoteMediaRepositoryImp @Inject constructor(
 
     override suspend fun saveNoteMedias(noteId: Int, mediasUri: List<String>) {
         val medias = mediasUri.map { MediaEntity(noteId = noteId, uriPath = it) }
-        noteMediaDao.saveNoteMedia(medias)
+        val ids = noteMediaDao.saveNoteMedia(medias)
+        Log.e("save nome medias", ids.toString())
     }
 
     override suspend fun fetchNoteMediaByNoteId(noteId: Int): List<NoteMedia> {

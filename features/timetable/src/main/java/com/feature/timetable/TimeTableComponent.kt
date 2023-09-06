@@ -16,16 +16,30 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.model.Timetable
+import com.example.model.TimetableCompound
+import com.feature.timetable.notification.CreateNotificationDialog
 import java.time.DayOfWeek
 
 @Composable
 fun TimeTableComponent(
     modifier: Modifier = Modifier,
-    timetableEntries: List<Timetable> = listOf(),
-    onWeekDayClicked: (DayOfWeek) -> Unit = {}
+    timetableEntries: List<TimetableCompound> = listOf(),
+    onWeekDayClicked: (DayOfWeek) -> Unit = {},
+    saveNotification: (List<Long>) -> Unit = {}
 ) {
     var weekDaySelected by remember { mutableStateOf("Segunda") }
+
+    val openNotification: @Composable (TimetableCompound) -> Unit = { timetable ->
+        var isOpen by remember { mutableStateOf(true) }
+
+        if(isOpen){
+            CreateNotificationDialog(
+                timetable = timetable,
+                onDismiss = { isOpen = false },
+                onSaveNotification = saveNotification
+            )
+        }
+    }
 
     Column(modifier = modifier.fillMaxSize(), verticalArrangement = Arrangement.Top) {
         DayOfWeekHeader(onClick = {
@@ -41,13 +55,20 @@ fun TimeTableComponent(
 
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
             items(timetableEntries) {
-                ScheduleCard(it)
+                ScheduleCard(
+                    item = it,
+                    onNotificationClicked = {
+                        openNotification(it)
+                    }
+                )
             }
         }
 
         if(timetableEntries.isEmpty()){
             Text(text = "Vazio!")
         }
+
+
     }
 }
 

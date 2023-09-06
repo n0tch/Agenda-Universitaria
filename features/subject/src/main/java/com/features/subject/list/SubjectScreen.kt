@@ -29,6 +29,7 @@ fun SubjectComponent(
         onSubjectDetailClicked = { subject ->
             navigateToSubjectDetail(subject.name, subject.id)
         },
+        onSearch = { viewModel.searchSubject(it) },
         onBackClicked = onBackPressed
     )
 

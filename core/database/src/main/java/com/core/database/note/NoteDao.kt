@@ -26,9 +26,11 @@ interface NoteDao {
     @Query("SELECT * FROM notes")
     suspend fun fetchNotesBySubjectId(): List<NoteEntity>
 
+    @Transaction
     @Query("SELECT * FROM notes WHERE title LIKE '%' || :query || '%'")
     suspend fun searchNoteByQuery(query: String): List<NoteWithLabelWithMediaAndSubject>
 
+    @Transaction
     @Query("SELECT * FROM notes")
     suspend fun fetchCompoundNotes(): List<NoteWithLabelWithMediaAndSubject>
 

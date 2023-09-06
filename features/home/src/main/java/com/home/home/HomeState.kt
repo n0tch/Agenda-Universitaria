@@ -1,11 +1,11 @@
 package com.home.home
 
-import com.example.model.Timetable
+import com.example.model.TimetableCompound
 import com.example.model.event.Exam
 import java.time.DayOfWeek
 
 data class HomeTimetableState(
-    val items: Map<DayOfWeek, List<Timetable>> = mapOf(),
+    val items: Map<DayOfWeek, List<TimetableCompound>> = mapOf(),
     val exception: Exception? = null
 )
 

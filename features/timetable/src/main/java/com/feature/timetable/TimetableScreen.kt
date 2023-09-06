@@ -53,7 +53,8 @@ fun TimetableScreen(
         ) {
             TimeTableComponent(
                 timetableEntries = uiState.items,
-                onWeekDayClicked = { viewModel.fetchTimetableByDay(it) }
+                onWeekDayClicked = { viewModel.fetchTimetableByDay(it) },
+                saveNotification = { viewModel.saveTimetableNotification(it) }
             )
         }
     }

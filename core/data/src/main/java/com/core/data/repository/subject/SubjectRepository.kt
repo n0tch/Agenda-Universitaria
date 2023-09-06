@@ -12,4 +12,6 @@ interface SubjectRepository {
     suspend fun fetchSubjectById(subjectId: Int): SubjectCompound
 
     suspend fun deleteSubject(subject: Subject): Boolean
+
+    suspend fun searchSubjectsByName(query: String): List<Subject>
 }

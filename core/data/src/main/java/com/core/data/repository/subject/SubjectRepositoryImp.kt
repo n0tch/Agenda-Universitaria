@@ -26,4 +26,8 @@ internal class SubjectRepositoryImp @Inject constructor(
         val deleted = subjectDao.deleteSubject(subject.toEntity())
         return deleted == 1
     }
+
+    override suspend fun searchSubjectsByName(query: String): List<Subject> {
+        return subjectDao.searchSubjectByName(query).map { it.toSubject() }
+    }
 }

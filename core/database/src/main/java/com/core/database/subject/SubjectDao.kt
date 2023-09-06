@@ -16,6 +16,7 @@ interface SubjectDao {
     @Query("SELECT * FROM subjects")
     suspend fun fetchSubjects(): List<SubjectEntity>
 
+    @Transaction
     @Query("SELECT * FROM subjects WHERE subjects.subjectId = :subjectId")
     suspend fun fetchSubjectById(subjectId: Int?): SubjectWithNotesWithExams
 
@@ -29,4 +30,7 @@ interface SubjectDao {
     @Transaction
     @Query("SELECT * FROM subjects WHERE subjects.subjectId = :subjectId")
     suspend fun fetchSubjectWithNotes(subjectId: Int): SubjectWithNotesWithExams
+
+    @Query("SELECT * FROM subjects WHERE name LIKE '%' || :query || '%'")
+    suspend fun searchSubjectByName(query: String): List<SubjectEntity>
 }

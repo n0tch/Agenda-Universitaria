@@ -68,6 +68,9 @@ fun SubjectDetailScreen(
     ) { paddingValue ->
         Column(Modifier.padding(paddingValue)) {
 
+            Text(subject.subject.teacher)
+            Text(subject.subject.place)
+
             Text(modifier = Modifier.padding(horizontal = 8.dp), text = "Notas")
 
             GridLazyRow(list = subject.notes) { note ->

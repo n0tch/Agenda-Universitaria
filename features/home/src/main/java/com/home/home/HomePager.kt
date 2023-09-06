@@ -11,13 +11,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.model.Timetable
+import com.example.model.TimetableCompound
 import java.time.DayOfWeek
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomePager(
-    timetableMap: Map<DayOfWeek, List<Timetable>> = emptyMap(),
-    homePagerContent: @Composable (DayOfWeek, List<Timetable>) -> Unit = { _, _ ->}
+    timetableMap: Map<DayOfWeek, List<TimetableCompound>> = emptyMap(),
+    homePagerContent: @Composable (DayOfWeek, List<TimetableCompound>) -> Unit = { _, _ ->}
 ) {
     val pagerState = rememberPagerState()
 

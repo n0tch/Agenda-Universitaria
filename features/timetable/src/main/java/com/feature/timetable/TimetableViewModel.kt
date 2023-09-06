@@ -32,4 +32,10 @@ class TimetableViewModel @Inject constructor(
                 }
         }
     }
+
+    fun saveTimetableNotification(millisToSchedule: List<Long>) {
+        viewModelScope.launch {
+            timetableUseCase.scheduleTimeTableNotification(millisToSchedule)
+        }
+    }
 }

@@ -1,5 +1,7 @@
 package com.features.subject.list
 
+import android.util.Log
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.core.common.AppDispatcher
@@ -52,7 +54,8 @@ class SubjectViewModel @Inject constructor(
         }
     }
 
-    fun fetchSubjects(){
+    @VisibleForTesting
+    private fun fetchSubjects(){
         viewModelScope.launch {
             subjectUseCase
                 .fetchSubjects()
@@ -66,6 +69,17 @@ class SubjectViewModel @Inject constructor(
                             _uiState.emit(SubjectState(subjects = it.data))
                     }
                 }
+        }
+    }
+
+    fun searchSubject(query: String){
+        viewModelScope.launch {
+            subjectUseCase.searchSubjectByName(query).flowOn(uiDispatcher).collect {
+                when(it){
+                    is Result.Error -> Log.e("searchSubject", it.exception.toString())
+                    is Result.Success -> _uiState.emit(SubjectState(subjects = it.data))
+                }
+            }
         }
     }
 }

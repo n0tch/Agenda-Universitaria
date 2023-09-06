@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -17,9 +18,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
@@ -27,49 +34,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.core.designsystem.components.LoadingView
 import com.example.model.Subject
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SubjectContent(
     subjects: List<Subject> = emptyList(),
     isLoading: Boolean = false,
     onAddSubjectClicked: () -> Unit = {},
     onSubjectDetailClicked: (Subject) -> Unit = {},
+    onSearch: (String) -> Unit = {},
     onBackClicked: () -> Unit = {}
 ) {
+    var searchVisible by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
-            TopAppBar(
-                modifier = Modifier,
-                title = { Text(text = "Disciplinas") },
-                navigationIcon = {
-                    IconButton(onClick = { onBackClicked() }) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "back subject"
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(imageVector = Icons.Filled.Search, contentDescription = "")
-                    }
-                }
-            )
+            if(searchVisible){
+                SearchTopBar(onSearch = onSearch, onClose = { searchVisible = false })
+            } else {
+                DefaultTopBar(onBackClicked = onBackClicked, onSearchClicked = { searchVisible = true })
+            }
         },
         floatingActionButton = {
             FloatingActionButton(onClick = { onAddSubjectClicked() }) {
                 Icon(imageVector = Icons.Filled.Add, contentDescription = "")
             }
-//            FabMenu(
-//                iconButton = FabItem(Icons.Filled.Add, "Expand"),
-//                items = listOf(
-//                    FabItem(Icons.Filled.HomeWork, "Trabalho"),
-//                    FabItem(Icons.Filled.Newspaper, "Prova"),
-//                ),
-//                onFabClicked = {
-//
-//                },
-//            )
         }
     ) {
         Column(modifier = Modifier.padding(it)) {
@@ -102,6 +89,51 @@ fun SubjectContent(
             LoadingView()
         }
     }
+}
+
+@Composable
+private fun SearchTopBar(
+    onSearch: (String) -> Unit,
+    onClose: (String) -> Unit
+){
+    var searchText by remember { mutableStateOf("") }
+
+    Surface(Modifier.fillMaxWidth()) {
+        TextField(
+            value = searchText,
+            onValueChange = {
+                searchText = it
+                onSearch(it)
+            },
+            trailingIcon = {
+                IconButton(onClick = { onClose(searchText) }) {
+                    Icon(imageVector = Icons.Filled.Close, contentDescription = null)
+                }
+            }
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun DefaultTopBar(onBackClicked: () -> Unit, onSearchClicked: () -> Unit) {
+    TopAppBar(
+        modifier = Modifier,
+        title = { Text(text = "Disciplinas") },
+        navigationIcon = {
+            IconButton(onClick = { onBackClicked() }) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = "back subject"
+                )
+            }
+        },
+        actions = {
+            IconButton(onClick = { onSearchClicked() }) {
+                Icon(imageVector = Icons.Filled.Search, contentDescription = "")
+            }
+        }
+    )
 }
 
 @Preview

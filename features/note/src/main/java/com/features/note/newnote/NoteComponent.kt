@@ -25,6 +25,7 @@ fun NoteComponent(
     NewNoteScreen(
         note = uiState.noteCompound.note,
         saved = uiState.noteSaved,
+        medias = uiState.noteCompound.uriPaths,
         noteLabels = labelState.labels,
         subjects = subjectState.subjects,
         onSaveClicked = { note, uriPaths, labels ->

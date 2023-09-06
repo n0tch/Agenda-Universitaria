@@ -19,12 +19,13 @@ import androidx.compose.ui.unit.sp
 import com.core.designsystem.extensions.localized
 import com.core.designsystem.extensions.toMinuteAndSecond
 import com.example.model.Timetable
+import com.example.model.TimetableCompound
 import java.time.DayOfWeek
 
 @Composable
 fun TimetableListComponent(
     dayOfWeek: DayOfWeek = DayOfWeek.MONDAY,
-    timetableEntries: List<Timetable> = listOf()
+    timetableEntries: List<TimetableCompound> = listOf()
 ) {
     Card(
         modifier = Modifier
@@ -43,9 +44,9 @@ fun TimetableListComponent(
 
             LazyColumn {
                 items(timetableEntries) {
-                    Text(text = it.startTime.toMinuteAndSecond())
-                    Text(text = it.endTime.toMinuteAndSecond())
-                    Text(text = it.subject?.name ?: "")
+                    Text(text = it.timetable.startTime.toMinuteAndSecond())
+                    Text(text = it.timetable.endTime.toMinuteAndSecond())
+                    Text(text = it.subject.name)
                     Spacer(Modifier.height(4.dp))
                     Divider()
                 }
