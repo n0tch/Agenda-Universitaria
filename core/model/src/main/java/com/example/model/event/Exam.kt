@@ -1,10 +1,8 @@
 package com.example.model.event
 
 import com.example.model.ScheduledEvent
-import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 data class Exam(
     val relatedNotes: List<String>,
