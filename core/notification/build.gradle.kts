@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.core.domain"
+    namespace = "com.core.notification"
     compileSdk = 33
 
     defaultConfig {
@@ -38,15 +38,12 @@ android {
 
 dependencies {
 
-    api(project(":core:common"))
-    api(project(":core:data"))
-    api(project(":core:model"))
-    implementation(project(":core:notification"))
+    implementation(libs.core.ktx)
+    implementation(libs.appcompat)
+    implementation(libs.material)
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
-
-    implementation("androidx.core:core-ktx:1.8.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

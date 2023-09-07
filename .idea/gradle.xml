@@ -21,6 +21,7 @@
             <option value="$PROJECT_DIR$/core/localstorage" />
             <option value="$PROJECT_DIR$/core/model" />
             <option value="$PROJECT_DIR$/core/network" />
+            <option value="$PROJECT_DIR$/core/notification" />
             <option value="$PROJECT_DIR$/features" />
             <option value="$PROJECT_DIR$/features/authentication" />
             <option value="$PROJECT_DIR$/features/exam" />
