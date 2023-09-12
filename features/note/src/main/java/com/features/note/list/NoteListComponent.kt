@@ -11,6 +11,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,7 +24,8 @@ import com.example.model.Note
 
 @Composable
 fun NoteListComponent(
-    onNavigateToNote: (id: Int?) -> Unit,
+    onNavigateToNote: (id: Int) -> Unit,
+    onNavigateToNewNote: () -> Unit = {},
     shouldReturnSelectedNotes: Boolean = false,
     onNotesSelected: (List<String>) -> Unit = {}
 ) {
@@ -33,26 +35,28 @@ fun NoteListComponent(
     val labelState by viewModel.labelState.collectAsStateWithLifecycle()
     val selectedNotes: MutableList<Note> = mutableListOf()
 
+    LaunchedEffect(key1 = Unit, block = {
+        viewModel.fetchNotes()
+        viewModel.fetchNoteLabels()
+    })
+
     Scaffold(
         modifier = Modifier,
         floatingActionButton = {
-            FloatingActionButton(onClick = { onNavigateToNote(null) }) {
+            FloatingActionButton(onClick = { onNavigateToNewNote() }) {
                 Icon(imageVector = Icons.Rounded.Add, contentDescription = "Add fab")
             }
         }
     ) {
         Column(Modifier.padding(it)) {
             HomeNotesHeaderComponent(
-                onNoteClicked = { note ->
-                    onNavigateToNote(note.id)
-                },
                 onSearch = { search ->
                     viewModel.searchNote(search)
                 }
             )
             PillLazyRow(
                 pillList = labelState.labels,
-                content = {label ->
+                content = { label ->
                     PillItem(label.name, Color.LightGray)
                 },
                 onClick = { label ->

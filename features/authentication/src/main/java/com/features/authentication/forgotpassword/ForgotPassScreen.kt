@@ -13,7 +13,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ForgotPassScreen(
     openAlert: Boolean,

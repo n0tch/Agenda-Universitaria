@@ -7,6 +7,8 @@ interface NoteRepository {
 
     suspend fun saveNote(note: Note): Note
 
+    suspend fun updateNote(note: Note): Note
+
     suspend fun fetchNotes(): List<NoteCompound>
 
     suspend fun fetchNotesBySubject(subjectId: Int): List<Note>

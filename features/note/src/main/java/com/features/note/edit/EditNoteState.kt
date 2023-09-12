@@ -1,4 +1,4 @@
-package com.features.note.newnote
+package com.features.note.edit
 
 import com.example.model.Label
 import com.example.model.NoteCompound
@@ -9,6 +9,18 @@ data class NoteState(
     val noteCompound: NoteCompound = NoteCompound(),
     val noteSaved: Boolean = false,
     val exception: Exception? = null
+)
+
+data class EditNoteState(
+    var title: String,
+    var body: String,
+    var subjectId: Int,
+    var labels: List<String>
+)
+
+data class LabelWithSubjectState(
+    val labels: List<Label> = emptyList(),
+    val subjects: List<Subject> = emptyList()
 )
 
 data class LabelState(

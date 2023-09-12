@@ -29,7 +29,7 @@ fun NavGraphBuilder.subjectGraph(navController: NavController) {
                 onBackPressed = { navController.popBackStack() },
                 subjectName = subjectName,
                 subjectId = subjectId?.toIntOrNull() ?: -1,
-                onNavigateToNote = { noteId -> navController.navigate(NoteScreens.NOTE.route + "/$noteId") }
+                onNavigateToNote = { noteId -> navController.navigate(NoteScreens.NOTE_EDITION.route + "/$noteId") }
             )
         }
     }

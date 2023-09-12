@@ -11,10 +11,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import coil.ImageLoader
 import coil.compose.AsyncImage
+import coil.disk.DiskCache
+import coil.memory.MemoryCache
 
 @Composable
 fun HomeHeader(
@@ -22,6 +26,8 @@ fun HomeHeader(
     photoUrl: String,
     onProfileClick: () -> Unit
 ) {
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -31,6 +37,19 @@ fun HomeHeader(
             val (name, photo) = createRefs()
 
             AsyncImage(
+                imageLoader = ImageLoader.Builder(context)
+                    .memoryCache {
+                        MemoryCache.Builder(context)
+                            .maxSizePercent(0.25)
+                            .build()
+                    }
+                    .diskCache {
+                        DiskCache.Builder()
+                            .directory(context.cacheDir.resolve("image_cache"))
+                            .maxSizePercent(0.02)
+                            .build()
+                    }
+                    .build(),
                 modifier = Modifier
                     .constrainAs(photo) {
                         top.linkTo(parent.top)

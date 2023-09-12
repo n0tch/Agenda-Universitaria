@@ -21,10 +21,10 @@ fun photoPicker(
 
 @Composable
 fun multiplePhotoPicker(
-    onPhotosPicked: (List<Uri>) -> Unit
-): ManagedActivityResultLauncher<PickVisualMediaRequest, List<Uri>> {
+    onPhotosPicked: (Uri?) -> Unit
+): ManagedActivityResultLauncher<String, Uri?> {
     return rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickMultipleVisualMedia(),
+        contract = ActivityResultContracts.GetContent(),
         onResult = {
             onPhotosPicked(it)
         }

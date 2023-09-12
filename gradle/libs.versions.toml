@@ -63,6 +63,12 @@ turbine = "0.7.0"
 kotlin-coroutine-tests = "1.5.0"
 jupyter-version = "5.8.2"
 
+#leak canary
+leak-canary-version = "2.12"
+
+#image picker version
+iamge-picker-version = "2.1"
+
 [libraries]
 
 #Kotlin
@@ -124,6 +130,12 @@ mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 turbune = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 coroutine-tests = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlin-coroutine-tests" }
 jupyter = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "jupyter-version"}
+
+#leakcanary
+leakcanary = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leak-canary-version" }
+
+#Image Picker
+imagePicker = { module = "com.github.dhaval2404:imagepicker", version.ref = "iamge-picker-version"}
 
 [bundles]
 compose = [

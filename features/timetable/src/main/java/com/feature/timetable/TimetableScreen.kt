@@ -28,6 +28,7 @@ fun TimetableScreen(
 
     val viewModel: TimetableViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val timetableState by viewModel.timetableState.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
@@ -51,11 +52,12 @@ fun TimetableScreen(
                 .padding(paddingValues)
                 .fillMaxSize()
         ) {
-            TimeTableComponent(
-                timetableEntries = uiState.items,
-                onWeekDayClicked = { viewModel.fetchTimetableByDay(it) },
-                saveNotification = { viewModel.saveTimetableNotification(it) }
-            )
+            TimetableSchedule(timetableState.items)
+//            TimeTableComponent(
+//                timetableEntries = uiState.items,
+//                onWeekDayClicked = { viewModel.fetchTimetableByDay(it) },
+//                saveNotification = { viewModel.saveTimetableNotification(it) }
+//            )
         }
     }
 }

@@ -86,6 +86,7 @@ fun NoteItemCard(
                 }
             }
             Text(text = item.note.body)
+            Text(text = "${item.uriPaths.size} medias")
 
             Spacer(Modifier.height(4.dp))
 

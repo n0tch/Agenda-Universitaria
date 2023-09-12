@@ -14,6 +14,11 @@ internal class NoteRepositoryImp @Inject constructor(
         return note.copy(id = noteId.toInt())
     }
 
+    override suspend fun updateNote(note: Note): Note {
+        noteDao.updateNote(note.toEntityWithId())
+        return note
+    }
+
     override suspend fun fetchNotes(): List<NoteCompound> {
         return noteDao.fetchCompoundNotes().map { it.toNoteCompound() }
     }

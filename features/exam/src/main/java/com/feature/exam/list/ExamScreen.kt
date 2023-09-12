@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.core.designsystem.components.LoadingView
 import com.core.designsystem.components.card.CardForward
+import com.core.designsystem.components.schedule.EventScheduleItem
 import com.core.designsystem.extensions.toDayMonthYear
 import com.example.model.event.Exam
 
@@ -56,22 +57,19 @@ fun ExamScreen(
                 .padding(horizontal = 12.dp)
                 .fillMaxSize()
         ) {
-            LazyColumn(modifier = Modifier.fillMaxSize(), content = {
-                items(exams) { exam ->
-                    CardForward(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 4.dp)
-                            .padding(horizontal = 6.dp),
-                        title = exam.name,
-                        body = "${exam.date.toDayMonthYear()} ${exam.subjectId} \n${exam.relatedNotes.size} notas relacionadas",
-                        onClick = {}
-                    )
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                content = {
+                    items(exams) { exam ->
+                        EventScheduleItem(exam.date.toDayMonthYear()) {
+                            Text(exam.name)
+                        }
+                    }
                 }
-            })
+            )
         }
 
-        if(isLoading){
+        if (isLoading) {
             LoadingView()
         }
     }
@@ -81,7 +79,7 @@ fun ExamScreen(
 @Composable
 fun ExamScreenPreview() {
     ExamScreen(
-        exams= listOf(Exam.getMock()),
+        exams = listOf(Exam.getMock()),
         onFabClicked = {},
         onBackClicked = {}
     )
@@ -92,7 +90,7 @@ fun ExamScreenPreview() {
 fun ExamScreenLoadingPreview() {
     ExamScreen(
         isLoading = true,
-        exams= listOf(Exam.getMock()),
+        exams = listOf(Exam.getMock()),
         onFabClicked = {},
         onBackClicked = {}
     )

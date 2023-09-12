@@ -17,13 +17,14 @@ internal fun Note.toEntityWithId() = NoteEntity(
     noteId = id,
     title = title,
     body = body,
-    noteSubjectId = null
+    noteSubjectId = subjectId
 )
 
 internal fun NoteEntity.toNote() = Note(
     id = noteId,
     title = title ?: "",
-    body = body ?: ""
+    body = body ?: "",
+    subjectId = noteSubjectId ?: -1
 )
 
 internal fun NoteWithLabelWithMediaAndSubject.toNoteCompound() = NoteCompound(

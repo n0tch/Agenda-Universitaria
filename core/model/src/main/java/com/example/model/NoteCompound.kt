@@ -6,3 +6,8 @@ data class NoteCompound(
     val subject: Subject = Subject(),
     val uriPaths: List<String> = emptyList()
 )
+{
+    companion object{
+        const val EMPTY_NOTE_ID = -1
+    }
+}

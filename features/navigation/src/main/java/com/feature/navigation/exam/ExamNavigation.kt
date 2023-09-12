@@ -5,7 +5,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.feature.exam.detail.ExamDetailComponent
 import com.feature.exam.list.ExamComponent
-import com.feature.navigation.note.navigateToNoteWithResult
 
 fun NavGraphBuilder.examGraph(navController: NavController){
     composable(route = ExamScreens.EXAM.route) {
@@ -21,9 +20,7 @@ fun NavGraphBuilder.examGraph(navController: NavController){
         ExamDetailComponent(
             examId = examId,
             onBackPressed = { navController.popBackStack() },
-            navigateToNotesWithResult = {
-                navController.navigateToNoteWithResult()
-            },
+            navigateToNotesWithResult = {},
             notesSelectionLiveDat = resultScreen
         )
     }

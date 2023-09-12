@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Photo
@@ -21,6 +22,8 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,13 +38,11 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun FabMenu(
-    iconButton: FabItem = FabItem(Icons.Filled.ExpandMore, "More"),
+    iconButton: FabItem = FabItem(Icons.Filled.Add, "More"),
     items: List<FabItem>,
     onFabClicked: (FabItem) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    val coroutineScope = rememberCoroutineScope()
-    val rotation = remember { Animatable(0f) }
 
     Column(
         horizontalAlignment = Alignment.End
@@ -62,7 +63,10 @@ fun FabMenu(
                         Spacer(Modifier.width(2.dp))
                         FloatingActionButton(
                             modifier = Modifier.padding(bottom = 2.dp),
-                            onClick = { onFabClicked(fabItem) }) {
+                            onClick = {
+                                onFabClicked.invoke(fabItem)
+                            }
+                        ) {
                             Icon(imageVector = fabItem.icon, contentDescription = "icons")
                         }
                     }
@@ -71,11 +75,11 @@ fun FabMenu(
         }
         FloatingActionButton(onClick = {
             expanded = !expanded
-            coroutineScope.launch {
-                rotation.animateTo(targetValue = if(expanded) 360f else 180f)
-            }
         }) {
-            Icon(modifier = Modifier.rotate(rotation.value), imageVector = iconButton.icon, contentDescription = "icons")
+            Icon(
+                imageVector = iconButton.icon,
+                contentDescription = "icons"
+            )
         }
     }
 }

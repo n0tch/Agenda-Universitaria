@@ -9,7 +9,7 @@ data class TimetableAndSubject(
     @Embedded val timetableEntity: TimetableEntity,
 
     @Relation(
-        parentColumn = "timetableId",
+        parentColumn = "subjectId",
         entityColumn = "subjectId"
     )
     val subject: SubjectEntity

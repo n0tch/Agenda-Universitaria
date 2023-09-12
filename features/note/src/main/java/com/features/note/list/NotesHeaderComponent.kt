@@ -27,7 +27,6 @@ import com.example.model.Note
 
 @Composable
 fun HomeNotesHeaderComponent(
-    onNoteClicked: (Note) -> Unit = {},
     onSearch: (String) -> Unit = {}
 ) {
     var searchText by remember { mutableStateOf("") }

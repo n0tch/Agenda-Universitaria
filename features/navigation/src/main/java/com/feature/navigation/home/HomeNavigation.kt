@@ -21,7 +21,7 @@ fun NavGraphBuilder.homeGraph(navController: NavController) {
             HomeComponent(
                 screenList = HomeMainScreens.values().map { it.label },
                 onNavigateToNote = { noteId ->
-                    navController.navigate(NoteScreens.NOTE.route + "/${noteId}")
+                    navController.navigate(NoteScreens.NOTE_EDITION.route + "/${noteId}")
                 },
                 onNavigateToNoteGraph = { noteNavGraph(navController) },
                 onLogout = {},

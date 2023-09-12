@@ -1,5 +1,6 @@
 package com.core.domain
 
+import android.net.Uri
 import android.util.Log
 import com.core.common.AppDispatcher
 import com.core.common.Dispatcher
@@ -30,20 +31,37 @@ class NoteUseCase @Inject constructor(
 
     fun saveNote(
         note: Note,
-        uriPaths: List<String>,
+        uriPaths: List<Uri?>,
         labels: List<Label>
-    ): Flow<Result<String>> = flow<Result<String>> {
+    ) = flow<Result<String>> {
 
         val savedNote = noteRepository.saveNote(note)
-        val media = noteMediaRepository.saveNoteMedias(savedNote.id, uriPaths)
-        noteLabelRepository.saveNoteLabels(savedNote.id, labels.map { it.id })
+        noteMediaRepository.saveNoteMedias(savedNote.id, uriPaths)
+        noteLabelRepository.saveNoteLabels(savedNote.id, labels)
 
         emit(Result.Success(savedNote.id.toString()))
     }.flowOn(ioDispatcher).catch {
+        Log.e("saveNote", it.message.toString())
         emit(Result.Error(it as Exception))
     }
 
-    fun fetchNotes(): Flow<Result<List<NoteCompound>>> = flow<Result<List<NoteCompound>>> {
+    fun updateNote(
+        note: Note,
+        uriPaths: List<Uri?>,
+        labels: List<Label>
+    ) = flow<Result<Note>> {
+
+        val updatedNote = noteRepository.updateNote(note)
+        noteMediaRepository.updateNoteMedia(updatedNote.id, uriPaths)
+        noteLabelRepository.updateNoteLabels(updatedNote.id, labels)
+
+        emit(Result.Success(updatedNote))
+    }.flowOn(ioDispatcher).catch {
+        Log.e("updateNote", it.message.toString())
+        emit(Result.Error(it as Exception))
+    }
+
+    fun fetchNotes() = flow<Result<List<NoteCompound>>> {
         val notes = noteRepository.fetchNotes()
         emit(Result.Success(notes))
     }.flowOn(ioDispatcher).catch {
@@ -51,14 +69,14 @@ class NoteUseCase @Inject constructor(
         emit(Result.Error(it as Exception))
     }
 
-    fun searchNotes(query: String): Flow<Result<List<NoteCompound>>> = flow<Result<List<NoteCompound>>> {
+    fun searchNotes(query: String) = flow<Result<List<NoteCompound>>> {
         val notes = noteRepository.searchNote(query)
         emit(Result.Success(notes))
     }.flowOn(ioDispatcher).catch {
         emit(Result.Error(it as Exception))
     }
 
-    fun deleteNote(note: Note): Flow<Result<Boolean>> = flow<Result<Boolean>> {
+    fun deleteNote(note: Note) = flow<Result<Boolean>> {
         val deleted = noteRepository.deleteNote(note)
         if (deleted)
             emit(Result.Success(true))
@@ -69,23 +87,21 @@ class NoteUseCase @Inject constructor(
         emit(Result.Error(it as Exception))
     }
 
-    fun fetchNoteById(noteId: Int?): Flow<Result<NoteCompound>> = flow {
-        if (noteId == null) {
-            emit(Result.Error(Exception()))
-        } else {
-            val noteCompound = noteRepository.fetchNoteById(noteId)
-            emit(Result.Success(noteCompound))
-        }
+    fun fetchNoteById(noteId: Int) = flow<Result<NoteCompound>> {
+        val noteCompound = if (noteId == NoteCompound.EMPTY_NOTE_ID)
+            NoteCompound()
+        else
+            noteRepository.fetchNoteById(noteId)
+
+        emit(Result.Success(noteCompound))
     }.flowOn(ioDispatcher).catch {
         emit(Result.Error(it as Exception))
     }
 
-    suspend fun fetchNotesByLabel(label: Label): Flow<Result<List<NoteCompound>>> = flow<Result<List<NoteCompound>>>{
+    suspend fun fetchNotesByLabel(label: Label) = flow<Result<List<NoteCompound>>> {
         val notes = noteRepository.fetchNotesByLabelId(label.id)
         emit(Result.Success(notes))
     }.flowOn(ioDispatcher).catch {
         emit(Result.Error(it as Exception))
     }
-
-    fun shouldOpenNewNote(noteId: Int?): Boolean = noteId != null
 }

@@ -3,7 +3,6 @@ package com.core.data.repository.timetable
 import com.core.data.repository.subject.toSubject
 import com.core.database.timetable.TimetableEntity
 import com.core.database.timetable.relations.TimetableAndSubject
-import com.example.model.Subject
 import com.example.model.Timetable
 import com.example.model.TimetableCompound
 

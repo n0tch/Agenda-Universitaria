@@ -4,25 +4,35 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.features.note.detail.NoteDetailComponent
 import com.features.note.list.NoteListComponent
-import com.features.note.newnote.NoteComponent
+import com.features.note.edit.NoteComponent
 
 const val noteGraphRoute = "note_graph"
 
 fun NavGraphBuilder.noteNavGraph(navController: NavController) {
     navigation(route = noteGraphRoute, startDestination = NoteScreens.NOTE_LIST.route) {
-        composable(route = NoteScreens.NOTE.route + "/{id}") { backStackEntry ->
-            val noteId = backStackEntry.arguments?.getString("id")
-            NoteComponent(navController = navController, noteId = noteId?.toIntOrNull())
+        composable(route = NoteScreens.NOTE_EDITION.route + "/{id}") {
+            val noteId = it.arguments?.getString("id")?.toIntOrNull() ?: -1
+            NoteComponent(
+                onBackPressed = { navController.popBackStack() },
+                noteId = noteId,
+                isNewNote = noteId == -1
+            )
         }
 
         composable(route = NoteScreens.NOTE_LIST.route) {
-            NoteListComponent(onNavigateToNote = { noteId ->
-                navController.navigate(NoteScreens.NOTE.route + "/$noteId")
-            })
+            NoteListComponent(
+                onNavigateToNote = { noteId ->
+                    navController.navigate(NoteScreens.NOTE_DETAIL.route + "/$noteId")
+                },
+                onNavigateToNewNote = {
+                    navController.navigate(NoteScreens.NOTE_EDITION.route + "/-1")
+                }
+            )
         }
 
-        composable(route = NoteScreens.NOTE_LIST_WITH_RESULT.route){
+        composable(route = NoteScreens.NOTE_LIST_WITH_RESULT.route) {
             NoteListComponent(
                 onNavigateToNote = {},
                 shouldReturnSelectedNotes = true,
@@ -32,6 +42,19 @@ fun NavGraphBuilder.noteNavGraph(navController: NavController) {
                 },
             )
         }
+
+        composable(route = NoteScreens.NOTE_DETAIL.route + "/{id}") { backStackEntry ->
+            val noteId = backStackEntry.arguments?.getString("id")?.toIntOrNull() ?: 0
+            NoteDetailComponent(
+                noteId = noteId,
+                onBackPressed = {
+                    navController.popBackStack()
+                },
+                onEditNotePressed = { id ->
+                    navController.navigateToNoteEdition(id)
+                }
+            )
+        }
     }
 }
 
@@ -39,6 +62,6 @@ fun NavController.navigateToNotes() {
     navigate(noteGraphRoute)
 }
 
-fun NavController.navigateToNoteWithResult() {
-    navigate(NoteScreens.NOTE_LIST_WITH_RESULT.route)
+fun NavController.navigateToNoteEdition(noteId: Int){
+    navigate(NoteScreens.NOTE_EDITION.route + "/$noteId")
 }
