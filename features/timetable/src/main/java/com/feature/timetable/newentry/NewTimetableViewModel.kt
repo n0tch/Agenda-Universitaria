@@ -25,9 +25,9 @@ class NewTimetableViewModel @Inject constructor(
 
     val uiState: MutableStateFlow<NewTimetableState> by lazy { MutableStateFlow(NewTimetableState.Idle) }
 
-    fun saveTimetable(entry: Timetable) {
+    fun saveTimetables(entries: List<Timetable>, subjectId: Int) {
         viewModelScope.launch {
-            timetableUseCase.saveTimetableEntry(entry).collect { Log.e("asas", "sssssss") }
+            timetableUseCase.saveTimetableEntries(entries, subjectId).collect { Log.e("asas", "sssssss") }
         }
     }
 

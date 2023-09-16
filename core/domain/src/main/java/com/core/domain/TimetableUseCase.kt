@@ -21,9 +21,11 @@ class TimetableUseCase @Inject constructor(
     private val appNotificationManager: AppNotificationManager
 ) {
 
-    fun saveTimetableEntry(entry: Timetable) = flow<Result<Timetable>> {
-        val timetable = timetableRepository.saveTimetableEntry(entry)
-        emit(Result.Success(timetable))
+    fun saveTimetableEntries(entries: List<Timetable>, subjectId: Int) = flow<Result<Timetable>> {
+        entries.forEach { it.subjectId = subjectId }
+        val timetable = timetableRepository.saveTimetableEntry(entries)
+
+        emit(Result.Success(Timetable()))
     }.flowOn(ioDispatcher).catch {
         Log.e("erro", it.toString())
         emit(Result.Error(it as Exception))

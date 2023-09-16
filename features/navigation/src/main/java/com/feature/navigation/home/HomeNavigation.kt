@@ -2,15 +2,20 @@ package com.feature.navigation.home
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.feature.navigation.HomeMainScreens
 import com.feature.navigation.exam.ExamScreens
+import com.feature.navigation.navigateTo
+import com.feature.navigation.note.NoteRoutes
 import com.feature.navigation.note.NoteScreens
 import com.feature.navigation.note.navigateToNotes
 import com.feature.navigation.note.noteNavGraph
+import com.feature.navigation.subject.navigateToSubjectById
 import com.feature.navigation.subject.navigateToSubjects
 import com.feature.navigation.timetable.TimetableScreens
+import com.feature.navigation.timetable.navigateToTimetable
 import com.home.home.HomeComponent
 
 const val homeGraphRoute = "home_graph"
@@ -20,20 +25,11 @@ fun NavGraphBuilder.homeGraph(navController: NavController) {
         composable(route = HomeScreens.HOME.route) {
             HomeComponent(
                 screenList = HomeMainScreens.values().map { it.label },
-                onNavigateToNote = { noteId ->
-                    navController.navigate(NoteScreens.NOTE_EDITION.route + "/${noteId}")
+                addScreens = listOf(),
+                navigateToSubject = { subjectName, subjectId ->
+                    navController.navigateToSubjectById(subjectName, subjectId)
                 },
-                onNavigateToNoteGraph = { noteNavGraph(navController) },
-                onLogout = {},
-                navigateToScreen = { screenName ->
-                    when (HomeMainScreens.values().firstOrNull { it.label == screenName }) {
-                        HomeMainScreens.SUBJECT -> navController.navigateToSubjects()
-                        HomeMainScreens.NOTE -> navController.navigateToNotes()
-                        HomeMainScreens.EXAMS -> navController.navigate(ExamScreens.EXAM.route)
-                        HomeMainScreens.TIMETABLE -> navController.navigate(TimetableScreens.TIMETABLE.route)
-                        else -> {}
-                    }
-                }
+                navigateToScreen = { navController.navigateTo(it) }
             )
         }
     }
@@ -41,8 +37,10 @@ fun NavGraphBuilder.homeGraph(navController: NavController) {
 
 fun NavController.navigateToHome() {
     navigate(homeGraphRoute) {
-        popUpTo(currentBackStackEntry?.destination?.route ?: "") {
-            inclusive = true
+        popUpTo(HomeScreens.HOME.route/*currentBackStackEntry?.destination?.route ?: ""*/) {
+            saveState = true
         }
+//        launchSingleTop = true
+        restoreState = true
     }
 }

@@ -1,112 +1,159 @@
 package com.feature.timetable.newentry
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.core.designsystem.components.alert.BasicAlertDialog
+import com.core.designsystem.components.chip.MultipleChipSelection
+import com.core.designsystem.components.chip.SingleChipSelection
 import com.core.designsystem.components.combobox.ComboBox
+import com.core.designsystem.components.expandablecard.ExpandableCard
+import com.core.designsystem.components.timepicker.AppTimePicker
 import com.example.model.Subject
 import com.example.model.Timetable
-import com.feature.timetable.WeekChip
 import java.time.DayOfWeek
 import java.time.format.TextStyle
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewTimetableScreen(
     subjects: List<Subject> = emptyList(),
-    onSaveButtonClicked: (Timetable) -> Unit
+    onSaveButtonClicked: (List<Timetable>, Int) -> Unit
 ) {
-    var selectedWeekDays by remember { mutableStateOf(DayOfWeek.MONDAY) }
-    var subject by remember { mutableStateOf("") }
+    val selectedWeekDays: SnapshotStateList<DayOfWeek> = remember { mutableStateListOf() }
+    val selectedTimetables: SnapshotStateMap<DayOfWeek, MutableList<Timetable>> = remember {
+        mutableStateMapOf()
+    }
 
-    var startTimerPicker by remember { mutableStateOf(false) }
-    var endTimerPicker by remember { mutableStateOf(false) }
-    var place by remember { mutableStateOf("") }
-    var teacher by remember { mutableStateOf("") }
+    var subject by remember { mutableStateOf(-1) }
 
-    val timePickerState = rememberTimePickerState()
-    val endTimePickerState = rememberTimePickerState()
-
-    Column {
-        Text("Selecione o(s) dia(s) da aula")
-
-        ComboBox(
-            initialText = "",
-            modifier = Modifier.fillMaxWidth(),
-            items = subjects.map { it.name },
-            onOptionClicked = {
-                subject = it
+    Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
+        Column {
+            OutlinedCard(modifier = Modifier.fillMaxWidth()) {
+                Text("Selecione a materia")
+                SingleChipSelection(
+                    items = subjects,
+                    content = { Text(it.name) },
+                    onSelection = { subject = it.id }
+                )
             }
-        )
 
-        FlowRow {
-            DayOfWeek.values().forEach { weekDay ->
-                WeekChip(
-                    text = weekDay.getDisplayName(
-                        TextStyle.FULL,
-                        Locale.getDefault()
-                    )
-                ) { text, selected ->
-                    if (selected) {
-                        selectedWeekDays = weekDay
-                    } else {
-//                        selectedWeekDays.remove(weekDay)
+            OutlinedCard(modifier = Modifier.fillMaxWidth()) {
+                Text("Selecione o(s) dia(s) da aula")
+
+                MultipleChipSelection(
+                    items = DayOfWeek.values().toList(),
+                    content = {
+                        Text(it.getDisplayName(TextStyle.FULL, Locale.getDefault()))
+                    },
+                    selectedItems = {
+                        selectedWeekDays.clear()
+                        selectedWeekDays.addAll(it)
+
+                        it.forEach { dayOfWeek ->
+                            if (!selectedTimetables.containsKey(dayOfWeek)) {
+                                selectedTimetables[dayOfWeek] =
+                                    mutableListOf(Timetable(weekDay = dayOfWeek.name))
+                            }
+                        }
+                    }
+                )
+            }
+
+            LazyColumn {
+                items(selectedWeekDays) { dayOfWeek ->
+                    ExpandableCard(
+                        modifier = Modifier.fillMaxWidth(),
+                        title = dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())
+                    ) {
+
+                        selectedTimetables[dayOfWeek]?.forEachIndexed { index, timetable ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Row {
+                                    AppTimePicker { start, end ->
+                                        timetable.startTime =
+                                            convertSelectedTime(start.hour, start.minute)
+                                        timetable.endTime =
+                                            convertSelectedTime(end.hour, end.minute)
+                                    }
+                                }
+
+                                Row {
+                                    OutlinedIconButton(
+                                        onClick = {
+                                            selectedTimetables[dayOfWeek] =
+                                                selectedTimetables[dayOfWeek]?.toMutableList()
+                                                    ?.apply { removeAt(index) }
+                                                    ?: mutableListOf()
+                                        }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Remove,
+                                            contentDescription = "remove item"
+                                        )
+                                    }
+                                    OutlinedIconButton(
+                                        onClick = {
+                                            selectedTimetables[dayOfWeek] =
+                                                selectedTimetables[dayOfWeek]?.toMutableList()
+                                                    ?.apply { add(Timetable(weekDay = dayOfWeek.name)) }
+                                                    ?: mutableListOf()
+                                        }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Add,
+                                            contentDescription = "add more"
+                                        )
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
 
-        Row {
-            OutlinedButton(
-                onClick = { startTimerPicker = true }
-            ) {
-                Text("Inicio")
-            }
-            OutlinedButton(onClick = { endTimerPicker = true }) {
-                Text("Fim")
-            }
-        }
 
-        OutlinedButton(modifier = Modifier.fillMaxWidth(), onClick = {
-            onSaveButtonClicked(
-                Timetable(
-                    weekDay = selectedWeekDays.name,
-                    //TODO remove thissss
-                    subjectId = subjects.find { it.name == subject }?.id ?: 0,
-                    startTime = convertSelectedTime(timePickerState.hour, timePickerState.minute),
-                    endTime = convertSelectedTime(endTimePickerState.hour, endTimePickerState.minute),
-                )
-            )
-        }) {
-            Text("Save")
-        }
-    }
-
-    if (startTimerPicker) {
-        BasicAlertDialog(onDismiss = { startTimerPicker = false }) {
-            TimePicker(state = timePickerState)
-        }
-    } else if (endTimerPicker) {
-        BasicAlertDialog(onDismiss = { endTimerPicker = false }) {
-            TimePicker(state = endTimePickerState)
-        }
+        OutlinedButton(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = {
+                onSaveButtonClicked(selectedTimetables.values.flatten(), subject)
+            },
+            content = {
+                Text("Save")
+            }
+        )
     }
 }
 
@@ -119,5 +166,5 @@ fun convertSelectedTime(hour: Int, minute: Int): Long {
 @Preview
 @Composable
 fun NewTimetableScreenPreview() {
-    NewTimetableScreen {}
+    NewTimetableScreen() { _, _ -> }
 }

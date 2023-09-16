@@ -18,6 +18,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.core.designsystem.components.ToastComponent
+import com.core.designsystem.components.schedule.DailySchedule
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,7 +54,10 @@ fun TimetableScreen(
                 .padding(paddingValues)
                 .fillMaxSize()
         ) {
-            TimetableSchedule(timetableState.items)
+//            TimetableSchedule(timetableState.items)
+            DailySchedule((1..24).toList())/*{
+                ToastComponent(message = it.title)
+            }*/
 //            TimeTableComponent(
 //                timetableEntries = uiState.items,
 //                onWeekDayClicked = { viewModel.fetchTimetableByDay(it) },

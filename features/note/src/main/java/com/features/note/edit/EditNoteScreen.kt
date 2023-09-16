@@ -85,7 +85,7 @@ fun NewNoteScreen(
     val v: MutableList<Uri?> = medias.map { Uri.parse(it) }.toMutableList()
     val z = photos.union(v).toList()
 
-    val context = LocalContext.current.applicationContext
+    val context = LocalContext.current
 
     val photoResult = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),

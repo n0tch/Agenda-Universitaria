@@ -1,14 +1,23 @@
 package com.feature.navigation.note
 
+import androidx.annotation.DrawableRes
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
+import com.feature.navigation.subject.subjectGraphRoute
+import com.features.navigation.R
 import com.features.note.detail.NoteDetailComponent
 import com.features.note.list.NoteListComponent
 import com.features.note.edit.NoteComponent
 
 const val noteGraphRoute = "note_graph"
+
+enum class NoteRoutes(val route: String, val label: String, @DrawableRes val icon: Int){
+    ADD(NoteScreens.NOTE_DETAIL.route + "/{id}", "Note", R.drawable.baseline_sticky_note_2_24)
+}
 
 fun NavGraphBuilder.noteNavGraph(navController: NavController) {
     navigation(route = noteGraphRoute, startDestination = NoteScreens.NOTE_LIST.route) {
@@ -43,7 +52,12 @@ fun NavGraphBuilder.noteNavGraph(navController: NavController) {
             )
         }
 
-        composable(route = NoteScreens.NOTE_DETAIL.route + "/{id}") { backStackEntry ->
+        composable(
+            route = NoteRoutes.ADD.route,
+            deepLinks = listOf(
+                navDeepLink { uriPattern = NoteRoutes.ADD.route }
+            )
+        ) { backStackEntry ->
             val noteId = backStackEntry.arguments?.getString("id")?.toIntOrNull() ?: 0
             NoteDetailComponent(
                 noteId = noteId,
@@ -59,7 +73,23 @@ fun NavGraphBuilder.noteNavGraph(navController: NavController) {
 }
 
 fun NavController.navigateToNotes() {
-    navigate(noteGraphRoute)
+    navigate(noteGraphRoute){
+        popUpTo(graph.findStartDestination().id) {
+            saveState = true
+        }
+        launchSingleTop = true
+        restoreState = true
+    }
+}
+
+fun NavController.navigateToAddNote(){
+    navigate(noteGraphRoute){
+        popUpTo(graph.findStartDestination().id) {
+            saveState = true
+        }
+        launchSingleTop = true
+        restoreState = true
+    }
 }
 
 fun NavController.navigateToNoteEdition(noteId: Int){

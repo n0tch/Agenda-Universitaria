@@ -12,6 +12,9 @@ interface TimetableDao {
     @Insert
     suspend fun saveTimetable(timetableEntity: TimetableEntity): Long
 
+    @Insert
+    suspend fun saveTimetables(timetables: List<TimetableEntity>): List<Long>
+
     @Transaction
     @Query("SELECT * FROM timetables")
     suspend fun fetchTimetable(): List<TimetableAndSubject>

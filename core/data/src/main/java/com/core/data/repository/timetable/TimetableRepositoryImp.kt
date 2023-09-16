@@ -10,9 +10,9 @@ internal class TimetableRepositoryImp @Inject constructor(
     private val timetableDao: TimetableDao
 ) : TimetableRepository {
 
-    override suspend fun saveTimetableEntry(timetable: Timetable): Timetable {
-        val id = timetableDao.saveTimetable(timetable.toEntity())
-        return timetable.copy(id = id.toInt())
+    override suspend fun saveTimetableEntry(timetables: List<Timetable>): List<Timetable> {
+        val ids = timetableDao.saveTimetables(timetables.map { it.toEntity() })
+        return listOf()
     }
 
     override suspend fun fetchTimetable(): Map<String, List<TimetableCompound>> {

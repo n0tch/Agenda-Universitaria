@@ -15,7 +15,7 @@ fun NavGraphBuilder.timetableGraph(navController: NavController) {
     }
 
     composable(route = TimetableScreens.NEW_TIMETABLE.route) {
-        NewTimeTableContent()
+        NewTimeTableContent(onBackPressed = navController::popBackStack)
     }
 }
 

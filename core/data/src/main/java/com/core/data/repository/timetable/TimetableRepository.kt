@@ -7,7 +7,7 @@ import java.time.DayOfWeek
 
 interface TimetableRepository {
 
-    suspend fun saveTimetableEntry(timetable: Timetable): Timetable
+    suspend fun saveTimetableEntry(timetables: List<Timetable>): List<Timetable>
 
     suspend fun fetchTimetable(): Map<String, List<TimetableCompound>>
 

@@ -9,6 +9,10 @@ data class HomeTimetableState(
     val exception: Exception? = null
 )
 
+data class HomeDailyTimetableState(
+    val items: List<TimetableCompound> = listOf(),
+)
+
 data class CurrentUserState(
     val username: String = "",
     val photoUrl: String = "",

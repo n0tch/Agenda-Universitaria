@@ -17,6 +17,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
+import java.time.DayOfWeek
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,6 +30,12 @@ class HomeViewModel @Inject constructor(
     private val examUseCase: ExamUseCase
 ) : ViewModel() {
 
+    init {
+        fetchCurrentUser()
+        fetchNextExams()
+        fetchTimetableBtWeekDay(LocalDate.now().dayOfWeek)
+    }
+
     private val _currentUserState: MutableStateFlow<CurrentUserState> =
         MutableStateFlow(CurrentUserState())
     val currentUserState: StateFlow<CurrentUserState> = _currentUserState.asStateFlow()
@@ -36,15 +44,30 @@ class HomeViewModel @Inject constructor(
         MutableStateFlow(ExamsState())
     val examsState: StateFlow<ExamsState> = _examsState.asStateFlow()
 
-    private val _logoutState: MutableStateFlow<LogoutState> =
-        MutableStateFlow(LogoutState())
-    val logoutState: StateFlow<LogoutState> = _logoutState.asStateFlow()
-
     private val _timetableState: MutableStateFlow<HomeTimetableState> =
         MutableStateFlow(HomeTimetableState())
     val timetableState: StateFlow<HomeTimetableState> = _timetableState.asStateFlow()
 
-    fun fetchTimetableByWeekDay() {
+    private val _dailyTimetableState: MutableStateFlow<HomeDailyTimetableState> =
+    MutableStateFlow(HomeDailyTimetableState())
+    val dailyTimetableState: StateFlow<HomeDailyTimetableState> = _dailyTimetableState.asStateFlow()
+
+    fun fetchTimetableBtWeekDay(dayOfWeek: DayOfWeek){
+        viewModelScope.launch {
+            homeUseCase.fetchTimetableByDay(dayOfWeek)
+                .flowOn(uiDispatcher)
+                .collect {
+                    when(it){
+                        is Result.Error ->
+                            _timetableState.emit(HomeTimetableState(exception = it.exception))
+
+                        is Result.Success ->
+                            _dailyTimetableState.emit(HomeDailyTimetableState(items = it.data))
+                    }
+                }
+        }
+    }
+    fun fetchWeeklyTimetable() {
         viewModelScope.launch {
             homeUseCase
                 .fetchWeeklyTimeTable()
@@ -83,19 +106,6 @@ class HomeViewModel @Inject constructor(
                     }
                 }
             }
-        }
-    }
-
-    fun logout() {
-        viewModelScope.launch {
-            loginUseCase.logout()
-                .flowOn(uiDispatcher)
-                .collect {
-                    when (it) {
-                        is Result.Error -> _logoutState.emit(LogoutState(exception = it.exception))
-                        is Result.Success -> _logoutState.emit(LogoutState(logoutSuccess = it.data))
-                    }
-                }
         }
     }
 
