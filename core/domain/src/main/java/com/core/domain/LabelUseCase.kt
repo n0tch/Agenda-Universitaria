@@ -19,13 +19,13 @@ class LabelUseCase @Inject constructor(
     private val labelRepository: LabelRepository
 ) {
 
-    fun saveNoteLabel(label: Label): Flow<Result<Boolean>> = flow {
+    fun saveNoteLabel(label: Label): Flow<Result<Label>> = flow {
         labelRepository
             .saveNoteLabel(label)
             .flowOn(ioDispatcher)
             .catch { emit(Result.Error(it as Exception)) }
             .collect {
-                emit(Result.Success(true))
+                emit(Result.Success(it))
             }
     }
 

@@ -9,13 +9,15 @@ import com.feature.timetable.newentry.NewTimeTableContent
 fun NavGraphBuilder.timetableGraph(navController: NavController) {
     composable(route = TimetableScreens.TIMETABLE.route) {
         TimetableScreen(
-            onBack = { navController.popBackStack() },
-            onNewTimetable = { navController.navigateNewToTimetable() }
+            onBack = navController::popBackStack,
+            onNewTimetable = navController::navigateNewToTimetable
         )
     }
 
     composable(route = TimetableScreens.NEW_TIMETABLE.route) {
-        NewTimeTableContent(onBackPressed = navController::popBackStack)
+        NewTimeTableContent(
+            onBackPressed = navController::popBackStack
+        )
     }
 }
 

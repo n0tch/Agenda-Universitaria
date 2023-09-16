@@ -16,8 +16,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TimePicker
-import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -29,10 +27,8 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.core.designsystem.components.alert.BasicAlertDialog
 import com.core.designsystem.components.chip.MultipleChipSelection
 import com.core.designsystem.components.chip.SingleChipSelection
-import com.core.designsystem.components.combobox.ComboBox
 import com.core.designsystem.components.expandablecard.ExpandableCard
 import com.core.designsystem.components.timepicker.AppTimePicker
 import com.example.model.Subject
@@ -46,7 +42,8 @@ import java.util.concurrent.TimeUnit
 @Composable
 fun NewTimetableScreen(
     subjects: List<Subject> = emptyList(),
-    onSaveButtonClicked: (List<Timetable>, Int) -> Unit
+    onSaveButtonClicked: (List<Timetable>, Int) -> Unit = {_,_->},
+    onAddNewSubjectClicked: () -> Unit = {}
 ) {
     val selectedWeekDays: SnapshotStateList<DayOfWeek> = remember { mutableStateListOf() }
     val selectedTimetables: SnapshotStateMap<DayOfWeek, MutableList<Timetable>> = remember {
@@ -62,7 +59,9 @@ fun NewTimetableScreen(
                 SingleChipSelection(
                     items = subjects,
                     content = { Text(it.name) },
-                    onSelection = { subject = it.id }
+                    onSelection = { subject = it.id },
+                    isLastItemSelected = true,
+                    onLastItemClicked = { onAddNewSubjectClicked() }
                 )
             }
 
@@ -166,5 +165,5 @@ fun convertSelectedTime(hour: Int, minute: Int): Long {
 @Preview
 @Composable
 fun NewTimetableScreenPreview() {
-    NewTimetableScreen() { _, _ -> }
+    NewTimetableScreen()
 }

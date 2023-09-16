@@ -13,6 +13,7 @@ import com.core.domain.NoteUseCase
 import com.core.domain.SubjectUseCase
 import com.example.model.Label
 import com.example.model.Note
+import com.example.model.Subject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,15 +40,11 @@ class EditNoteViewModel @Inject constructor(
     private val _uiState: MutableStateFlow<NoteState> by lazy { MutableStateFlow(NoteState(isLoading = true)) }
     val uiState: StateFlow<NoteState> = _uiState.asStateFlow()
 
-    private val _labelState: MutableStateFlow<LabelState> by lazy { MutableStateFlow(LabelState()) }
-    val labelState: StateFlow<LabelState> = _labelState.asStateFlow()
+    private val _labelState: MutableStateFlow<List<Label>> by lazy { MutableStateFlow(emptyList()) }
+    val labelState: StateFlow<List<Label>> = _labelState.asStateFlow()
 
-    private val _subjectsState: MutableStateFlow<SubjectsState> by lazy {
-        MutableStateFlow(
-            SubjectsState()
-        )
-    }
-    val subjectsState: StateFlow<SubjectsState> = _subjectsState.asStateFlow()
+    private val _subjects: MutableStateFlow<List<Subject>> by lazy { MutableStateFlow(emptyList()) }
+    val subjects: StateFlow<List<Subject>> = _subjects.asStateFlow()
 
     fun saveNote(note: Note, uriPaths: List<Uri?>, labels: List<Label>) {
         viewModelScope.launch {
@@ -84,20 +81,20 @@ class EditNoteViewModel @Inject constructor(
                         Result.Error(Exception(""))
                     }
                 }.flowOn(uiDispatcher).collect {
-                when (it) {
-                    is Result.Error -> TODO()
-                    is Result.Success -> {
-                        _labelState.emit(LabelState(it.data.labels))
-                        _subjectsState.emit(SubjectsState(it.data.subjects))
+                    when (it) {
+                        is Result.Error -> TODO()
+                        is Result.Success -> {
+                            _labelState.emit(it.data.labels)
+                            _subjects.emit(it.data.subjects)
+                        }
                     }
                 }
-            }
         }
     }
 
-    fun saveNoteLabel(label: Label) {
+    fun saveNoteLabel(label: String) {
         viewModelScope.launch {
-            labelUseCase.saveNoteLabel(label).flowOn(uiDispatcher).collect {
+            labelUseCase.saveNoteLabel(Label(name = label)).flowOn(uiDispatcher).collect {
                 when (it) {
                     is Result.Error -> {
                         Log.e("erro", it.exception.toString())
@@ -105,11 +102,7 @@ class EditNoteViewModel @Inject constructor(
 
                     is Result.Success -> {
                         Log.e("success", it.data.toString())
-                        _labelState.emit(LabelState(labels = _labelState.value.labels.apply {
-                            toMutableList().add(
-                                label
-                            )
-                        }))
+                        _labelState.value = _labelState.value.toMutableList().apply { add(it.data) }
                     }
                 }
             }
@@ -125,6 +118,19 @@ class EditNoteViewModel @Inject constructor(
                     when (it) {
                         is Result.Error -> _uiState.emit(NoteState(exception = it.exception))
                         is Result.Success -> _uiState.emit(NoteState(noteCompound = it.data))
+                    }
+                }
+        }
+    }
+
+    fun saveSubject(name: String, place: String, teacher: String) {
+        viewModelScope.launch {
+            subjectUseCase.saveSubject(Subject(name = name, place = place, teacher = teacher))
+                .collect {
+                    when (it) {
+                        is Result.Error -> TODO()
+                        is Result.Success -> _subjects.value =
+                            _subjects.value.toMutableList().apply { add(it.data) }
                     }
                 }
         }

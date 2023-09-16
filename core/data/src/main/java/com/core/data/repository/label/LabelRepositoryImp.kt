@@ -1,11 +1,7 @@
 package com.core.data.repository.label
 
-import com.core.data.repository.note.toNote
-import com.core.data.repository.note.toNoteCompound
 import com.core.database.label.LabelDao
 import com.example.model.Label
-import com.example.model.Note
-import com.example.model.NoteCompound
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -14,8 +10,8 @@ internal class LabelRepositoryImp @Inject constructor(
     private val labelDao: LabelDao
 ): LabelRepository {
     override fun saveNoteLabel(label: Label): Flow<Label> = flow {
-        labelDao.saveLabel(label.toEntity())
-        emit(label)
+        val id = labelDao.saveLabel(label.toEntity())
+        emit(label.copy(id = id.toInt()))
     }
 
     override fun fetchNoteLabels(): Flow<List<Label>> = flow {

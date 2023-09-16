@@ -1,29 +1,26 @@
 package com.feature.navigation.note
 
-import androidx.annotation.DrawableRes
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
-import com.feature.navigation.subject.subjectGraphRoute
-import com.features.navigation.R
 import com.features.note.detail.NoteDetailComponent
+import com.features.note.edit.EditNoteComponent
 import com.features.note.list.NoteListComponent
-import com.features.note.edit.NoteComponent
 
 const val noteGraphRoute = "note_graph"
 
-enum class NoteRoutes(val route: String, val label: String, @DrawableRes val icon: Int){
-    ADD(NoteScreens.NOTE_DETAIL.route + "/{id}", "Note", R.drawable.baseline_sticky_note_2_24)
+enum class NoteRoutes(val route: String){
+    ADD(NoteScreens.NOTE_DETAIL.route + "/{id}")
 }
 
 fun NavGraphBuilder.noteNavGraph(navController: NavController) {
     navigation(route = noteGraphRoute, startDestination = NoteScreens.NOTE_LIST.route) {
         composable(route = NoteScreens.NOTE_EDITION.route + "/{id}") {
             val noteId = it.arguments?.getString("id")?.toIntOrNull() ?: -1
-            NoteComponent(
+            EditNoteComponent(
                 onBackPressed = { navController.popBackStack() },
                 noteId = noteId,
                 isNewNote = noteId == -1

@@ -11,7 +11,7 @@ import com.core.database.label.relations.LabelWithNotes
 @Dao
 interface LabelDao {
     @Insert
-    suspend fun saveLabel(labelEntity: LabelEntity)
+    suspend fun saveLabel(labelEntity: LabelEntity): Long
 
     @Delete
     suspend fun deleteLabel(labelEntity: LabelEntity)

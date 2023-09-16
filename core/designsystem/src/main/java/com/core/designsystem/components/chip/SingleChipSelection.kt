@@ -4,10 +4,12 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.ElevatedFilterChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,6 +23,8 @@ import androidx.compose.ui.unit.dp
 fun <T> SingleChipSelection(
     items: List<T>,
     preSelected: () -> T? = { null },
+    isLastItemSelected: Boolean = false,
+    onLastItemClicked: () -> Unit = {},
     content: @Composable (T) -> Unit,
     onSelection: (T) -> Unit = {}
 ) {
@@ -46,6 +50,12 @@ fun <T> SingleChipSelection(
                 },
                 selected = itemSelected == it
             )
+        }
+
+        if(isLastItemSelected){
+            IconButton(onClick = { onLastItemClicked() }) {
+                Icon(imageVector = Icons.Filled.Add, contentDescription = "Add")
+            }
         }
     }
 }

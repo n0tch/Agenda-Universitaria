@@ -4,10 +4,12 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.ElevatedFilterChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
@@ -20,6 +22,8 @@ import androidx.compose.ui.unit.dp
 inline fun <reified T> MultipleChipSelection(
     items: List<T>,
     preSelection: Array<T> = emptyArray(),
+    lastItemEnabled: Boolean = false,
+    crossinline onLastItemClicked: () -> Unit = {},
     crossinline content: @Composable (T) -> Unit,
     selectedItems: (List<T>) -> Unit
 ) {
@@ -44,6 +48,12 @@ inline fun <reified T> MultipleChipSelection(
                     }
                 }
             )
+        }
+
+        if (lastItemEnabled) {
+            IconButton(onClick = { onLastItemClicked() }) {
+                Icon(imageVector = Icons.Filled.Add, contentDescription = "")
+            }
         }
     }
 

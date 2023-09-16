@@ -1,5 +1,9 @@
 package com.feature.navigation.subject
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
@@ -8,11 +12,12 @@ import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import com.feature.navigation.note.NoteScreens
 import com.features.subject.detail.SubjectDetailComponent
+import com.features.subject.list.SubjectAddDialog
 import com.features.subject.list.SubjectComponent
 
 const val subjectGraphRoute = "subject_graph"
 
-enum class SubjectRoutes(val route: String){
+enum class SubjectRoutes(val route: String) {
     DETAIL(SubjectScreens.SUBJECT_DETAIL.route + "/{name}/{id}")
 }
 
@@ -44,10 +49,18 @@ fun NavGraphBuilder.subjectGraph(navController: NavController) {
             )
         }
     }
+
+    composable(route = SubjectScreens.ADD.route) {
+        var isOpen by remember { mutableStateOf(true) }
+
+        if(isOpen){
+            SubjectAddDialog(onDismiss = { isOpen = false }, onSaveButton = {})
+        }
+    }
 }
 
 fun NavController.navigateToSubjects() {
-    navigate(subjectGraphRoute){
+    navigate(subjectGraphRoute) {
         popUpTo(graph.findStartDestination().id) {
             saveState = true
         }
@@ -56,8 +69,12 @@ fun NavController.navigateToSubjects() {
     }
 }
 
+fun NavController.navigateToAddSubject() {
+    navigate(SubjectScreens.ADD.route)
+}
+
 fun NavController.navigateToSubjectById(subjectName: String, subjectId: Int) {
-    navigate(SubjectScreens.SUBJECT_DETAIL.route + "/$subjectName/$subjectId"){
+    navigate(SubjectScreens.SUBJECT_DETAIL.route + "/$subjectName/$subjectId") {
         popUpTo(graph.findStartDestination().id) {
             saveState = true
         }

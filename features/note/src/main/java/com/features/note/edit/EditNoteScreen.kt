@@ -16,8 +16,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,10 +23,8 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
-import com.github.dhaval2404.imagepicker.ImagePicker
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,7 +39,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.core.designsystem.components.alert.BasicAlertDialog
 import com.core.designsystem.components.chip.MultipleChipSelection
 import com.core.designsystem.components.chip.SingleChipSelection
 import com.core.designsystem.components.fab.FabItem
@@ -52,6 +47,7 @@ import com.example.model.Label
 import com.example.model.Note
 import com.example.model.NoteCompound
 import com.example.model.Subject
+import com.github.dhaval2404.imagepicker.ImagePicker
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,29 +56,24 @@ fun NewNoteScreen(
     noteCompound: NoteCompound,
     saved: Boolean,
     noteLabels: List<Label>,
-    medias: List<String>,
     subjects: List<Subject>,
     onSaveClicked: (note: Note, mediaList: List<Uri?>, labels: List<Label>) -> Unit,
     onBackClicked: () -> Unit,
-    onSaveLabel: (Label) -> Unit = {}
+    addNewLabel: () -> Unit = {},
+    addSubject: () -> Unit = {}
 ) {
 
     val snackBar = SnackbarHostState()
     val coroutineScope = rememberCoroutineScope()
 
-    var openLabelDialog by remember { mutableStateOf(false) }
-
     var title by remember { mutableStateOf(noteCompound.note.title) }
     var description by remember { mutableStateOf(noteCompound.note.body) }
     var subjectId by remember { mutableStateOf(noteCompound.note.subjectId) }
 
-    //remove to a widget
-    var labelText by remember { mutableStateOf("") }
-
     val photos: MutableList<Uri?> = remember { mutableStateListOf() }
     var selectedLabels: List<Label> = remember { mutableStateListOf() }
 
-    val v: MutableList<Uri?> = medias.map { Uri.parse(it) }.toMutableList()
+    val v: MutableList<Uri?> = noteCompound.uriPaths.map { Uri.parse(it) }.toMutableList()
     val z = photos.union(v).toList()
 
     val context = LocalContext.current
@@ -148,7 +139,7 @@ fun NewNoteScreen(
                         }
 
                         EditNoteButtons.TAG.icon -> {
-                            openLabelDialog = true
+                            addNewLabel()
                         }
                     }
                 }
@@ -183,6 +174,10 @@ fun NewNoteScreen(
                     },
                     selectedItems = {
                         selectedLabels = it
+                    },
+                    lastItemEnabled = true,
+                    onLastItemClicked = {
+                        addNewLabel()
                     }
                 )
             }
@@ -193,7 +188,9 @@ fun NewNoteScreen(
                     items = subjects,
                     preSelected = { noteCompound.subject },
                     content = { Text(text = it.name) },
-                    onSelection = { subjectId = it.id }
+                    onSelection = { subjectId = it.id },
+                    isLastItemSelected = true,
+                    onLastItemClicked = { addSubject() }
                 )
             }
 
@@ -215,19 +212,6 @@ fun NewNoteScreen(
                 coroutineScope.launch { snackBar.showSnackbar(message = "Saved") }
             }
         })
-
-        if (openLabelDialog) {
-            BasicAlertDialog(
-                onDismiss = { openLabelDialog = false }
-            ) {
-                Card(Modifier.padding(4.dp)) {
-                    TextField(value = labelText, onValueChange = { labelText = it })
-                    Button(onClick = { onSaveLabel(Label(name = labelText)) }) {
-                        Text(text = "Salvar")
-                    }
-                }
-            }
-        }
     }
 }
 
