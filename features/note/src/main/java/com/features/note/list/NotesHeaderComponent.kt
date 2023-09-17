@@ -4,14 +4,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,32 +23,41 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import com.example.model.Note
 
 @Composable
 fun HomeNotesHeaderComponent(
-    onSearch: (String) -> Unit = {}
+    onSearch: (String) -> Unit = {},
+    onBackPressed: () -> Unit = {}
 ) {
     var searchText by remember { mutableStateOf("") }
 
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically) {
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
-                val (textField, searchIcon) = createRefs()
+                val (backRef, textField, searchIcon) = createRefs()
 
-                TextField(modifier =
-                Modifier
-                    .wrapContentWidth()
-                    .fillMaxWidth(1f)
-                    .constrainAs(textField) {
+                IconButton(
+                    modifier = Modifier.constrainAs(backRef) {
                         top.linkTo(parent.top)
                         start.linkTo(parent.start)
-                        end.linkTo(searchIcon.start)
-                        width = Dimension.preferredWrapContent
-                    }
-                    .padding(8.dp),
+                        bottom.linkTo(parent.bottom)
+                    },
+                    onClick = { onBackPressed() }) {
+                    Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "")
+                }
+
+                OutlinedTextField(
+                    modifier = Modifier
+                        .constrainAs(textField) {
+                            top.linkTo(parent.top)
+                            start.linkTo(backRef.end)
+                            end.linkTo(searchIcon.start)
+                            width = Dimension.fillToConstraints
+                        }
+                        .padding(horizontal = 4.dp),
                     value = searchText,
                     onValueChange = {
                         searchText = it

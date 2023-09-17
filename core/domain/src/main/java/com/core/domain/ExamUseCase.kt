@@ -1,5 +1,6 @@
 package com.core.domain
 
+import android.util.Log
 import com.core.common.AppDispatcher
 import com.core.common.Dispatcher
 import com.core.common.Result
@@ -35,6 +36,14 @@ class ExamUseCase @Inject constructor(
             .catch { emit(Result.Error(it as Exception)) }
             .map { Result.Success(it) }
             .collect { emit(it) }
+    }
+
+    fun fetchExamsCount() = flow<Result<Int>>{
+        val examsCount = examRepository.fetchExamsCount()
+        emit(Result.Success(examsCount))
+    }.flowOn(ioDispatcher).catch {
+        Log.e("fetchExamsCount", it.message.toString())
+        emit(Result.Error(it as Exception))
     }
 
     fun fetchExamById(examId: Int): Flow<Result<Exam>> = flow {

@@ -6,6 +6,7 @@ import com.core.database.exam.ExamDao
 import com.core.database.note.NoteDao
 import com.core.database.label.LabelDao
 import com.core.database.media.NoteMediaDao
+import com.core.database.migrations.migration_1_2
 import com.core.database.note.relations.NoteLabelDao
 import com.core.database.subject.SubjectDao
 import com.core.database.timetable.TimetableDao
@@ -31,6 +32,7 @@ class DatabaseModule {
             APP_DATABASE_NAME
         )
         .fallbackToDestructiveMigration()
+        .addMigrations(migration_1_2)
         .build()
 
     @Provides

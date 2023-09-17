@@ -11,22 +11,7 @@ data class NoteState(
     val exception: Exception? = null
 )
 
-data class EditNoteState(
-    var title: String,
-    var body: String,
-    var subjectId: Int,
-    var labels: List<String>
-)
-
 data class LabelWithSubjectState(
     val labels: List<Label> = emptyList(),
-    val subjects: List<Subject> = emptyList()
-)
-
-data class LabelState(
-    val labels: List<Label> = emptyList(),
-)
-
-data class SubjectsState(
     val subjects: List<Subject> = emptyList()
 )

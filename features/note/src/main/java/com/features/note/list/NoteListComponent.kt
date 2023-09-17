@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.core.designsystem.components.row.PillItem
@@ -27,12 +28,13 @@ fun NoteListComponent(
     onNavigateToNote: (id: Int) -> Unit,
     onNavigateToNewNote: () -> Unit = {},
     shouldReturnSelectedNotes: Boolean = false,
-    onNotesSelected: (List<String>) -> Unit = {}
+    onNotesSelected: (List<String>) -> Unit = {},
+    onBackPressed: () -> Unit = {},
 ) {
 
     val viewModel: NoteListViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val labelState by viewModel.labelState.collectAsStateWithLifecycle()
+    val labels by viewModel.labels.collectAsStateWithLifecycle()
     val selectedNotes: MutableList<Note> = mutableListOf()
 
     LaunchedEffect(key1 = Unit, block = {
@@ -42,20 +44,21 @@ fun NoteListComponent(
 
     Scaffold(
         modifier = Modifier,
+        topBar = {
+            HomeNotesHeaderComponent(
+                onSearch = viewModel::searchNote,
+                onBackPressed = onBackPressed
+            )
+        },
         floatingActionButton = {
-            FloatingActionButton(onClick = { onNavigateToNewNote() }) {
+            FloatingActionButton(onClick = onNavigateToNewNote ) {
                 Icon(imageVector = Icons.Rounded.Add, contentDescription = "Add fab")
             }
         }
     ) {
-        Column(Modifier.padding(it)) {
-            HomeNotesHeaderComponent(
-                onSearch = { search ->
-                    viewModel.searchNote(search)
-                }
-            )
+        Column(Modifier.padding(it).padding(top = 8.dp)) {
             PillLazyRow(
-                pillList = labelState.labels,
+                pillList = labels,
                 content = { label ->
                     PillItem(label.name, Color.LightGray)
                 },

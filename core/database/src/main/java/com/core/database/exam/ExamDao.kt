@@ -22,4 +22,7 @@ interface ExamDao {
 
     @Query("SELECT * FROM exams WHERE exams.date > :fromDateInMillis")
     suspend fun fetchNextExams(fromDateInMillis: Long): List<ExamEntity>
+
+    @Query("SELECT COUNT(*) FROM exams")
+    suspend fun fetchExamsCount(): Int
 }

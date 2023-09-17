@@ -14,7 +14,6 @@ import com.example.model.Label
 import com.example.model.Note
 import com.example.model.NoteCompound
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -66,6 +65,22 @@ class NoteUseCase @Inject constructor(
         emit(Result.Success(notes))
     }.flowOn(ioDispatcher).catch {
         Log.e("fetchNotes", it.message.toString())
+        emit(Result.Error(it as Exception))
+    }
+
+    fun fetchNotes(count: Int) = flow <Result<List<NoteCompound>>> {
+        val notes = noteRepository.fetchNotes(count)
+        emit(Result.Success(notes))
+    }.flowOn(ioDispatcher).catch {
+        Log.e("fetchNotes with count", it.message.toString())
+        emit(Result.Error(it as Exception))
+    }
+
+    fun fetchNoteCount() = flow<Result<Int>> {
+        val noteCount = noteRepository.fetchNotesCount()
+        emit(Result.Success(noteCount))
+    }.flowOn(ioDispatcher).catch {
+        Log.e("fetchNotes with count", it.message.toString())
         emit(Result.Error(it as Exception))
     }
 

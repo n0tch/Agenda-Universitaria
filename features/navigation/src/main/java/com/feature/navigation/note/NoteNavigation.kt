@@ -34,7 +34,8 @@ fun NavGraphBuilder.noteNavGraph(navController: NavController) {
                 },
                 onNavigateToNewNote = {
                     navController.navigate(NoteScreens.NOTE_EDITION.route + "/-1")
-                }
+                },
+                onBackPressed = navController::popBackStack
             )
         }
 

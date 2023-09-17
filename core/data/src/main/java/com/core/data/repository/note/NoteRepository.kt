@@ -11,6 +11,8 @@ interface NoteRepository {
 
     suspend fun fetchNotes(): List<NoteCompound>
 
+    suspend fun fetchNotes(count: Int): List<NoteCompound>
+
     suspend fun fetchNotesBySubject(subjectId: Int): List<Note>
 
     suspend fun fetchNoteById(noteId: Int): NoteCompound
@@ -22,4 +24,6 @@ interface NoteRepository {
     suspend fun saveNoteImagePaths(noteId: Int, images: List<String>)
 
     suspend fun fetchNotesByLabelId(labelId: Int): List<NoteCompound>
+
+    suspend fun fetchNotesCount(): Int
 }

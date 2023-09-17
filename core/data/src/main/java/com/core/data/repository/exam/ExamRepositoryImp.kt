@@ -28,4 +28,8 @@ internal class ExamRepositoryImp @Inject constructor(
         val exams = examDao.fetchNextExams(fromDateTime).map { it.toExam() }
         emit(exams)
     }
+
+    override suspend  fun fetchExamsCount(): Int {
+        return examDao.fetchExamsCount()
+    }
 }

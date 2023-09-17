@@ -25,6 +25,7 @@
             android:exported="true"
             android:screenOrientation="portrait"
             android:label="@string/app_name"
+            android:windowSoftInputMode="adjustPan"
             android:theme="@style/Theme.AgendaUniversitaria">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

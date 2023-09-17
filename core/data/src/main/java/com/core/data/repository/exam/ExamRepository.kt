@@ -12,4 +12,6 @@ interface ExamRepository {
     fun fetchExamById(examId: Int): Flow<Exam>
 
     fun fetchNextExams(fromDateTime: Long): Flow<List<Exam>>
+
+    suspend fun fetchExamsCount(): Int
 }

@@ -1,6 +1,5 @@
 package com.core.data.repository.note
 
-import android.util.Log
 import com.core.database.note.NoteDao
 import com.example.model.Note
 import com.example.model.NoteCompound
@@ -23,13 +22,15 @@ internal class NoteRepositoryImp @Inject constructor(
         return noteDao.fetchCompoundNotes().map { it.toNoteCompound() }
     }
 
+    override suspend fun fetchNotes(count: Int): List<NoteCompound> {
+        return noteDao.fetchCompoundNotes(count).map { it.toNoteCompound() }
+    }
+
     override suspend fun fetchNotesBySubject(subjectId: Int): List<Note> {
         return emptyList()//noteDao.fetchNotesBySubjectId(subjectId).map { it.toNote() }
     }
 
     override suspend fun fetchNoteById(noteId: Int): NoteCompound {
-        val note = noteDao.fetchNoteWithLabelsAndSubject(noteId).toNoteCompound()
-        Log.e("notes", note.toString())
         return noteDao.fetchNoteWithLabelsAndSubject(noteId).toNoteCompound()
     }
 
@@ -48,5 +49,9 @@ internal class NoteRepositoryImp @Inject constructor(
 
     override suspend fun fetchNotesByLabelId(labelId: Int): List<NoteCompound> {
         return noteDao.fetchNotesByLabelId(labelId).map { it.toNoteCompound() }
+    }
+
+    override suspend fun fetchNotesCount(): Int {
+        return noteDao.fetchNoteCount()
     }
 }

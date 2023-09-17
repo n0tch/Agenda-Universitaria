@@ -3,9 +3,9 @@ package com.core.designsystem.components.card
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
@@ -17,17 +17,24 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CardForward(
+fun CardConfig(
     modifier: Modifier = Modifier,
     title: String,
     body: String,
-    indicatorIcon: ImageVector = Icons.Filled.ChevronRight,
+    indicatorIcon: ImageVector = Icons.Filled.MoreHoriz,
     onClick: () -> Unit
 ) {
-    OutlinedCard(modifier = modifier.fillMaxWidth().padding(horizontal = 2.dp, vertical = 2.dp), onClick = { onClick() }) {
-        ConstraintLayout(modifier = Modifier.fillMaxWidth().padding(6.dp)) {
+    OutlinedCard(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 2.dp, vertical = 2.dp)
+    ) {
+        ConstraintLayout(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(6.dp)
+        ) {
             val (textRef, bodyRef, indicatorRef) = createRefs()
 
             Text(
@@ -48,15 +55,18 @@ fun CardForward(
                 overflow = TextOverflow.Ellipsis
             )
 
-            Icon(
+            IconButton(
                 modifier = Modifier.constrainAs(indicatorRef) {
                     end.linkTo(parent.end)
                     top.linkTo(textRef.top)
                     bottom.linkTo(bodyRef.bottom)
                 },
-                imageVector = indicatorIcon,
-                contentDescription = ""
-            )
+                onClick = { onClick() }) {
+                Icon(
+                    imageVector = indicatorIcon,
+                    contentDescription = ""
+                )
+            }
 
         }
     }
@@ -64,8 +74,8 @@ fun CardForward(
 
 @Preview
 @Composable
-fun CardForwardPreview() {
-    CardForward(
+fun CardConfigPreview() {
+    CardConfig(
         title = "Titulo",
         body = "A descrição do card vai aparecer nessa linha. Caso seja pequeno, deverá cortar linha"
     ) {

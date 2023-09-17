@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
                     val navController = rememberNavController()
 
                     Scaffold(
-                        bottomBar = { AppBottomBar(navController = navController) }
+//                        bottomBar = { AppBottomBar(navController = navController) }
                     ) {
                         Column(modifier = Modifier.padding(it)) {
                             AgendaNavHost(navController = navController)

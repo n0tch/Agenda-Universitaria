@@ -1,7 +1,6 @@
 package com.features.note.list
 
 import android.util.Log
-import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.core.common.AppDispatcher
@@ -11,7 +10,6 @@ import com.core.domain.LabelUseCase
 import com.core.domain.NoteUseCase
 import com.example.model.Label
 import com.example.model.Note
-import com.features.note.edit.LabelState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,8 +29,8 @@ class NoteListViewModel @Inject constructor(
     private val _uiState: MutableStateFlow<NoteState> by lazy { MutableStateFlow(NoteState()) }
     val uiState: StateFlow<NoteState> = _uiState.asStateFlow()
 
-    private val _labelState: MutableStateFlow<LabelState> by lazy { MutableStateFlow(LabelState()) }
-    val labelState: StateFlow<LabelState> = _labelState.asStateFlow()
+    private val _labels: MutableStateFlow<List<Label>> by lazy { MutableStateFlow(emptyList()) }
+    val labels: StateFlow<List<Label>> = _labels.asStateFlow()
 
     fun fetchNotes() {
         viewModelScope.launch {
@@ -94,7 +92,7 @@ class NoteListViewModel @Inject constructor(
             labelUseCase.fetchNoteLabels().flowOn(uiDispatcher).collect {
                 when (it) {
                     is Result.Error -> _uiState.emit(NoteState(exception = it.exception))
-                    is Result.Success -> _labelState.emit(LabelState(labels = it.data))
+                    is Result.Success -> _labels.emit(it.data)
                 }
             }
         }

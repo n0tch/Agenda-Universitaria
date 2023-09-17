@@ -31,8 +31,12 @@ interface NoteDao {
     suspend fun searchNoteByQuery(query: String): List<NoteWithLabelWithMediaAndSubject>
 
     @Transaction
-    @Query("SELECT * FROM notes")
+    @Query("SELECT * FROM notes ORDER BY coalesce(notes.updatedAt, notes.createdAt) DESC")
     suspend fun fetchCompoundNotes(): List<NoteWithLabelWithMediaAndSubject>
+
+    @Transaction
+    @Query("SELECT * FROM notes ORDER BY coalesce(notes.updatedAt, notes.createdAt) DESC LIMIT :count")
+    suspend fun fetchCompoundNotes(count: Int): List<NoteWithLabelWithMediaAndSubject>
 
     @Transaction
     @Query("SELECT * FROM notes WHERE notes.noteId = :noteId")
@@ -45,4 +49,7 @@ interface NoteDao {
     @Transaction
     @Query("SELECT * FROM notes WHERE notes.noteId in (SELECT noteId FROM notelabelcrossref WHERE notelabelcrossref.labelId = :labelId)")
     suspend fun fetchNotesByLabelId(labelId: Int): List<NoteWithLabelWithMediaAndSubject>
+
+    @Query("SELECT COUNT(*) FROM notes")
+    fun fetchNoteCount(): Int
 }

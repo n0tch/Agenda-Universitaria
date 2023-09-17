@@ -17,14 +17,17 @@ internal fun Note.toEntityWithId() = NoteEntity(
     noteId = id,
     title = title,
     body = body,
-    noteSubjectId = subjectId
+    noteSubjectId = subjectId,
+    updatedAt = System.currentTimeMillis()
 )
 
 internal fun NoteEntity.toNote() = Note(
     id = noteId,
     title = title ?: "",
     body = body ?: "",
-    subjectId = noteSubjectId ?: -1
+    subjectId = noteSubjectId ?: -1,
+    createdAt = createdAt,
+    updatedAt = updatedAt
 )
 
 internal fun NoteWithLabelWithMediaAndSubject.toNoteCompound() = NoteCompound(

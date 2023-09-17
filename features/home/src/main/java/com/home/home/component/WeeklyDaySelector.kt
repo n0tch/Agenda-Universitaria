@@ -11,16 +11,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,10 +27,10 @@ import java.util.Locale
 
 @Composable
 fun WeeklyDaySelector(
+    selectedDay: DayOfWeek,
     onClick: (DayOfWeek) -> Unit = {}
 ) {
     val days = DayOfWeek.values()
-    var daySelected by remember { mutableStateOf(LocalDate.now().dayOfWeek) }
 
     Column(
         modifier = Modifier
@@ -57,16 +50,16 @@ fun WeeklyDaySelector(
                 Text(
                     modifier = Modifier
                         .clip(CircleShape)
-                        .background(if (daySelected == it) MaterialTheme.colorScheme.inverseSurface else MaterialTheme.colorScheme.background)
+                        .background(if (selectedDay == it) MaterialTheme.colorScheme.inverseSurface else MaterialTheme.colorScheme.background)
                         .size(32.dp)
                         .wrapContentSize()
                         .clickable {
-                            daySelected = it
+//                            selectedDay = it
                             onClick(it)
                         },
                     text = it.getDisplayName(TextStyle.SHORT, Locale.getDefault()).first().uppercase(),
                     textAlign = TextAlign.Center,
-                    color = if (daySelected == it) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.inverseSurface
+                    color = if (selectedDay == it) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.inverseSurface
                 )
             }
         }
@@ -76,5 +69,5 @@ fun WeeklyDaySelector(
 @Preview
 @Composable
 fun WeeklyDaySelectorPreview() {
-    WeeklyDaySelector()
+    WeeklyDaySelector(selectedDay = LocalDate.now().dayOfWeek)
 }
