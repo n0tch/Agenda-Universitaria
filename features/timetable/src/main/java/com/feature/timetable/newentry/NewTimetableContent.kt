@@ -60,8 +60,8 @@ fun NewTimeTableContent(
                 onDismiss = {
                     showAddSubjectDialog = false
                 },
-                onSaveButton = { name, place, teacher ->
-                    viewModel.saveSubject(name, place, teacher)
+                onSaveButton = { subject ->
+                    viewModel.saveSubject(subject.name, subject.place, subject.teacher)
                     showAddSubjectDialog = false
                 }
             )

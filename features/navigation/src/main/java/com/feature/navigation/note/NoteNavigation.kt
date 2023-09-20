@@ -42,11 +42,6 @@ fun NavGraphBuilder.noteNavGraph(navController: NavController) {
         composable(route = NoteScreens.NOTE_LIST_WITH_RESULT.route) {
             NoteListComponent(
                 onNavigateToNote = {},
-                shouldReturnSelectedNotes = true,
-                onNotesSelected = {
-                    navController.previousBackStackEntry?.savedStateHandle?.set("note_list", it)
-                    navController.popBackStack()
-                },
             )
         }
 

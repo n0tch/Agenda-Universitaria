@@ -1,5 +1,6 @@
 package com.home.home
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.core.common.AppDispatcher
 import com.core.common.Dispatcher
@@ -10,7 +11,7 @@ import com.core.domain.LoginUseCase
 import com.core.domain.NoteUseCase
 import com.core.domain.UserUseCase
 import com.example.model.Subject
-import com.home.home.base.BaseViewModel
+import com.core.common.viewmodel.BaseViewModel
 import com.home.home.navigation.HomeNavigation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -32,7 +33,7 @@ class HomeViewModel @Inject constructor(
     private val userUseCase: UserUseCase,
     private val homeUseCase: HomeUseCase,
     private val examUseCase: ExamUseCase,
-    private val noteUseCase: NoteUseCase
+    private val noteUseCase: NoteUseCase,
 ) : BaseViewModel<HomeActon, HomeNavigation>() {
 
     init {
@@ -158,11 +159,11 @@ class HomeViewModel @Inject constructor(
         _subjectConfigState.update { it.copy(showDialog = false) }
     }
 
-//    fun handleAction(action: HomeActon) {
-//        viewModelScope.launch(uiDispatcher) {
-//            _actionState.emit(action)
-//        }
-//    }
+    fun setAlarm() {
+        viewModelScope.launch {
+            homeUseCase.setAlarm().collect { Log.e("set", it.toString()) }
+        }
+    }
 
     companion object {
         private const val LATEST_TEN_NOTES = 10

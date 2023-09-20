@@ -41,6 +41,7 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:model"))
     implementation(project(":core:database"))
+    implementation(project(":core:notification"))
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)

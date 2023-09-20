@@ -22,4 +22,7 @@ interface TimetableDao {
     @Transaction
     @Query("SELECT * FROM timetables WHERE timetables.weekDay = :weekDay")
     suspend fun fetchTimetableByWeekDay(weekDay: String): List<TimetableAndSubject>
+
+    @Query("SELECT * FROM timetables WHERE subjectId = :subjectId")
+    suspend fun fetchTimetableBySubjectId(subjectId: Int): List<TimetableEntity>
 }

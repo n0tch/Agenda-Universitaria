@@ -8,3 +8,10 @@ data class SubjectState(
     val subjects: List<Subject> = emptyList(),
     val exception: Exception? = null
 )
+
+sealed class SubjectListSideEffect{
+    data class Toast(val message: String): SubjectListSideEffect()
+    data class NavigateToDetail(val subject: Subject): SubjectListSideEffect()
+    object NavigateToNewSubject: SubjectListSideEffect()
+    object OnBack: SubjectListSideEffect()
+}

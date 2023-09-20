@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
@@ -30,15 +29,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.core.designsystem.components.chip.MultipleChipSelection
 import com.core.designsystem.components.chip.SingleChipSelection
 import com.core.designsystem.components.expandablecard.ExpandableCard
-import com.core.designsystem.components.timepicker.AppTimePicker
+import com.core.designsystem.components.timepicker.StartAndEndTimePicker
 import com.example.model.Subject
 import com.example.model.Timetable
 import java.time.DayOfWeek
 import java.time.format.TextStyle
 import java.util.Locale
-import java.util.concurrent.TimeUnit
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewTimetableScreen(
     subjects: List<Subject> = emptyList(),
@@ -100,11 +97,9 @@ fun NewTimetableScreen(
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Row {
-                                    AppTimePicker { start, end ->
-                                        timetable.startTime =
-                                            convertSelectedTime(start.hour, start.minute)
-                                        timetable.endTime =
-                                            convertSelectedTime(end.hour, end.minute)
+                                    StartAndEndTimePicker { start, end ->
+                                        timetable.startTime = start
+                                        timetable.endTime = end
                                     }
                                 }
 
@@ -154,12 +149,6 @@ fun NewTimetableScreen(
             }
         )
     }
-}
-
-fun convertSelectedTime(hour: Int, minute: Int): Long {
-    val h = TimeUnit.HOURS.toMillis(hour.toLong())
-    val m = TimeUnit.MINUTES.toMillis(minute.toLong())
-    return h + m
 }
 
 @Preview

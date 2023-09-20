@@ -1,6 +1,8 @@
 package com.feature.navigation
 
 import androidx.navigation.NavController
+import com.feature.navigation.event.navigateToEditEvent
+import com.feature.navigation.event.navigateToListEvent
 import com.feature.navigation.exam.navigateToExams
 import com.feature.navigation.note.navigateToNotes
 import com.feature.navigation.subject.navigateToSubjects
@@ -12,8 +14,8 @@ fun NavController.navigateTo(screenName: String){
         HomeMainScreens.NOTE.label -> navigateToNotes()
         HomeMainScreens.EXAMS.label -> navigateToExams()
         HomeMainScreens.TIMETABLE.label -> navigateToTimetable()
-        HomeMainScreens.HOMEWORK.label -> {}
-        HomeMainScreens.NOTIFICATIONS.label -> {}
+        HomeMainScreens.HOMEWORK.label -> navigateToEditEvent()
+        HomeMainScreens.NOTIFICATIONS.label -> navigateToListEvent()
         else  -> {}
     }
 }

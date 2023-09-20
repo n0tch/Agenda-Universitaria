@@ -1,5 +1,7 @@
 package com.core.data.di
 
+import com.core.data.repository.event.EventRepository
+import com.core.data.repository.event.EventRepositoryImp
 import com.core.data.repository.exam.ExamRepository
 import com.core.data.repository.exam.ExamRepositoryImp
 import com.core.data.repository.label.LabelRepository
@@ -16,6 +18,8 @@ import com.core.data.repository.profile.ProfileRepository
 import com.core.data.repository.profile.ProfileRepositoryImp
 import com.core.data.repository.register.RegisterRepository
 import com.core.data.repository.register.RegisterRepositoryImp
+import com.core.data.repository.schedulenotification.ScheduleNotificationRepository
+import com.core.data.repository.schedulenotification.ScheduleNotificationRepositoryImp
 import com.core.data.repository.subject.SubjectRepository
 import com.core.data.repository.subject.SubjectRepositoryImp
 import com.core.data.repository.timetable.TimetableRepository
@@ -63,4 +67,10 @@ internal abstract class DataRepositoryModule {
 
     @Binds
     abstract fun bindNoteLabelRepository(repository: NoteLabelRepositoryImp): NoteLabelRepository
+
+    @Binds
+    abstract fun bindsEventRepository(repository: EventRepositoryImp): EventRepository
+
+    @Binds
+    abstract fun bindsSheduleNotificationRepository(repository: ScheduleNotificationRepositoryImp): ScheduleNotificationRepository
 }

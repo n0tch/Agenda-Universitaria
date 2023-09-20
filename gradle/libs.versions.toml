@@ -70,6 +70,9 @@ leak-canary-version = "2.12"
 #image picker version
 iamge-picker-version = "2.1"
 
+#orbit-mvi
+orbit-version = "6.1.0"
+
 [libraries]
 
 #Kotlin
@@ -139,6 +142,11 @@ leakcanary = { module = "com.squareup.leakcanary:leakcanary-android", version.re
 #Image Picker
 imagePicker = { module = "com.github.dhaval2404:imagepicker", version.ref = "iamge-picker-version"}
 
+#Orbit mvi
+orbit-mvi-core = { module = "org.orbit-mvi:orbit-core", version.ref = "orbit-version" }
+orbit-mvi-viewmodel = { module = "org.orbit-mvi:orbit-viewmodel", version.ref = "orbit-version" }
+orbit-mvi-compose = { module = "org.orbit-mvi:orbit-compose", version.ref = "orbit-version" }
+
 [bundles]
 compose = [
     "compose.ui",
@@ -152,6 +160,7 @@ compose = [
     "compose.material.component"
 ]
 hilt = ["hilt.android", "hilt.navigation"]
+orbit-mvi= ["orbit-mvi-core", "orbit-mvi-viewmodel", "orbit-mvi-compose"]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "gradlePlugin" }

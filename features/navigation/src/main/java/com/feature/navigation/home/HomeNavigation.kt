@@ -19,7 +19,7 @@ fun NavGraphBuilder.homeGraph(navController: NavController) {
         composable(route = HomeScreens.HOME.route) {
             HomeComponent(
                 screenList = HomeMainScreens.values().map { it.label },
-                onNavigation = {navigation ->
+                onNavigation = { navigation ->
                     when(navigation){
                         is HomeNavigation.NavigateToExamById -> navController.navigateToExam(navigation.examId)
                         is HomeNavigation.NavigateToNoteById -> TODO()

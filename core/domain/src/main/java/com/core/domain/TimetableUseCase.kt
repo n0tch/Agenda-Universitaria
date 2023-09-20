@@ -17,13 +17,12 @@ import javax.inject.Inject
 
 class TimetableUseCase @Inject constructor(
     @Dispatcher(AppDispatcher.IO) private val ioDispatcher: CoroutineDispatcher,
-    private val timetableRepository: TimetableRepository,
-    private val appNotificationManager: AppNotificationManager
+    private val timetableRepository: TimetableRepository
 ) {
 
     fun saveTimetableEntries(entries: List<Timetable>, subjectId: Int) = flow<Result<Timetable>> {
         entries.forEach { it.subjectId = subjectId }
-        val timetable = timetableRepository.saveTimetableEntry(entries)
+        timetableRepository.saveTimetableEntry(entries, 0)
 
         emit(Result.Success(Timetable()))
     }.flowOn(ioDispatcher).catch {
@@ -39,8 +38,15 @@ class TimetableUseCase @Inject constructor(
         emit(Result.Error(it as Exception))
     }
 
+    suspend fun fetchTimetableBySubjectId(subjectId: Int): Result<Map<DayOfWeek, List<Timetable>>> = try{
+        val timetables = timetableRepository.fetchTimetableBySubjectId(subjectId)
+        Result.Success(timetables)
+    }catch (exception: Exception){
+        Result.Error(exception)
+    }
+
     suspend fun scheduleTimeTableNotification(millisToSchedule: List<Long>) {
         Log.e("scheduleTimeTableNotification", millisToSchedule.toString())
-        appNotificationManager.scheduleNotification(4, 21, 25)
+//        appNotificationManager.scheduleNotification(4, 21, 25)
     }
 }

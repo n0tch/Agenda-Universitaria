@@ -2,6 +2,8 @@ package com.core.database.di
 
 import android.content.Context
 import androidx.room.Room
+import com.core.database.event.EventDao
+import com.core.database.event.score.ScoreDao
 import com.core.database.exam.ExamDao
 import com.core.database.note.NoteDao
 import com.core.database.label.LabelDao
@@ -55,6 +57,12 @@ class DatabaseModule {
 
     @Provides
     fun providesNoteLabelDao(room: AppDatabase): NoteLabelDao = room.noteLabelDao()
+
+    @Provides
+    fun providesEventDao(room: AppDatabase): EventDao = room.eventDao()
+
+    @Provides
+    fun providesScoreDao(room: AppDatabase): ScoreDao = room.scoreDao()
 
     companion object{
         const val APP_DATABASE_NAME = "agenda_universitaria"

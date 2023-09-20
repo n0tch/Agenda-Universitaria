@@ -1,52 +1,80 @@
 package com.features.subject.detail
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.core.common.AppDispatcher
 import com.core.common.Dispatcher
 import com.core.common.Result
+import com.core.domain.EventUseCase
 import com.core.domain.SubjectUseCase
+import com.core.domain.TimetableUseCase
 import com.example.model.Subject
+import com.example.model.Timetable
+import com.example.model.event.EventCompound
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.launch
+import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
+import org.orbitmvi.orbit.syntax.simple.reduce
+import org.orbitmvi.orbit.viewmodel.container
+import java.time.DayOfWeek
 import javax.inject.Inject
 
 @HiltViewModel
 class SubjectDetailViewModel @Inject constructor(
     @Dispatcher(AppDispatcher.UI) private val uiDispatcher: CoroutineDispatcher,
-    private val subjectUseCase: SubjectUseCase
-): ViewModel() {
+    private val subjectUseCase: SubjectUseCase,
+    private val eventUseCase: EventUseCase,
+    private val timetableUseCase: TimetableUseCase,
+) : ViewModel(), ContainerHost<SubjectDetailState, SubjectDetailSideEffect> {
 
-    private val _uiState: MutableStateFlow<SubjectDetailState> by lazy { MutableStateFlow(SubjectDetailState()) }
+    override val container = container<SubjectDetailState, SubjectDetailSideEffect>(
+        SubjectDetailState()
+    )
+
+    private val _uiState: MutableStateFlow<SubjectDetailState> by lazy {
+        MutableStateFlow(
+            SubjectDetailState()
+        )
+    }
     val uiState: StateFlow<SubjectDetailState> = _uiState.asStateFlow()
 
-    fun fetchSubject(subjectId: Int){
-        viewModelScope.launch {
-            subjectUseCase
-                .fetchSubject(subjectId)
-                .flowOn(uiDispatcher)
-                .collect {
-                    when(it){
-                        is Result.Error -> _uiState.emit(SubjectDetailState(exception = it.exception))
-                        is Result.Success -> _uiState.emit(SubjectDetailState(subjectCompound = it.data))
-                    }
-                }
+    private val _events: MutableStateFlow<List<EventCompound>> by lazy { MutableStateFlow(emptyList()) }
+    val events: StateFlow<List<EventCompound>> = _events.asStateFlow()
+
+    private val _timetableState: MutableStateFlow<Map<DayOfWeek, List<Timetable>>> =
+        MutableStateFlow(mapOf())
+    val timetableState: StateFlow<Map<DayOfWeek, List<Timetable>>> = _timetableState.asStateFlow()
+
+    fun fetchSubject(subjectId: Int) = intent {
+        when (val subjectResult = subjectUseCase.fetchSubject(subjectId)) {
+            is Result.Error -> postSideEffect(SubjectDetailSideEffect.Toast(subjectResult.exception.message.toString()))
+            is Result.Success -> reduce { state.copy(subjectCompound = subjectResult.data) }
         }
     }
 
-    fun deleteSubject(subject: Subject) {
-        viewModelScope.launch {
-            subjectUseCase
-                .deleteSubjectName(subject)
-                .catch {  }
-                .collect {  }
+    fun fetchEvents(subjectId: Int) = intent {
+        when (val eventResult = eventUseCase.fetchEventBySubjectId(subjectId)) {
+            is Result.Error -> postSideEffect(SubjectDetailSideEffect.Toast(eventResult.exception.message.toString()))
+            is Result.Success -> reduce { state.copy(events = eventResult.data) }
         }
     }
 
+    fun fetchTimetables(subjectId: Int) = intent {
+        when (val timetableResult = timetableUseCase.fetchTimetableBySubjectId(subjectId)) {
+            is Result.Error -> postSideEffect(SubjectDetailSideEffect.Toast(timetableResult.exception.message.toString()))
+            is Result.Success -> reduce { state.copy(timetable = timetableResult.data) }
+        }
+    }
+
+    fun deleteSubject(subject: Subject) = intent {
+        when (val timetableResult = subjectUseCase.deleteSubjectName(subject)) {
+            is Result.Error -> postSideEffect(SubjectDetailSideEffect.Toast(timetableResult.exception.message.toString()))
+            is Result.Success -> postSideEffect(SubjectDetailSideEffect.Toast("deleted."))
+        }
+    }
 }
+

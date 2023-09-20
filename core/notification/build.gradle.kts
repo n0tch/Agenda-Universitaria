@@ -42,6 +42,8 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.material)
 
+    implementation(project(":core:model"))
+
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
 

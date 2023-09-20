@@ -1,8 +1,6 @@
 package com.features.note.list
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.core.common.AppDispatcher
 import com.core.common.Dispatcher
 import com.core.common.Result
@@ -12,11 +10,11 @@ import com.example.model.Label
 import com.example.model.Note
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.launch
+import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
+import org.orbitmvi.orbit.syntax.simple.reduce
+import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,77 +22,46 @@ class NoteListViewModel @Inject constructor(
     @Dispatcher(AppDispatcher.UI) private val uiDispatcher: CoroutineDispatcher,
     private val noteUseCase: NoteUseCase,
     private val labelUseCase: LabelUseCase
-) : ViewModel() {
+) : ViewModel(), ContainerHost<NoteListState, NoteListSideEffect> {
 
-    private val _uiState: MutableStateFlow<NoteState> by lazy { MutableStateFlow(NoteState()) }
-    val uiState: StateFlow<NoteState> = _uiState.asStateFlow()
+    override val container = container<NoteListState, NoteListSideEffect>(NoteListState())
 
-    private val _labels: MutableStateFlow<List<Label>> by lazy { MutableStateFlow(emptyList()) }
-    val labels: StateFlow<List<Label>> = _labels.asStateFlow()
-
-    fun fetchNotes() {
-        viewModelScope.launch {
-            noteUseCase
-                .fetchNotes()
-                .flowOn(uiDispatcher)
-                .collect {
-                    when (it) {
-                        is Result.Error -> _uiState.emit(NoteState(exception = it.exception))
-                        is Result.Success -> _uiState.emit(NoteState(notes = it.data))
-                    }
-                }
+    fun fetchNotes() = intent {
+        when(val notesResult = noteUseCase.fetchNotes()){
+            is Result.Error -> postSideEffect(NoteListSideEffect.Toast(notesResult.exception.toString()))
+            is Result.Success -> reduce { state.copy(notes = notesResult.data) }
         }
     }
 
-    fun searchNote(query: String) {
-        viewModelScope.launch {
-            noteUseCase
-                .searchNotes(query)
-                .flowOn(uiDispatcher)
-                .collect {
-                    when (it) {
-                        is Result.Error -> _uiState.emit(NoteState(exception = it.exception))
-                        is Result.Success -> _uiState.emit(NoteState(notes = it.data))
-                    }
-                }
+    fun searchNote(query: String) = intent {
+        when(val notesResult = noteUseCase.searchNotes(query)){
+            is Result.Error -> postSideEffect(NoteListSideEffect.Toast(notesResult.exception.toString()))
+            is Result.Success -> reduce { state.copy(notes = notesResult.data) }
         }
     }
 
-    fun deleteNote(note: Note) {
-        viewModelScope.launch {
-            noteUseCase
-                .deleteNote(note)
-                .flowOn(uiDispatcher)
-                .collect {
-                    when (it) {
-                        is Result.Error -> _uiState.emit(NoteState(exception = it.exception))
-                        is Result.Success -> {
-                            _uiState.emit(NoteState(notes = uiState.value.notes.filterNot { it.note.id == note.id }))
-                        }
-                    }
-                }
+    fun deleteNote(note: Note) = intent {
+        when(val deletedResult = noteUseCase.deleteNote(note)){
+            is Result.Error -> postSideEffect(NoteListSideEffect.Toast(deletedResult.exception.toString()))
+            is Result.Success -> reduce { state.copy(noteDeleted = deletedResult.data) }
         }
     }
 
-    fun searchNotesByLabel(label: Label) {
-        viewModelScope.launch {
-            noteUseCase.fetchNotesByLabel(label).flowOn(uiDispatcher).collect {
-                when (it) {
-                    is Result.Error -> Log.e("searchNotesByLabel", it.exception.toString())
-                    is Result.Success -> _uiState.emit(NoteState(notes = it.data))
-                }
-            }
+    fun searchNotesByLabel(label: Label) = intent {
+        when(val notesResult = noteUseCase.fetchNotesByLabel(label)){
+            is Result.Error -> postSideEffect(NoteListSideEffect.Toast(notesResult.exception.toString()))
+            is Result.Success -> reduce { state.copy(notes = notesResult.data) }
         }
     }
 
-    fun fetchNoteLabels() {
-        viewModelScope.launch {
-            labelUseCase.fetchNoteLabels().flowOn(uiDispatcher).collect {
-                when (it) {
-                    is Result.Error -> _uiState.emit(NoteState(exception = it.exception))
-                    is Result.Success -> _labels.emit(it.data)
-                }
-            }
+    fun fetchNoteLabels() = intent {
+        when(val labelsResult = labelUseCase.fetchNoteLabels()){
+            is Result.Error -> postSideEffect(NoteListSideEffect.Toast(labelsResult.exception.toString()))
+            is Result.Success -> reduce { state.copy(labels = labelsResult.data) }
         }
+    }
+
+    fun setSideEffect() = intent {
+        postSideEffect(NoteListSideEffect.ShowFilter)
     }
 }

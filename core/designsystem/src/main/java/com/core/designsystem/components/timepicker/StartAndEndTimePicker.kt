@@ -11,7 +11,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimePicker
-import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,11 +20,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppTimePicker(
-    onTimeSelected: (TimePickerState, TimePickerState) -> Unit = { _, _ -> }
+fun StartAndEndTimePicker(
+    dayOfWeek: Int = 0,
+    onTimeSelected: (Long, Long) -> Unit = { _, _ -> }
 ) {
 
     val startTimePicker = rememberTimePickerState()
@@ -34,11 +35,13 @@ fun AppTimePicker(
     var showTimePicker by remember { mutableStateOf(0) }
 
     val startText: () -> String = {
-        "${startTimePicker.hour}:${startTimePicker.minute}"
+        val cal = createCalendar(dayOfWeek, startTimePicker.hour, startTimePicker.minute)
+        "${cal.get(Calendar.HOUR_OF_DAY)}:${cal.get(Calendar.MINUTE)}"
     }
 
     val endText: () -> String = {
-        "${endTimePicker.hour}:${endTimePicker.minute}"
+        val cal = createCalendar(dayOfWeek, endTimePicker.hour, endTimePicker.minute)
+        "${cal.get(Calendar.HOUR_OF_DAY)}:${cal.get(Calendar.MINUTE)}"
     }
 
     Row {
@@ -66,7 +69,10 @@ fun AppTimePicker(
             AlertDialog(
                 onDismissRequest = {
                     showTimePicker = 0
-                    onTimeSelected(startTimePicker, endTimePicker)
+                    onTimeSelected(
+                        createCalendar(dayOfWeek, startTimePicker.hour, startTimePicker.minute).timeInMillis,
+                        createCalendar(dayOfWeek, endTimePicker.hour, endTimePicker.minute).timeInMillis
+                    )
                 },
                 content = {
                     when (showTimePicker) {
@@ -79,9 +85,15 @@ fun AppTimePicker(
     }
 }
 
+private fun createCalendar(dayOfWeek: Int, hour: Int, minute: Int) = Calendar.getInstance().apply {
+    set(Calendar.DAY_OF_WEEK, dayOfWeek)
+    set(Calendar.HOUR_OF_DAY, hour)
+    set(Calendar.MINUTE, minute)
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun AppTimePickerPreview() {
-    AppTimePicker() { _, _ -> }
+    StartAndEndTimePicker() { _, _ -> }
 }

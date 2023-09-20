@@ -43,13 +43,23 @@ fun HomeComponent(
     val selectedSubjectState by viewModel.subjectConfigState.collectAsStateWithLifecycle()
 
     val homeActions by viewModel.actionState.observeAsState()
+    val navigationState by viewModel.navigationState.collectAsStateWithLifecycle()
+
+    when (val navigation = navigationState) {
+        is HomeNavigation.NavigateToExamById -> {}
+        HomeNavigation.NavigateToExams -> {}
+        is HomeNavigation.NavigateToNoteById -> {}
+        HomeNavigation.NavigateToNotes -> {}
+        is HomeNavigation.NavigateToScreenByName -> onNavigation(navigation)
+        else -> {}
+    }
 
     LaunchedEffect(key1 = Unit, block = {
         viewModel.fetchNextExams()
         viewModel.fetchLatestNotes()
     })
 
-    LaunchedEffect(homeActions){
+    LaunchedEffect(homeActions) {
         when (val action = homeActions) {
             is HomeActon.DaySelected -> viewModel.fetchTimetableBtWeekDay(action.dayOfWeek)
             is HomeActon.ExamSelected -> {}
@@ -75,7 +85,8 @@ fun HomeComponent(
         notesState = notesState,
         examsState = examsState,
         onAction = { viewModel.setAction(it) },
-        onNavigation = { }
+        onNavigation = { viewModel.setNavigation(it) },
+        setAlarm = { viewModel.setAlarm() }
     )
 
     ShowBottomSheet(selectedSubjectState) { viewModel.onDismissDialog() }

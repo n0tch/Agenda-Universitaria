@@ -19,7 +19,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
@@ -73,22 +72,19 @@ class EditNoteViewModel @Inject constructor(
     @VisibleForTesting
     private fun fetchSubjectAndLabels() {
         viewModelScope.launch {
-            labelUseCase.fetchNoteLabels()
-                .combine(subjectUseCase.fetchSubjects()) { labels, subjects ->
-                    if (labels is Result.Success && subjects is Result.Success) {
-                        Result.Success(LabelWithSubjectState(labels.data, subjects.data))
-                    } else {
-                        Result.Error(Exception(""))
-                    }
-                }.flowOn(uiDispatcher).collect {
-                    when (it) {
-                        is Result.Error -> TODO()
-                        is Result.Success -> {
-                            _labelState.emit(it.data.labels)
-                            _subjects.emit(it.data.subjects)
-                        }
-                    }
+            val labels = labelUseCase.fetchNoteLabels()
+
+            when (labels) {
+                is Result.Error -> {}
+                is Result.Success -> _labelState.emit(labels.data)
+            }
+
+            subjectUseCase.fetchSubjects().collect {
+                when (it) {
+                    is Result.Error -> {}
+                    is Result.Success -> _subjects.emit(it.data)
                 }
+            }
         }
     }
 

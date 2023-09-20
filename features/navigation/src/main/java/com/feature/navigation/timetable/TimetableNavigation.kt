@@ -1,6 +1,7 @@
 package com.feature.navigation.timetable
 
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.feature.timetable.TimetableScreen
@@ -22,9 +23,21 @@ fun NavGraphBuilder.timetableGraph(navController: NavController) {
 }
 
 fun NavController.navigateNewToTimetable() {
-    navigate(TimetableScreens.NEW_TIMETABLE.route)
+    navigate(TimetableScreens.NEW_TIMETABLE.route){
+        popUpTo(graph.findStartDestination().id) {
+            saveState = true
+        }
+        launchSingleTop = true
+        restoreState = true
+    }
 }
 
 fun NavController.navigateToTimetable() {
-    navigate(TimetableScreens.TIMETABLE.route)
+    navigate(TimetableScreens.TIMETABLE.route){
+        popUpTo(graph.findStartDestination().id) {
+            saveState = true
+        }
+        launchSingleTop = true
+        restoreState = true
+    }
 }

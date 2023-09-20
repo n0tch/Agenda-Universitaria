@@ -70,6 +70,7 @@ dependencies {
     implementation(libs.coil.compose)
 
     implementation(libs.imagePicker)
+    implementation(libs.bundles.orbit.mvi)
 
     implementation(libs.hilt.navigation)
     implementation(libs.hilt.android)

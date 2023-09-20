@@ -1,6 +1,5 @@
 package com.core.domain
 
-import android.util.Log
 import com.core.common.AppDispatcher
 import com.core.common.Dispatcher
 import com.core.common.Result
@@ -11,7 +10,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class LabelUseCase @Inject constructor(
@@ -29,16 +27,11 @@ class LabelUseCase @Inject constructor(
             }
     }
 
-    fun fetchNoteLabels(): Flow<Result<List<Label>>> = flow {
-        labelRepository
-            .fetchNoteLabels()
-            .flowOn(ioDispatcher)
-            .catch {
-                Log.e("fetchNoteLabels", "${it.message}")
-                emit(Result.Error(it as Exception))
-            }
-            .map { Result.Success(it) }
-            .collect { emit(it) }
+    suspend fun fetchNoteLabels(): Result<List<Label>> = try {
+        val labels = labelRepository.fetchNoteLabels()
+        Result.Success(labels)
+    }catch (exception: Exception){
+        Result.Error(exception)
     }
 
 }

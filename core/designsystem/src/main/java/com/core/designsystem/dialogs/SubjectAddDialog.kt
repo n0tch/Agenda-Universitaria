@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -21,21 +22,34 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 
+data class DialogSubject(
+    val name: String,
+    val place: String,
+    val teacher: String,
+    val startAt: String,
+    val endAt: String,
+    val remote: Boolean,
+)
+
 @Composable
 fun CommonSubjectAddDialog(
-    onSaveButton: (name: String, place: String, teacher: String) -> Unit,
+    onSaveButton: (DialogSubject) -> Unit,
     onDismiss: () -> Unit
 ) {
 
     var subjectName by remember { mutableStateOf("") }
     var placeName by remember { mutableStateOf("") }
     var teacherName by remember { mutableStateOf("") }
+    var start by remember { mutableStateOf("") }
+    var end by remember { mutableStateOf("") }
+    var remote by remember { mutableStateOf(false) }
 
     Dialog(onDismissRequest = { onDismiss() }) {
         Card(
@@ -83,7 +97,33 @@ fun CommonSubjectAddDialog(
                     onValueChange = { teacherName = it },
                     placeholder = { Text(text = "Professor") }
                 )
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(2.dp)
+                ) {
+                    OutlinedTextField(
+                        modifier = Modifier.weight(1f),
+                        value = start,
+                        placeholder = { Text(text = "Inicio") },
+                        onValueChange = { start = it })
+
+                    OutlinedTextField(
+                        modifier = Modifier.weight(1f),
+                        value = end,
+                        placeholder = { Text(text = "Fim") },
+                        onValueChange = { end = it })
+                }
+
+                Row(modifier = Modifier.padding(4.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Checkbox(checked = remote, onCheckedChange = { remote = it })
+                    Text("Remota")
+                }
+
                 Spacer(Modifier.height(16.dp))
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
@@ -94,9 +134,14 @@ fun CommonSubjectAddDialog(
                     Button(
                         onClick = {
                             onSaveButton(
-                                subjectName,
-                                placeName,
-                                teacherName
+                                DialogSubject(
+                                    name = subjectName,
+                                    place = placeName,
+                                    teacher = teacherName,
+                                    startAt = start,
+                                    endAt = end,
+                                    remote = remote
+                                )
                             )
                         }
                     ) {
@@ -111,5 +156,5 @@ fun CommonSubjectAddDialog(
 @Preview
 @Composable
 fun CommonSubjectAddDialogPreview() {
-    CommonSubjectAddDialog(onSaveButton = {_,_,_ -> }, onDismiss = {})
+    CommonSubjectAddDialog(onSaveButton = {}, onDismiss = {})
 }

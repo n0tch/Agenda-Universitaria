@@ -13,6 +13,13 @@ internal fun Timetable.toEntity() = TimetableEntity(
     subjectId = subjectId
 )
 
+internal fun Timetable.toEntityWithGivenSubjectId(subjectId: Int) = TimetableEntity(
+    weekDay = weekDay,
+    startTime = startTime,
+    endTime = endTime,
+    subjectId = subjectId
+)
+
 internal fun TimetableEntity.toTimetable() = Timetable(
     id = timetableId,
     weekDay = weekDay ?: "",

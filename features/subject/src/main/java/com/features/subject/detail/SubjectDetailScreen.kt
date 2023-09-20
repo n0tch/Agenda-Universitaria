@@ -6,12 +6,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.BookmarkAdd
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.NoteAdd
+import androidx.compose.material.icons.filled.PostAdd
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -21,25 +26,27 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.core.designsystem.components.Pill
+import com.core.designsystem.components.fab.FabItem
+import com.core.designsystem.components.fab.FabMenu
 import com.core.designsystem.components.row.GridLazyRow
+import com.core.designsystem.extensions.toMinuteAndSecond
 import com.example.model.Note
-import com.example.model.NoteCompound
-import com.example.model.SubjectCompound
+import com.example.model.Subject
 import com.example.model.event.Exam
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SubjectDetailScreen(
     onBackPressed: () -> Unit,
-    subjectName: String = "Test 1",
-    subject: SubjectCompound,
+    detailState: SubjectDetailState,
     onNoteClicked: (Note) -> Unit,
-    onDeleteButtonClicked: () -> Unit = {}
+    onDeleteButtonClicked: (Subject) -> Unit = {},
+    onAddEventClicked: (String) -> Unit = {}
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(subjectName) },
+                title = { Text(detailState.subjectCompound.subject.name) },
                 navigationIcon = {
                     IconButton(onClick = { onBackPressed() }) {
                         Icon(
@@ -56,7 +63,7 @@ fun SubjectDetailScreen(
                         )
                     }
 
-                    IconButton(onClick = { onDeleteButtonClicked() }) {
+                    IconButton(onClick = { onDeleteButtonClicked(detailState.subjectCompound.subject) }) {
                         Icon(
                             imageVector = Icons.Filled.Delete,
                             contentDescription = "Delete button"
@@ -64,23 +71,60 @@ fun SubjectDetailScreen(
                     }
                 }
             )
+        },
+        floatingActionButton = {
+            FabMenu(
+                items = listOf(
+                    FabItem(Icons.Filled.NoteAdd, "Prova"),
+                    FabItem(Icons.Filled.PostAdd, "Trabalho"),
+                    FabItem(Icons.Filled.BookmarkAdd, "Customizado"),
+                ),
+                onFabClicked = {
+                    when (it.icon) {
+                        Icons.Filled.NoteAdd -> onAddEventClicked("prova")
+                        Icons.Filled.PostAdd -> onAddEventClicked("trabalho")
+                        else -> onAddEventClicked("custom")
+                    }
+                }
+            )
         }
     ) { paddingValue ->
         Column(Modifier.padding(paddingValue)) {
 
-            Text(subject.subject.teacher)
-            Text(subject.subject.place)
+            Text(detailState.subjectCompound.subject.teacher)
+            Text(detailState.subjectCompound.subject.place)
+
+            Text(text = "Grade horária")
+
+            detailState.timetable.entries.forEach {
+                Text(text = it.key.name)
+                it.value.forEach { timetable ->
+                    Text(timetable.startTime.toMinuteAndSecond())
+                    Text(timetable.endTime.toMinuteAndSecond())
+                    Divider()
+                }
+            }
 
             Text(modifier = Modifier.padding(horizontal = 8.dp), text = "Notas")
 
-            GridLazyRow(list = subject.notes) { note ->
+            GridLazyRow(list = detailState.subjectCompound.notes) { note ->
                 NoteItemCard(item = note, onNoteClicked = { onNoteClicked(note) })
             }
 
-            Text(modifier = Modifier.padding(horizontal = 8.dp), text = "Provas")
+//            Text(modifier = Modifier.padding(horizontal = 8.dp), text = "Provas")
+//
+//            GridLazyRow(list = subject.exams) { exam ->
+//                ExamItemCard(item = exam, onExamClicked = {/* onNoteClicked(note)*/ })
+//            }
 
-            GridLazyRow(list = subject.exams) { exam ->
-                ExamItemCard(item = exam, onExamClicked = {/* onNoteClicked(note)*/ })
+            Text("Proximos eventos")
+            GridLazyRow(list = detailState.events) { event ->
+                OutlinedCard {
+                    Column(Modifier.padding(6.dp)) {
+                        Text(event.event.name)
+                        Text(text = event.event.eventLabels.first())
+                    }
+                }
             }
 
 //            Text(modifier = Modifier.padding(horizontal = 8.dp), text = "Notificações")
@@ -138,7 +182,7 @@ fun ExamItemCard(item: Exam, onExamClicked: (Exam) -> Unit) {
 fun SubjectDetailScreenPreview() {
     SubjectDetailScreen(
         onBackPressed = {},
-        subject = SubjectCompound(),
+        detailState = SubjectDetailState(),
         onNoteClicked = {},
     )
 }

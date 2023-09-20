@@ -4,6 +4,12 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.core.database.Converter
+import com.core.database.event.EventDao
+import com.core.database.event.EventEntity
+import com.core.database.event.notification.NotificationDao
+import com.core.database.event.notification.NotificationEntity
+import com.core.database.event.score.ScoreDao
+import com.core.database.event.score.ScoreEntity
 import com.core.database.exam.ExamDao
 import com.core.database.exam.ExamEntity
 import com.core.database.exam.relations.label.ExamLabelCrossRef
@@ -33,7 +39,10 @@ import com.core.database.timetable.relations.TimetableSubjectCrossRef
         NoteLabelCrossRef::class,
         NoteMediaCrossRef::class,
         ExamLabelCrossRef::class,
-        TimetableSubjectCrossRef::class
+        TimetableSubjectCrossRef::class,
+        EventEntity::class,
+        NotificationEntity::class,
+        ScoreEntity::class
     ], version = 1
 )
 @TypeConverters(Converter::class)
@@ -45,4 +54,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun examDao(): ExamDao
     abstract fun noteMediaDao(): NoteMediaDao
     abstract fun noteLabelDao(): NoteLabelDao
+    abstract fun eventDao(): EventDao
+    abstract fun notificationDao(): NotificationDao
+    abstract fun scoreDao(): ScoreDao
 }

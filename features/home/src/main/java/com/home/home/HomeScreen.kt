@@ -35,7 +35,8 @@ fun HomeScreen(
     timetableState: TimetableState,
     notesState: NoteState,
     onAction: (HomeActon) -> Unit = {},
-    onNavigation: (HomeNavigation) -> Unit = {}
+    onNavigation: (HomeNavigation) -> Unit = {},
+    setAlarm: () -> Unit = {},
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val isGestureEnabled = drawerState.isOpen
@@ -77,7 +78,7 @@ fun HomeScreen(
                             FabItem(Icons.Filled.CalendarMonth, "Add Timetable"),
                             FabItem(Icons.Filled.Hexagon, "Add exam")
                         ),
-                        onFabClicked = {}
+                        onFabClicked = { setAlarm() }
                     )
                 },
             ) {

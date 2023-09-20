@@ -14,9 +14,9 @@ class NotificationReceiver: BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.baseline_notifications_24)
-            .setContentTitle("Titulo")
-            .setContentText("Text")
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentTitle(intent.getStringExtra("title") ?: "Empty text")
+            .setContentText(intent.getStringExtra("body") ?: "Empty Body")
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setChannelId(CHANNEL_ID)
 
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

@@ -1,6 +1,6 @@
 package com.home.home.navigation
 
-import com.home.home.base.Navigation
+import com.core.common.viewmodel.Navigation
 
 sealed class HomeNavigation: Navigation {
     object NavigateToExams: HomeNavigation()

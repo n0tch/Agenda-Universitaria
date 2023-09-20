@@ -5,7 +5,7 @@ import com.example.model.NoteCompound
 import com.example.model.Subject
 import com.example.model.TimetableCompound
 import com.example.model.event.Exam
-import com.home.home.base.Action
+import com.core.common.viewmodel.Action
 import java.time.DayOfWeek
 import java.time.LocalDate
 

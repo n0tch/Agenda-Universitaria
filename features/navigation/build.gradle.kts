@@ -66,4 +66,7 @@ dependencies {
     implementation(project(":features:subject"))
     implementation(project(":features:exam"))
     implementation(project(":features:timetable"))
+    implementation(project(":features:event"))
+
+    implementation(project(":core:common"))
 }

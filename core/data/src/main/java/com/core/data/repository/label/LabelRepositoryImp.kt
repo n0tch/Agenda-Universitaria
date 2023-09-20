@@ -14,9 +14,8 @@ internal class LabelRepositoryImp @Inject constructor(
         emit(label.copy(id = id.toInt()))
     }
 
-    override fun fetchNoteLabels(): Flow<List<Label>> = flow {
-        val labels = labelDao.fetchAllLabels().map { it.toLabel() }
-        emit(labels)
+    override suspend fun fetchNoteLabels(): List<Label> {
+        return labelDao.fetchAllLabels().map { it.toLabel() }
     }
 
     override suspend fun fetchNoteLabelByNoteId(noteId: Int): List<Label> {

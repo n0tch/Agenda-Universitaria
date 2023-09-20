@@ -32,17 +32,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.core.designsystem.components.LoadingView
-import com.example.model.Subject
 
 @Composable
 fun SubjectContent(
-    subjects: List<Subject> = emptyList(),
-    isLoading: Boolean = false,
-    onAddSubjectClicked: () -> Unit = {},
-    onSubjectDetailClicked: (Subject) -> Unit = {},
+    state: SubjectState,
+    onAction: (SubjectListSideEffect) -> Unit = {},
     onSearch: (String) -> Unit = {},
-    onBackClicked: () -> Unit = {}
 ) {
+    println("Recomposition")
     var searchVisible by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -50,11 +47,11 @@ fun SubjectContent(
             if(searchVisible){
                 SearchTopBar(onSearch = onSearch, onClose = { searchVisible = false })
             } else {
-                DefaultTopBar(onBackClicked = onBackClicked, onSearchClicked = { searchVisible = true })
+                DefaultTopBar(onBackClicked = { onAction(SubjectListSideEffect.OnBack) }, onSearchClicked = { searchVisible = true })
             }
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { onAddSubjectClicked() }) {
+            FloatingActionButton(onClick = { onAction(SubjectListSideEffect.NavigateToNewSubject) }) {
                 Icon(imageVector = Icons.Filled.Add, contentDescription = "")
             }
         }
@@ -78,14 +75,14 @@ fun SubjectContent(
             }
 
             SubjectListComponent(
-                subjects = subjects,
+                subjects = state.subjects,
                 onCardClicked = { subject ->
-                    onSubjectDetailClicked(subject)
+                    onAction(SubjectListSideEffect.NavigateToDetail(subject))
                 }
             )
         }
 
-        if(isLoading){
+        if(state.isLoading){
             LoadingView()
         }
     }
@@ -139,11 +136,11 @@ private fun DefaultTopBar(onBackClicked: () -> Unit, onSearchClicked: () -> Unit
 @Preview
 @Composable
 fun SubjectContentPreview() {
-    SubjectContent()
+    SubjectContent(SubjectState())
 }
 
 @Preview
 @Composable
 fun SubjectContentLoadingPreview() {
-    SubjectContent(isLoading = true)
+    SubjectContent(SubjectState(isLoading = true))
 }

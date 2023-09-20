@@ -1,18 +1,15 @@
 package com.feature.navigation.subject
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
+import com.feature.navigation.event.navigateToEditEventWithSubject
 import com.feature.navigation.note.NoteScreens
 import com.features.subject.detail.SubjectDetailComponent
-import com.features.subject.list.SubjectAddDialog
+import com.features.subject.edit.SubjectEditComponent
 import com.features.subject.list.SubjectComponent
 
 const val subjectGraphRoute = "subject_graph"
@@ -29,7 +26,8 @@ fun NavGraphBuilder.subjectGraph(navController: NavController) {
                 onBackPressed = { navController.popBackStack() },
                 navigateToSubjectDetail = { name, id ->
                     navController.navigate(SubjectScreens.SUBJECT_DETAIL.route + "/${name}/${id}")
-                }
+                },
+                navigateToSubjectEdit = { navController.navigateToEditSubject() }
             )
         }
 
@@ -45,17 +43,16 @@ fun NavGraphBuilder.subjectGraph(navController: NavController) {
                 onBackPressed = { navController.popBackStack() },
                 subjectName = subjectName,
                 subjectId = subjectId?.toIntOrNull() ?: -1,
-                onNavigateToNote = { noteId -> navController.navigate(NoteScreens.NOTE_EDITION.route + "/$noteId") }
+                onNavigateToNote = { noteId -> navController.navigate(NoteScreens.NOTE_EDITION.route + "/$noteId") },
+                navigateToAddEvent = {
+                    navController.navigateToEditEventWithSubject(it)
+                }
             )
         }
     }
 
-    composable(route = SubjectScreens.ADD.route) {
-        var isOpen by remember { mutableStateOf(true) }
-
-        if(isOpen){
-            SubjectAddDialog(onDismiss = { isOpen = false }, onSaveButton = {})
-        }
+    composable(route = SubjectScreens.ADD.route){
+        SubjectEditComponent()
     }
 }
 
@@ -69,10 +66,6 @@ fun NavController.navigateToSubjects() {
     }
 }
 
-fun NavController.navigateToAddSubject() {
-    navigate(SubjectScreens.ADD.route)
-}
-
 fun NavController.navigateToSubjectById(subjectName: String, subjectId: Int) {
     navigate(SubjectScreens.SUBJECT_DETAIL.route + "/$subjectName/$subjectId") {
         popUpTo(graph.findStartDestination().id) {
@@ -81,4 +74,8 @@ fun NavController.navigateToSubjectById(subjectName: String, subjectId: Int) {
         launchSingleTop = true
         restoreState = true
     }
+}
+
+fun NavController.navigateToEditSubject(){
+    navigate(SubjectScreens.ADD.route)
 }

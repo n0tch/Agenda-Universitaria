@@ -60,12 +60,11 @@ class NoteUseCase @Inject constructor(
         emit(Result.Error(it as Exception))
     }
 
-    fun fetchNotes() = flow<Result<List<NoteCompound>>> {
+    suspend fun fetchNotes(): Result<List<NoteCompound>> = try {
         val notes = noteRepository.fetchNotes()
-        emit(Result.Success(notes))
-    }.flowOn(ioDispatcher).catch {
-        Log.e("fetchNotes", it.message.toString())
-        emit(Result.Error(it as Exception))
+        Result.Success(notes)
+    }catch (exception: Exception){
+        Result.Error(exception)
     }
 
     fun fetchNotes(count: Int) = flow <Result<List<NoteCompound>>> {
@@ -84,22 +83,21 @@ class NoteUseCase @Inject constructor(
         emit(Result.Error(it as Exception))
     }
 
-    fun searchNotes(query: String) = flow<Result<List<NoteCompound>>> {
+    suspend fun searchNotes(query: String): Result<List<NoteCompound>> = try {
         val notes = noteRepository.searchNote(query)
-        emit(Result.Success(notes))
-    }.flowOn(ioDispatcher).catch {
-        emit(Result.Error(it as Exception))
+        Result.Success(notes)
+    }catch (exception: Exception){
+        Result.Error(exception)
     }
 
-    fun deleteNote(note: Note) = flow<Result<Boolean>> {
+    suspend fun deleteNote(note: Note): Result<Boolean> = try {
         val deleted = noteRepository.deleteNote(note)
         if (deleted)
-            emit(Result.Success(true))
+            Result.Success(true)
         else
             throw Exception("")
-    }.flowOn(ioDispatcher).catch {
-        Log.e("deleteNote", it.message.toString())
-        emit(Result.Error(it as Exception))
+    }catch (exception: Exception){
+        Result.Error(exception)
     }
 
     fun fetchNoteById(noteId: Int) = flow<Result<NoteCompound>> {
@@ -113,10 +111,10 @@ class NoteUseCase @Inject constructor(
         emit(Result.Error(it as Exception))
     }
 
-    suspend fun fetchNotesByLabel(label: Label) = flow<Result<List<NoteCompound>>> {
+    suspend fun fetchNotesByLabel(label: Label): Result<List<NoteCompound>> = try {
         val notes = noteRepository.fetchNotesByLabelId(label.id)
-        emit(Result.Success(notes))
-    }.flowOn(ioDispatcher).catch {
-        emit(Result.Error(it as Exception))
+        Result.Success(notes)
+    }catch (exception: Exception){
+        Result.Error(exception)
     }
 }

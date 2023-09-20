@@ -38,6 +38,9 @@ android {
 
 dependencies {
     implementation(libs.hilt.android)
+
+    implementation(libs.androidx.lifecycle.viewModelCompose)
+
     kapt(libs.hilt.compiler)
     androidTestImplementation(libs.androidx.test.ext.junit)
     testImplementation(libs.junit)

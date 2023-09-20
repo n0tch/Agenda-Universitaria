@@ -69,6 +69,8 @@ dependencies {
     implementation(libs.bundles.compose)
     implementation(libs.coil.compose)
 
+    implementation(libs.bundles.orbit.mvi)
+
     implementation(libs.hilt.navigation)
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)

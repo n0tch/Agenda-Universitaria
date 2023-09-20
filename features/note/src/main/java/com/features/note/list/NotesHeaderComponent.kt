@@ -27,6 +27,7 @@ import androidx.constraintlayout.compose.Dimension
 @Composable
 fun HomeNotesHeaderComponent(
     onSearch: (String) -> Unit = {},
+    onFilter: () -> Unit = {},
     onBackPressed: () -> Unit = {}
 ) {
     var searchText by remember { mutableStateOf("") }
@@ -78,7 +79,7 @@ fun HomeNotesHeaderComponent(
                             top.linkTo(parent.top)
                             bottom.linkTo(parent.bottom)
                         },
-                    onClick = { /*TODO*/ }) {
+                    onClick = { onFilter() }) {
                     Icon(imageVector = Icons.Filled.FilterList, contentDescription = "")
                 }
             }

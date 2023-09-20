@@ -1,48 +1,47 @@
 package com.features.subject.list
 
+import android.widget.Toast
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import org.orbitmvi.orbit.compose.collectAsState
+import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
 fun SubjectComponent(
     onBackPressed: () -> Unit = {},
-    navigateToSubjectDetail: (name: String, id: Int) -> Unit = {_,_ -> }
+    navigateToSubjectDetail: (name: String, id: Int) -> Unit = { _, _ -> },
+    navigateToSubjectEdit: () -> Unit = {}
 ) {
-
+    val context = LocalContext.current
     val viewModel: SubjectViewModel = hiltViewModel()
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val state by viewModel.collectAsState()
 
-    var openAddSubjectDialog by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit){
+        viewModel.fetchSubjects()
+    }
 
     SubjectContent(
-        subjects = uiState.subjects,
-        isLoading = uiState.isLoading,
-        onAddSubjectClicked = {
-            openAddSubjectDialog = true
-        },
-        onSubjectDetailClicked = { subject ->
-            navigateToSubjectDetail(subject.name, subject.id)
-        },
-        onSearch = { viewModel.searchSubject(it) },
-        onBackClicked = onBackPressed
+        state = state,
+        onAction = viewModel::setSideEffect,
+        onSearch = viewModel::searchSubject,
     )
 
-    //TODO remove this from here
-    if (openAddSubjectDialog) {
-        SubjectAddDialog(
-            onSaveButton = { subjectName ->
-                viewModel.saveSubject(subjectName)
-                openAddSubjectDialog = false
-            }, onDismiss = {
-                openAddSubjectDialog = false
-            }
-        )
+    viewModel.collectSideEffect {
+        when (it) {
+            is SubjectListSideEffect.Toast -> Toast.makeText(
+                context,
+                it.message,
+                Toast.LENGTH_SHORT
+            ).show()
+
+            SubjectListSideEffect.NavigateToNewSubject -> navigateToSubjectEdit()
+            is SubjectListSideEffect.NavigateToDetail -> navigateToSubjectDetail(it.subject.name, it.subject.id)
+            is SubjectListSideEffect.OnBack -> onBackPressed()
+        }
     }
 }
 

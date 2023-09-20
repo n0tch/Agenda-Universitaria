@@ -10,8 +10,8 @@ internal class TimetableRepositoryImp @Inject constructor(
     private val timetableDao: TimetableDao
 ) : TimetableRepository {
 
-    override suspend fun saveTimetableEntry(timetables: List<Timetable>): List<Timetable> {
-        val ids = timetableDao.saveTimetables(timetables.map { it.toEntity() })
+    override suspend fun saveTimetableEntry(timetables: List<Timetable>, subjectId: Int): List<Timetable> {
+        val ids = timetableDao.saveTimetables(timetables.map { it.toEntityWithGivenSubjectId(subjectId) })
         return listOf()
     }
 
@@ -35,5 +35,13 @@ internal class TimetableRepositoryImp @Inject constructor(
             timetables[dayOfWeek] = timetable
         }
         return timetables
+    }
+
+    override suspend fun fetchTimetableBySubjectId(subjectId: Int): Map<DayOfWeek, List<Timetable>> {
+        return timetableDao
+            .fetchTimetableBySubjectId(subjectId)
+            .groupBy { it.weekDay }
+            .mapKeys { DayOfWeek.valueOf(it.key ?: "") }
+            .mapValues { it.value.map { it.toTimetable() } }
     }
 }

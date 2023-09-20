@@ -5,16 +5,14 @@ import com.core.common.AppDispatcher
 import com.core.common.Dispatcher
 import com.core.common.Result
 import com.core.data.repository.timetable.TimetableRepository
-import com.core.data.repository.user.UserRepository
-import com.example.model.Timetable
 import com.example.model.TimetableCompound
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
 import java.time.DayOfWeek
+import java.util.Calendar
 import javax.inject.Inject
 
 class HomeUseCase @Inject constructor(
@@ -37,5 +35,10 @@ class HomeUseCase @Inject constructor(
     }.flowOn(ioDispatcher).catch {
         Log.e("fetchWeeklyTimeTable error", it.message.toString())
         emit(Result.Error(it as Exception))
+    }
+
+    fun setAlarm() = flow<Boolean> {
+        val calendar = Calendar.getInstance()
+//        notificationManager.scheduleNotification(1, calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE) + 1)
     }
 }
