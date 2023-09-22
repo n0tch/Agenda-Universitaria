@@ -16,7 +16,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.core.designsystem.components.CustomBottomBar
 import com.feature.navigation.BottomBarScreens
-import com.feature.navigation.exam.navigateToExams
 import com.feature.navigation.home.navigateToHome
 import com.feature.navigation.note.navigateToNotes
 import com.feature.navigation.subject.navigateToSubjects
@@ -38,7 +37,7 @@ fun AppBottomBar(navController: NavHostController) {
                 BottomBarScreens.HOME -> navController.navigateToHome()
                 BottomBarScreens.CALENDAR -> navController.navigateToSubjects()
                 BottomBarScreens.NOTE -> navController.navigateToNotes()
-                BottomBarScreens.PROFILE -> navController.navigateToExams()
+                BottomBarScreens.PROFILE -> {}//navController.navi()
             }
         }
     )

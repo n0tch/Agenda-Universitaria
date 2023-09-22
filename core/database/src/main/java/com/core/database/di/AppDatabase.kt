@@ -10,15 +10,12 @@ import com.core.database.event.notification.NotificationDao
 import com.core.database.event.notification.NotificationEntity
 import com.core.database.event.score.ScoreDao
 import com.core.database.event.score.ScoreEntity
-import com.core.database.exam.ExamDao
-import com.core.database.exam.ExamEntity
-import com.core.database.exam.relations.label.ExamLabelCrossRef
-import com.core.database.note.NoteDao
-import com.core.database.note.NoteEntity
 import com.core.database.label.LabelDao
 import com.core.database.label.LabelEntity
-import com.core.database.media.NoteMediaDao
 import com.core.database.media.MediaEntity
+import com.core.database.media.NoteMediaDao
+import com.core.database.note.NoteDao
+import com.core.database.note.NoteEntity
 import com.core.database.note.relations.NoteLabelCrossRef
 import com.core.database.note.relations.NoteLabelDao
 import com.core.database.note.relations.NoteMediaCrossRef
@@ -34,16 +31,14 @@ import com.core.database.timetable.relations.TimetableSubjectCrossRef
         LabelEntity::class,
         SubjectEntity::class,
         TimetableEntity::class,
-        ExamEntity::class,
         MediaEntity::class,
         NoteLabelCrossRef::class,
         NoteMediaCrossRef::class,
-        ExamLabelCrossRef::class,
         TimetableSubjectCrossRef::class,
         EventEntity::class,
         NotificationEntity::class,
         ScoreEntity::class
-    ], version = 1
+    ], version = 2
 )
 @TypeConverters(Converter::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -51,7 +46,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun labelDao(): LabelDao
     abstract fun subjectDao(): SubjectDao
     abstract fun timetableDao(): TimetableDao
-    abstract fun examDao(): ExamDao
     abstract fun noteMediaDao(): NoteMediaDao
     abstract fun noteLabelDao(): NoteLabelDao
     abstract fun eventDao(): EventDao

@@ -6,7 +6,7 @@ import androidx.room.Entity
 @Entity(primaryKeys = ["eventId", "scoreId"])
 data class EventScoreCrossRef(
     @ColumnInfo(index = true)
-    val examId: Int,
+    val eventId: Int,
     @ColumnInfo(index = true)
     val labelId: Int
 )

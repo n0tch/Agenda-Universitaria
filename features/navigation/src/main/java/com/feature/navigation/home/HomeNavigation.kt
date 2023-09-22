@@ -6,7 +6,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.feature.navigation.HomeMainScreens
 import com.feature.navigation.event.navigateToListEvent
-import com.feature.navigation.exam.navigateToExams
 import com.feature.navigation.navigateTo
 import com.feature.navigation.note.navigateToNoteDetail
 import com.feature.navigation.note.navigateToNotes

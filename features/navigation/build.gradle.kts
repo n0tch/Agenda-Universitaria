@@ -64,7 +64,6 @@ dependencies {
     implementation(project(":features:home"))
     implementation(project(":features:note"))
     implementation(project(":features:subject"))
-    implementation(project(":features:exam"))
     implementation(project(":features:timetable"))
     implementation(project(":features:event"))
 

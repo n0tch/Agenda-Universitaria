@@ -2,8 +2,6 @@ package com.core.data.di
 
 import com.core.data.repository.event.EventRepository
 import com.core.data.repository.event.EventRepositoryImp
-import com.core.data.repository.exam.ExamRepository
-import com.core.data.repository.exam.ExamRepositoryImp
 import com.core.data.repository.label.LabelRepository
 import com.core.data.repository.label.LabelRepositoryImp
 import com.core.data.repository.login.LoginRepository
@@ -55,9 +53,6 @@ internal abstract class DataRepositoryModule {
 
     @Binds
     abstract fun bindsTimetableRepository(repository: TimetableRepositoryImp): TimetableRepository
-
-    @Binds
-    abstract fun bindsExamRepository(repository: ExamRepositoryImp): ExamRepository
 
     @Binds
     abstract fun bindsLabelRepository(repository: LabelRepositoryImp): LabelRepository
