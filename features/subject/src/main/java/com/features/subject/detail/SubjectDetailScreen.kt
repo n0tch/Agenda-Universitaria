@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.BookmarkAdd
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.NoteAdd
+import androidx.compose.material.icons.filled.Notes
 import androidx.compose.material.icons.filled.PostAdd
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
@@ -29,7 +30,9 @@ import com.core.designsystem.components.Pill
 import com.core.designsystem.components.fab.FabItem
 import com.core.designsystem.components.fab.FabMenu
 import com.core.designsystem.components.row.GridLazyRow
+import com.core.designsystem.extensions.asLocalizedDate
 import com.core.designsystem.extensions.toMinuteAndSecond
+import com.example.model.Label
 import com.example.model.Note
 import com.example.model.Subject
 import com.example.model.event.Exam
@@ -75,6 +78,7 @@ fun SubjectDetailScreen(
         floatingActionButton = {
             FabMenu(
                 items = listOf(
+                    FabItem(Icons.Filled.Notes, "Nota"),
                     FabItem(Icons.Filled.NoteAdd, "Prova"),
                     FabItem(Icons.Filled.PostAdd, "Trabalho"),
                     FabItem(Icons.Filled.BookmarkAdd, "Customizado"),
@@ -96,8 +100,8 @@ fun SubjectDetailScreen(
 
             Text(text = "Grade horária")
 
-            detailState.timetable.entries.forEach {
-                Text(text = it.key.name)
+            detailState.subjectCompound.timetables.entries.forEach {
+                Text(text = it.key.asLocalizedDate())
                 it.value.forEach { timetable ->
                     Text(timetable.startTime.toMinuteAndSecond())
                     Text(timetable.endTime.toMinuteAndSecond())
@@ -107,22 +111,19 @@ fun SubjectDetailScreen(
 
             Text(modifier = Modifier.padding(horizontal = 8.dp), text = "Notas")
 
-            GridLazyRow(list = detailState.subjectCompound.notes) { note ->
-                NoteItemCard(item = note, onNoteClicked = { onNoteClicked(note) })
+            GridLazyRow(list = detailState.notesWithLabelCompound) { note ->
+                NoteItemCard(item = note.note, labels = note.labels, onNoteClicked = { onNoteClicked(note.note) })
             }
-
-//            Text(modifier = Modifier.padding(horizontal = 8.dp), text = "Provas")
-//
-//            GridLazyRow(list = subject.exams) { exam ->
-//                ExamItemCard(item = exam, onExamClicked = {/* onNoteClicked(note)*/ })
-//            }
 
             Text("Proximos eventos")
             GridLazyRow(list = detailState.events) { event ->
                 OutlinedCard {
                     Column(Modifier.padding(6.dp)) {
                         Text(event.event.name)
-                        Text(text = event.event.eventLabels.first())
+                        Pill(text = event.label.name, color = Color.Gray)
+                        event.eventScore?.score?.let { Text("Vale $it pontos!") }
+//                        Text(event.label.name)
+//                        Text(text = event.event.eventLabels.first())
                     }
                 }
             }
@@ -138,7 +139,7 @@ fun SubjectDetailScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NoteItemCard(item: Note, onNoteClicked: (Note) -> Unit) {
+fun NoteItemCard(item: Note, labels: List<Label>, onNoteClicked: (Note) -> Unit) {
     Card(onClick = { onNoteClicked(item) }) {
         Column(Modifier.padding(8.dp)) {
             Text(text = item.title, maxLines = 2)
@@ -146,7 +147,7 @@ fun NoteItemCard(item: Note, onNoteClicked: (Note) -> Unit) {
 
             Spacer(Modifier.height(4.dp))
 
-            Pill("change thiss", Color.Blue.copy(0.4f))
+            labels.forEach { Pill(it.name, Color.Blue.copy(0.4f)) }
 
 //            Row {
 //

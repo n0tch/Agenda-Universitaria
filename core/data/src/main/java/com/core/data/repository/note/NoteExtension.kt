@@ -3,9 +3,12 @@ package com.core.data.repository.note
 import com.core.data.repository.label.toLabel
 import com.core.data.repository.subject.toSubject
 import com.core.database.note.NoteEntity
+import com.core.database.note.relations.NoteWithLabel
 import com.core.database.note.relations.NoteWithLabelWithMediaAndSubject
 import com.example.model.Note
 import com.example.model.NoteCompound
+import com.example.model.NotesWithCountCompound
+import com.example.model.NoteWithLabelCompound
 
 internal fun Note.toEntity() = NoteEntity(
     title = title,
@@ -35,4 +38,9 @@ internal fun NoteWithLabelWithMediaAndSubject.toNoteCompound() = NoteCompound(
     labels = labels.map { it.toLabel() },
     subject = subject.toSubject(),
     uriPaths = medias.map { it.uriPath }
+)
+
+internal fun NoteWithLabel.toNoteCompound() = NoteWithLabelCompound(
+    note = note.toNote(),
+    labels = labels.map { it.toLabel() }
 )

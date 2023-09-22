@@ -3,6 +3,8 @@ package com.core.data.repository.note
 import com.core.database.note.NoteDao
 import com.example.model.Note
 import com.example.model.NoteCompound
+import com.example.model.NotesWithCountCompound
+import com.example.model.NoteWithLabelCompound
 import javax.inject.Inject
 
 internal class NoteRepositoryImp @Inject constructor(
@@ -22,12 +24,14 @@ internal class NoteRepositoryImp @Inject constructor(
         return noteDao.fetchCompoundNotes().map { it.toNoteCompound() }
     }
 
-    override suspend fun fetchNotes(count: Int): List<NoteCompound> {
-        return noteDao.fetchCompoundNotes(count).map { it.toNoteCompound() }
+    override suspend fun fetchNotes(count: Int): NotesWithCountCompound {
+        val noteCount = noteDao.fetchNoteCount()
+        val notes = noteDao.fetchCompoundNotes(count).map { it.toNoteCompound() }
+        return NotesWithCountCompound(count = noteCount, note = notes)
     }
 
-    override suspend fun fetchNotesBySubject(subjectId: Int): List<Note> {
-        return emptyList()//noteDao.fetchNotesBySubjectId(subjectId).map { it.toNote() }
+    override suspend fun fetchNotesBySubject(subjectId: Int): List<NoteWithLabelCompound> {
+        return noteDao.fetchNotesBySubjectId(subjectId).map { it.toNoteCompound() }
     }
 
     override suspend fun fetchNoteById(noteId: Int): NoteCompound {

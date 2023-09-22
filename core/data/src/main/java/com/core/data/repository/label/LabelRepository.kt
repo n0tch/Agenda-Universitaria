@@ -4,7 +4,7 @@ import com.example.model.Label
 import kotlinx.coroutines.flow.Flow
 
 interface LabelRepository {
-    fun saveNoteLabel(label: Label): Flow<Label>
+    suspend fun saveNoteLabel(label: Label): Label
 
     suspend fun fetchNoteLabels(): List<Label>
 

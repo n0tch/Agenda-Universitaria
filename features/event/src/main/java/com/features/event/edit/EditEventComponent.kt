@@ -3,37 +3,33 @@ package com.features.event.edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.core.designsystem.components.LoadingView
+import org.orbitmvi.orbit.compose.collectAsState
+import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
 fun EditEventComponent(
     subject: Int = -1,
-    onNavigation: (EditEventNavigation) -> Unit
+    onBackPressed: () -> Unit = {},
 ) {
 
     val viewModel: EditEventViewModel = hiltViewModel()
+    val state by viewModel.collectAsState()
 
-    val actionState by viewModel.actionState.observeAsState()
-    val subjects by viewModel.subjects.collectAsStateWithLifecycle()
-    val labels by viewModel.labels.collectAsStateWithLifecycle()
-
-    LaunchedEffect(actionState) {
-        when (val action = actionState) {
-            is EditEventAction.SaveEvent -> {
-                viewModel.saveEvent(action.eventCompound, action.subjectId)
-            }
-
-            EditEventAction.OnBack -> { onNavigation(EditEventNavigation.OnBack) }
-            null -> {}
-        }
+    if(state.isLoading){
+        LoadingView()
+    } else {
+        EditEventScreen(
+            subjectSelected = subject,
+            state = state,
+            onAction = { viewModel.setAction(it) }
+        )
     }
 
-    EditEventScreen(
-        subjectSelected = subjects.firstOrNull { it.id == subject },
-        subjects = subjects,
-        labels = labels,
-        onAction = { viewModel.setAction(it) }
-    )
+    viewModel.collectSideEffect{
+        when(it){
+            EditEventSideEffect.OnBack -> onBackPressed()
+        }
+    }
 }

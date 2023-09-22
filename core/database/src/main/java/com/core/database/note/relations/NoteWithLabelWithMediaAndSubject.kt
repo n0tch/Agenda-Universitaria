@@ -31,3 +31,14 @@ data class NoteWithLabelWithMediaAndSubject(
     )
     val subject: SubjectEntity
 )
+
+data class NoteWithLabel(
+    @Embedded val note: NoteEntity,
+
+    @Relation(
+        parentColumn = "noteId",
+        entityColumn = "labelId",
+        associateBy = Junction(NoteLabelCrossRef::class)
+    )
+    val labels: List<LabelEntity>,
+)

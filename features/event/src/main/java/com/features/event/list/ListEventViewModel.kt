@@ -1,38 +1,26 @@
 package com.features.event.list
 
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.ViewModel
 import com.core.common.Result
-import com.core.common.viewmodel.BaseViewModel
 import com.core.domain.EventUseCase
-import com.example.model.event.EventCompound
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
+import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.reduce
+import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 @HiltViewModel
 internal class ListEventViewModel @Inject constructor(
     private val eventUseCase: EventUseCase
-): BaseViewModel<ListEventAction, ListEventNavigation>(){
+): ViewModel(), ContainerHost<ListEventState, ListEventSideEffect>{
 
-    init {
-        fetchEvents()
-    }
+    override val container = container<ListEventState, ListEventSideEffect>(ListEventState())
 
-    private val _events: MutableStateFlow<List<EventCompound>> = MutableStateFlow(emptyList())
-    val events: StateFlow<List<EventCompound>> = _events.asStateFlow()
-
-    fun fetchEvents(){
-        viewModelScope.launch {
-            eventUseCase.fetchEvents().collect{ result ->
-                when(result){
-                    is Result.Error -> {}
-                    is Result.Success -> _events.update { result.data }
-                }
-            }
+    fun fetchEvents() = intent {
+        when(val eventsResult = eventUseCase.fetchEvents()){
+            is Result.Error -> {}
+            is Result.Success -> reduce { state.copy(events = eventsResult.data) }
         }
     }
 }

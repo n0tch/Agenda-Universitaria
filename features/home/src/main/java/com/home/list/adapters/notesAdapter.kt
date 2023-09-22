@@ -1,5 +1,6 @@
-package com.home.home.adapters
+package com.home.list.adapters
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,9 +20,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.core.designsystem.NoteItemCard
 import com.core.designsystem.components.Pill
+import com.example.model.Note
 import com.example.model.NoteCompound
 
-fun LazyGridScope.notesAdapter(notes: List<NoteCompound>, totalCount: Int = 0) {
+fun LazyGridScope.notesAdapter(
+    notes: List<NoteCompound>,
+    onNoteClicked: (Note) -> Unit = {},
+    onSeeAll: () -> Unit = {},
+) {
     item(span = { GridItemSpan(2) }) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -36,8 +42,8 @@ fun LazyGridScope.notesAdapter(notes: List<NoteCompound>, totalCount: Int = 0) {
             )
 
             Text(
-                modifier = Modifier.padding(vertical = 8.dp),
-                text = "Ver todos(${totalCount})",
+                modifier = Modifier.padding(vertical = 8.dp).clickable { onSeeAll() },
+                text = "Ver todos",
                 fontSize = 14.sp,
                 textAlign = TextAlign.End,
                 fontWeight = FontWeight.Bold,
@@ -49,7 +55,7 @@ fun LazyGridScope.notesAdapter(notes: List<NoteCompound>, totalCount: Int = 0) {
     items(notes, span = { GridItemSpan(1) }) {
         NoteItemCard(
             item = it,
-            onNoteClicked = { }
+            onNoteClicked = { onNoteClicked(it.note) }
         ) { item ->
             Text(
                 text = item.note.title,

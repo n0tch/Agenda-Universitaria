@@ -5,12 +5,14 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.feature.navigation.HomeMainScreens
-import com.feature.navigation.exam.navigateToExam
+import com.feature.navigation.event.navigateToListEvent
 import com.feature.navigation.exam.navigateToExams
 import com.feature.navigation.navigateTo
+import com.feature.navigation.note.navigateToNoteDetail
 import com.feature.navigation.note.navigateToNotes
-import com.home.home.HomeComponent
-import com.home.home.navigation.HomeNavigation
+import com.feature.navigation.subject.navigateToSubjectById
+import com.home.list.HomeComponent
+import com.home.list.navigation.HomeNavigation
 
 const val homeGraphRoute = "home_graph"
 
@@ -21,11 +23,12 @@ fun NavGraphBuilder.homeGraph(navController: NavController) {
                 screenList = HomeMainScreens.values().map { it.label },
                 onNavigation = { navigation ->
                     when(navigation){
-                        is HomeNavigation.NavigateToExamById -> navController.navigateToExam(navigation.examId)
-                        is HomeNavigation.NavigateToNoteById -> TODO()
-                        HomeNavigation.NavigateToExams -> navController.navigateToExams()
+                        is HomeNavigation.NavigateToEventById -> {}//navController.navigateToEv(navigation.examId)
+                        is HomeNavigation.NavigateToNoteById -> navController.navigateToNoteDetail(navigation.noteId)
+                        HomeNavigation.NavigateToEvents -> navController.navigateToListEvent()
                         HomeNavigation.NavigateToNotes -> navController.navigateToNotes()
                         is HomeNavigation.NavigateToScreenByName -> navController.navigateTo(navigation.screenName)
+                        is HomeNavigation.NavigateToSubjectById -> navController.navigateToSubjectById(navigation.subjectId)
                     }
                 }
             )

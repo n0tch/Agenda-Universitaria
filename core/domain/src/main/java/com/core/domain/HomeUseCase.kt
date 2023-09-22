@@ -20,13 +20,13 @@ class HomeUseCase @Inject constructor(
     private val timetableRepository: TimetableRepository
 ) {
 
-    fun fetchTimetableByDay(
+    suspend fun fetchTimetableByDay(
         weekDayName: DayOfWeek
-    ): Flow<Result<List<TimetableCompound>>> = flow<Result<List<TimetableCompound>>> {
+    ): Result<List<TimetableCompound>> = try {
         val timetable = timetableRepository.fetchTimetableByDay(weekDayName)
-        emit(Result.Success(timetable))
-    }.flowOn(ioDispatcher).catch {
-        emit(Result.Error(it as Exception))
+        Result.Success(timetable)
+    }catch(exception: Exception) {
+        Result.Error(exception)
     }
 
     suspend fun fetchWeeklyTimeTable(): Flow<Result<Map<DayOfWeek, List<TimetableCompound>>>> = flow<Result<Map<DayOfWeek, List<TimetableCompound>>>> {

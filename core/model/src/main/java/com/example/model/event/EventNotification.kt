@@ -4,6 +4,6 @@ data class EventNotification(
     val id: Int = 0,
     val eventId: Int = 0,
     val notifyAt: Long,
-    val notificationEarly: NotificationEarlier,
-    val notificationPeriod: NotificationPeriod,
+    val notificationEarly: NotificationEarlier = NotificationEarlier.IN_TIME,
+    val notificationPeriod: NotificationPeriod = NotificationPeriod.ONCE,
 )

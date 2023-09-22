@@ -29,27 +29,21 @@ class ExamDetailViewModel @Inject constructor(
         fetchSubjects()
     }
 
-    private val _uiState: MutableStateFlow<ExamDetailState> by lazy { MutableStateFlow(
-        ExamDetailState()
-    ) }
+    private val _uiState: MutableStateFlow<ExamDetailState> by lazy {
+        MutableStateFlow(
+            ExamDetailState()
+        )
+    }
 
     val uiState: StateFlow<ExamDetailState> = _uiState
 
     @VisibleForTesting
     private fun fetchSubjects() {
         viewModelScope.launch {
-            subjectUseCase
-                .fetchSubjects()
-                .flowOn(uiDispatcher)
-//                .onStart { _uiState.emit(ExamDetailState(loading = true)) }
-                .collect {
-                    when (it) {
-                        is Result.Error -> _uiState.emit(ExamDetailState(error = it.exception))
-                        is Result.Success -> {
-                            _uiState.emit(ExamDetailState(subjects = it.data))
-                        }
-                    }
-                }
+            when (val subjectsResult = subjectUseCase.fetchSubjects()) {
+                is Result.Error -> _uiState.emit(ExamDetailState(error = subjectsResult.exception))
+                is Result.Success -> _uiState.emit(ExamDetailState(subjects = subjectsResult.data))
+            }
         }
     }
 

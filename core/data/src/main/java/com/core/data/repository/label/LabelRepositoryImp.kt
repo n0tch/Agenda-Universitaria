@@ -9,9 +9,10 @@ import javax.inject.Inject
 internal class LabelRepositoryImp @Inject constructor(
     private val labelDao: LabelDao
 ): LabelRepository {
-    override fun saveNoteLabel(label: Label): Flow<Label> = flow {
+
+    override suspend fun saveNoteLabel(label: Label) : Label {
         val id = labelDao.saveLabel(label.toEntity())
-        emit(label.copy(id = id.toInt()))
+        return label.copy(id = id.toInt())
     }
 
     override suspend fun fetchNoteLabels(): List<Label> {

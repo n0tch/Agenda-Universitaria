@@ -21,6 +21,10 @@ interface EventDao {
     @Query("SELECT * FROM events")
     suspend fun fetchCompoundEvents(): List<EventAndNotificationAndScoreAndSubject>
 
+    @Transaction
+    @Query("SELECT * FROM events ORDER BY events.createdAt LIMIT :limit")
+    suspend fun fetchCompoundEvents(limit: Int): List<EventAndNotificationAndScoreAndSubject>
+
     @Query("SELECT * FROM events WHERE events.subjectId = :subjectId")
     suspend fun fetchEventsBySubjectId(subjectId: Int): List<EventAndNotificationAndScoreAndSubject>
 

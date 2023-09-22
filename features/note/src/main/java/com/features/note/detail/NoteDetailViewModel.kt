@@ -14,29 +14,31 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
+import org.orbitmvi.orbit.Container
+import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.reduce
+import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 @HiltViewModel
 class NoteDetailViewModel @Inject constructor(
     @Dispatcher(AppDispatcher.UI) private val uiDispatcher: CoroutineDispatcher,
     private val noteUseCase: NoteUseCase,
-) : ViewModel() {
+) : ViewModel(), ContainerHost<NoteDetailState, NoteDetailSideEffect> {
+
+    override val container = container<NoteDetailState, NoteDetailSideEffect>(NoteDetailState())
 
     private val _noteDetailState: MutableStateFlow<NoteDetailState> by lazy {
         MutableStateFlow(NoteDetailState())
     }
     val noteDetailState: StateFlow<NoteDetailState> = _noteDetailState.asStateFlow()
 
-    fun fetchNoteDetail(noteId: Int) {
-        viewModelScope.launch {
-            noteUseCase.fetchNoteById(noteId)
-                .flowOn(uiDispatcher)
-                .collect {
-                    when (it) {
-                        is Result.Error -> Log.e("fetchNoteDetail", it.exception.toString())
-                        is Result.Success -> _noteDetailState.emit(NoteDetailState(noteCompound = it.data))
-                    }
-                }
+    fun fetchNoteDetail(noteId: Int) = intent {
+        val noteResult = noteUseCase.fetchNoteById(noteId)
+        when(noteResult){
+            is Result.Error -> {}
+            is Result.Success -> reduce { state.copy(noteCompound = noteResult.data) }
         }
     }
 }

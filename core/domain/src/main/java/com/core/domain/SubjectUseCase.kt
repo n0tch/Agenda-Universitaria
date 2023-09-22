@@ -42,10 +42,12 @@ class SubjectUseCase @Inject constructor(
         Result.Error(exception)
     }
 
-    fun fetchSubjects() = flow<Result<List<Subject>>> {
+    suspend fun fetchSubjects(): Result<List<Subject>> = try {
         val subjects = subjectRepository.fetchSubjects()
-        emit(Result.Success(subjects))
-    }.flowOn(ioDispatcher).catch { emit(Result.Error(it as Exception)) }
+        Result.Success(subjects)
+    }catch(exception: Exception) {
+        Result.Error(exception)
+    }
 
     suspend fun fetchSubject(subjectId: Int): Result<SubjectCompound> = try {
         val subject = subjectRepository.fetchSubjectById(subjectId)

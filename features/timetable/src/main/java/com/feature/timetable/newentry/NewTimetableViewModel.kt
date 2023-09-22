@@ -31,18 +31,17 @@ class NewTimetableViewModel @Inject constructor(
 
     fun saveTimetables(entries: List<Timetable>, subjectId: Int) {
         viewModelScope.launch {
-            timetableUseCase.saveTimetableEntries(entries, subjectId).collect { Log.e("asas", "sssssss") }
+            timetableUseCase.saveTimetableEntries(entries, subjectId)
+                .collect { Log.e("asas", "sssssss") }
         }
     }
 
     @VisibleForTesting
     private fun fetchSubjects() {
         viewModelScope.launch {
-            subjectUseCase.fetchSubjects().collect {
-                when (it) {
-                    is Result.Error -> {}
-                    is Result.Success -> _subjects.emit(it.data)
-                }
+            when (val subjectsResult = subjectUseCase.fetchSubjects()) {
+                is Result.Error -> {}
+                is Result.Success -> _subjects.emit(subjectsResult.data)
             }
         }
     }
@@ -52,7 +51,7 @@ class NewTimetableViewModel @Inject constructor(
             subjectUseCase.saveSubject(
                 Subject(name = name, place = place, teacher = teacher)
             ).collect {
-                when(it){
+                when (it) {
                     is Result.Error -> TODO()
                     is Result.Success -> {
                         _subjects.value = _subjects.value.toMutableList().apply { add(it.data) }

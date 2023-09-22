@@ -1,4 +1,4 @@
-package com.home.home.adapters
+package com.home.list.adapters
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -21,7 +21,8 @@ import java.util.Locale
 fun LazyGridScope.timetableAdapter(
     selectedDay: DayOfWeek,
     timetable: List<TimetableCompound>,
-    onTimetableClicked: (Subject) -> Unit = {}
+    onTimetableClicked: (Subject) -> Unit = {},
+    onConfigClicked: (Subject) -> Unit = {}
 ) {
     item(span = { GridItemSpan(2) }) {
         Text(
@@ -42,7 +43,8 @@ fun LazyGridScope.timetableAdapter(
         CardConfig(
             title = it.subject.name,
             body = "${it.timetable.startTime.toMinuteAndSecond()} - ${it.timetable.endTime.toMinuteAndSecond()}",
-            onClick = { onTimetableClicked(it.subject) }
+            onCardClick = { onTimetableClicked(it.subject) },
+            onMoreClick = { onConfigClicked(it.subject) }
         )
     }
 }

@@ -1,12 +1,11 @@
 package com.features.event.edit
 
 import com.core.common.viewmodel.Action
-import com.example.model.event.EventCompound
+import com.example.model.event.EventSaveRequest
 
 internal sealed class EditEventAction : Action {
     data class SaveEvent(
-        val eventCompound: EventCompound,
-        val subjectId: Int
+        val eventSaveRequest: EventSaveRequest
     ) : EditEventAction()
 
     object OnBack: EditEventAction()

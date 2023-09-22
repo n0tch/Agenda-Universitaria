@@ -1,4 +1,4 @@
-package com.home.home.drawer
+package com.home.list.drawer
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

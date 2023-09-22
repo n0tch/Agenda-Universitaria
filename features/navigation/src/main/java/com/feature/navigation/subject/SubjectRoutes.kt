@@ -15,7 +15,7 @@ import com.features.subject.list.SubjectComponent
 const val subjectGraphRoute = "subject_graph"
 
 enum class SubjectRoutes(val route: String) {
-    DETAIL(SubjectScreens.SUBJECT_DETAIL.route + "/{name}/{id}")
+    DETAIL(SubjectScreens.SUBJECT_DETAIL.route + "/{id}")
 }
 
 fun NavGraphBuilder.subjectGraph(navController: NavController) {
@@ -37,11 +37,9 @@ fun NavGraphBuilder.subjectGraph(navController: NavController) {
                 navDeepLink { uriPattern = SubjectRoutes.DETAIL.route }
             )
         ) { backStackEntry ->
-            val subjectName = backStackEntry.arguments?.getString("name") ?: ""
             val subjectId = backStackEntry.arguments?.getString("id")
             SubjectDetailComponent(
                 onBackPressed = { navController.popBackStack() },
-                subjectName = subjectName,
                 subjectId = subjectId?.toIntOrNull() ?: -1,
                 onNavigateToNote = { noteId -> navController.navigate(NoteScreens.NOTE_EDITION.route + "/$noteId") },
                 navigateToAddEvent = {
@@ -66,8 +64,8 @@ fun NavController.navigateToSubjects() {
     }
 }
 
-fun NavController.navigateToSubjectById(subjectName: String, subjectId: Int) {
-    navigate(SubjectScreens.SUBJECT_DETAIL.route + "/$subjectName/$subjectId") {
+fun NavController.navigateToSubjectById(subjectId: Int) {
+    navigate(SubjectScreens.SUBJECT_DETAIL.route + "/$subjectId") {
         popUpTo(graph.findStartDestination().id) {
             saveState = true
         }

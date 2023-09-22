@@ -1,15 +1,26 @@
 package com.features.event.list
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import org.orbitmvi.orbit.compose.collectAsState
 
 @Composable
-fun ListEventComponent() {
+fun ListEventComponent(
+    onBackPressed: () -> Unit,
+) {
 
     val viewModel: ListEventViewModel = hiltViewModel()
-    val events by viewModel.events.collectAsStateWithLifecycle()
+    val state by viewModel.collectAsState()
 
-    ListEventScreen(events)
+    LaunchedEffect(Unit){
+        viewModel.fetchEvents()
+    }
+
+    ListEventScreen(
+        events = state.events,
+        onBackPressed = { onBackPressed() }
+    )
 }

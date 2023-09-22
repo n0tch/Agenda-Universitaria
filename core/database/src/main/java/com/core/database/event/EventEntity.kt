@@ -7,11 +7,11 @@ import androidx.room.PrimaryKey
 data class EventEntity(
     @PrimaryKey(autoGenerate = true) val eventId: Int = 0,
     val name: String?,
-    val description: String?,
-    val isGroupEvent: Boolean?,
     val subjectId: Int,
-    val eventNotificationId: Int? = null,
-    val scoreId: Int? = null,
+    val labelId: Int,
+    val isGroupEvent: Boolean? = null,
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long? = null
+//    val eventNotificationId: Int? = null,
+//    val scoreId: Int? = null,
 )

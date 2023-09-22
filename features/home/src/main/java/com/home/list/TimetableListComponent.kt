@@ -1,4 +1,4 @@
-package com.home.home
+package com.home.list
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,9 +16,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.core.designsystem.extensions.localized
+import com.core.designsystem.extensions.asLocalizedDate
 import com.core.designsystem.extensions.toMinuteAndSecond
-import com.example.model.Timetable
 import com.example.model.TimetableCompound
 import java.time.DayOfWeek
 
@@ -37,7 +36,7 @@ fun TimetableListComponent(
                 modifier = Modifier
                     .padding(vertical = 12.dp)
                     .fillMaxWidth(),
-                text = dayOfWeek.localized(),
+                text = dayOfWeek.asLocalizedDate(),
                 fontSize = 18.sp,
                 textAlign = TextAlign.Center
             )
@@ -53,7 +52,7 @@ fun TimetableListComponent(
             }
 
             if(timetableEntries.isEmpty())
-                Text("Sem eventos para ${dayOfWeek.localized()}")
+                Text("Sem eventos para ${dayOfWeek.asLocalizedDate()}")
         }
     }
 }

@@ -2,6 +2,8 @@ package com.core.data.repository.note
 
 import com.example.model.Note
 import com.example.model.NoteCompound
+import com.example.model.NotesWithCountCompound
+import com.example.model.NoteWithLabelCompound
 
 interface NoteRepository {
 
@@ -11,9 +13,9 @@ interface NoteRepository {
 
     suspend fun fetchNotes(): List<NoteCompound>
 
-    suspend fun fetchNotes(count: Int): List<NoteCompound>
+    suspend fun fetchNotes(count: Int): NotesWithCountCompound
 
-    suspend fun fetchNotesBySubject(subjectId: Int): List<Note>
+    suspend fun fetchNotesBySubject(subjectId: Int): List<NoteWithLabelCompound>
 
     suspend fun fetchNoteById(noteId: Int): NoteCompound
 

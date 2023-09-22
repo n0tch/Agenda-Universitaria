@@ -5,6 +5,7 @@ import com.core.common.AppDispatcher
 import com.core.common.Dispatcher
 import com.core.common.Result
 import com.core.domain.EventUseCase
+import com.core.domain.NoteUseCase
 import com.core.domain.SubjectUseCase
 import com.core.domain.TimetableUseCase
 import com.example.model.Subject
@@ -28,6 +29,7 @@ class SubjectDetailViewModel @Inject constructor(
     @Dispatcher(AppDispatcher.UI) private val uiDispatcher: CoroutineDispatcher,
     private val subjectUseCase: SubjectUseCase,
     private val eventUseCase: EventUseCase,
+    private val noteUseCase: NoteUseCase,
     private val timetableUseCase: TimetableUseCase,
 ) : ViewModel(), ContainerHost<SubjectDetailState, SubjectDetailSideEffect> {
 
@@ -49,7 +51,7 @@ class SubjectDetailViewModel @Inject constructor(
         MutableStateFlow(mapOf())
     val timetableState: StateFlow<Map<DayOfWeek, List<Timetable>>> = _timetableState.asStateFlow()
 
-    fun fetchSubject(subjectId: Int) = intent {
+    fun fetchSubjectWithTimetable(subjectId: Int) = intent {
         when (val subjectResult = subjectUseCase.fetchSubject(subjectId)) {
             is Result.Error -> postSideEffect(SubjectDetailSideEffect.Toast(subjectResult.exception.message.toString()))
             is Result.Success -> reduce { state.copy(subjectCompound = subjectResult.data) }
@@ -63,17 +65,17 @@ class SubjectDetailViewModel @Inject constructor(
         }
     }
 
-    fun fetchTimetables(subjectId: Int) = intent {
-        when (val timetableResult = timetableUseCase.fetchTimetableBySubjectId(subjectId)) {
-            is Result.Error -> postSideEffect(SubjectDetailSideEffect.Toast(timetableResult.exception.message.toString()))
-            is Result.Success -> reduce { state.copy(timetable = timetableResult.data) }
-        }
-    }
-
     fun deleteSubject(subject: Subject) = intent {
         when (val timetableResult = subjectUseCase.deleteSubjectName(subject)) {
             is Result.Error -> postSideEffect(SubjectDetailSideEffect.Toast(timetableResult.exception.message.toString()))
             is Result.Success -> postSideEffect(SubjectDetailSideEffect.Toast("deleted."))
+        }
+    }
+
+    fun fetchNotes(subjectId: Int) = intent {
+        when(val notesResult = noteUseCase.fetchNoteBySubjectId(subjectId)){
+            is Result.Error -> postSideEffect(SubjectDetailSideEffect.Toast(notesResult.exception.message.toString()))
+            is Result.Success -> reduce { state.copy(notesWithLabelCompound = notesResult.data) }
         }
     }
 }

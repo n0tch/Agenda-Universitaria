@@ -34,50 +34,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.core.designsystem.components.chip.SingleChipSelection
-import com.core.designsystem.components.timepicker.StartTimePicker
-import com.example.model.Label
-import com.example.model.Subject
-import com.example.model.event.Event
-import com.example.model.event.EventCompound
-import com.example.model.event.EventNotification
-import com.example.model.event.EventScore
-import com.example.model.event.NotificationEarlier
+import com.core.designsystem.components.timepicker.DateTimePicker
+import com.example.model.event.EventSaveRequest
 import com.example.model.event.NotificationPeriod
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun EditEventScreen(
-    subjectSelected: Subject?,
-    subjects: List<Subject> = emptyList(),
-    labels: List<Label> = emptyList(),
+    subjectSelected: Int,
+    state: EditEventState,
     onAction: (EditEventAction) -> Unit = {}
 ) {
-
-    val eventCompound = EventCompound(
-        event = Event(
-            name = "Prova 1",
-            description = "Descricao 1",
-            eventLabels = emptyList(),
-            hasScore = false,
-            isGroupEvent = false,
-            notificationOn = true,
-        ),
-        eventNotification = EventNotification(
-            notifyAt = System.currentTimeMillis(),
-            notificationEarly = NotificationEarlier.IN_TIME,
-            notificationPeriod = NotificationPeriod.ONCE
-        ),
-        eventScore = EventScore(
-            eventId = 1,
-            score = 25F
-        )
-    )
 
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var notificationEnabled by remember { mutableStateOf(false) }
+    var notificationDate: Long? by remember { mutableStateOf(null) }
+    var notificationHour by remember { mutableStateOf(0) }
+    var notificationMinute by remember { mutableStateOf(0) }
     var scoreEnabled by remember { mutableStateOf(false) }
-    var scoreValue by remember { mutableStateOf(0F) }
+    var scoreValue: Float? by remember { mutableStateOf(null) }
+    var subject by remember { mutableStateOf(0) }
+    var label by remember { mutableStateOf(0) }
 
     Scaffold(
         topBar = {
@@ -107,12 +85,6 @@ internal fun EditEventScreen(
                     value = name,
                     onValueChange = { name = it })
 
-                Text(text = "Informe o nome test")
-                TextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = name,
-                    onValueChange = { name = it })
-
                 Text(text = "Informe a descriçao")
                 TextField(
                     modifier = Modifier.fillMaxWidth(),
@@ -124,21 +96,19 @@ internal fun EditEventScreen(
                 OutlinedCard(modifier = Modifier.fillMaxWidth()) {
                     Text(text = "Selectione a materia")
                     SingleChipSelection(
-                        items = subjects,
+                        items = state.subjects,
                         content = {
                             Text(it.name)
                         },
-                        preSelected = { subjectSelected },
-                        onSelection = {
-
-                        }
+                        preSelected = { state.subjects.firstOrNull { it.id == subjectSelected } },
+                        onSelection = { subject = it.id }
                     )
                 }
 
                 OutlinedCard(modifier = Modifier.fillMaxWidth()) {
-                    Text(text = "Selectione a etiqueta")
+                    Text(text = "Selectione a categoria")
                     SingleChipSelection(
-                        items = labels,
+                        items = state.labels,
                         content = {
                             Text(it.name)
                         },
@@ -146,9 +116,7 @@ internal fun EditEventScreen(
                         onLastItemClicked = {
 
                         },
-                        onSelection = {
-
-                        }
+                        onSelection = { label = it.id }
                     )
                 }
 
@@ -165,7 +133,13 @@ internal fun EditEventScreen(
 
                 AnimatedVisibility(visible = notificationEnabled) {
                     Column {
-                        StartTimePicker()
+                        DateTimePicker(
+                            onDateSelected = { date -> date?.let { notificationDate = it } },
+                            onTimeSelected = { hour, minute ->
+                                notificationHour = hour
+                                notificationMinute = minute
+                            }
+                        )
                         OutlinedCard(modifier = Modifier.fillMaxWidth()) {
                             Text("Selecione a periodicidade")
                             SingleChipSelection(
@@ -200,14 +174,26 @@ internal fun EditEventScreen(
                         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
                     )
                 }
-            }
 
-            Button(
-                onClick = {
-                    onAction(EditEventAction.SaveEvent(eventCompound, 1))
+                Button(
+                    onClick = {
+                        onAction(
+                            EditEventAction.SaveEvent(
+                                EventSaveRequest(
+                                    event = name,
+                                    subjectId = subject,
+                                    labelId = label,
+                                    score = scoreValue,
+                                    date = notificationDate,
+                                    hour = notificationHour,
+                                    minute = notificationMinute
+                                )
+                            )
+                        )
+                    }
+                ) {
+                    Text(text = "Salvar")
                 }
-            ) {
-                Text(text = "Salvar")
             }
         }
     }

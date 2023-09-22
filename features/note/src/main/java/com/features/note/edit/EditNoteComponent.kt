@@ -1,5 +1,6 @@
 package com.features.note.edit
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -7,11 +8,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.core.designsystem.components.LoadingView
-import com.core.designsystem.components.ToastComponent
 import com.core.designsystem.dialogs.CommonSubjectAddDialog
 import com.core.designsystem.dialogs.LabelAddDialog
+import org.orbitmvi.orbit.compose.collectAsState
+import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
 fun EditNoteComponent(
@@ -21,9 +22,7 @@ fun EditNoteComponent(
 ) {
     val viewModel: EditNoteViewModel = hiltViewModel()
 
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val labels by viewModel.labelState.collectAsStateWithLifecycle()
-    val subjects by viewModel.subjects.collectAsStateWithLifecycle()
+    val state by viewModel.collectAsState()
     var showLabelDialog by remember { mutableStateOf(false) }
     var showSubjectDialog by remember { mutableStateOf(false) }
 
@@ -31,12 +30,11 @@ fun EditNoteComponent(
         viewModel.fetchNote(noteId)
     })
 
-    if (!uiState.isLoading) {
+    if(state.isLoading){
+        LoadingView()
+    }else{
         NewNoteScreen(
-            noteCompound = uiState.noteCompound,
-            saved = uiState.noteSaved,
-            noteLabels = labels,
-            subjects = subjects,
+            state = state,
             onSaveClicked = { note, mediaList, labelList ->
                 if (isNewNote) {
                     viewModel.saveNote(note, mediaList, labelList)
@@ -48,8 +46,6 @@ fun EditNoteComponent(
             addNewLabel = { showLabelDialog = true },
             addSubject = { showSubjectDialog = true }
         )
-    } else {
-        LoadingView()
     }
 
     if (showLabelDialog) {
@@ -71,7 +67,9 @@ fun EditNoteComponent(
         )
     }
 
-    if (uiState.exception != null) {
-        ToastComponent(message = uiState.exception!!.message.toString())
+    viewModel.collectSideEffect{
+        when(it){
+            is EditNoteSideEffect.Toast -> Log.e("toast", it.message)
+        }
     }
 }

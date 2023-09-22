@@ -46,34 +46,31 @@ import com.core.designsystem.components.fab.FabMenu
 import com.example.model.Label
 import com.example.model.Note
 import com.example.model.NoteCompound
-import com.example.model.Subject
 import com.github.dhaval2404.imagepicker.ImagePicker
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewNoteScreen(
-    noteCompound: NoteCompound,
-    saved: Boolean,
-    noteLabels: List<Label>,
-    subjects: List<Subject>,
+    state: EditNoteState,
     onSaveClicked: (note: Note, mediaList: List<Uri?>, labels: List<Label>) -> Unit,
     onBackClicked: () -> Unit,
     addNewLabel: () -> Unit = {},
     addSubject: () -> Unit = {}
 ) {
 
+    println("Recomposition")
     val snackBar = SnackbarHostState()
     val coroutineScope = rememberCoroutineScope()
 
-    var title by remember { mutableStateOf(noteCompound.note.title) }
-    var description by remember { mutableStateOf(noteCompound.note.body) }
-    var subjectId by remember { mutableStateOf(noteCompound.note.subjectId) }
+    var title by remember { mutableStateOf(state.noteCompound.note.title) }
+    var description by remember { mutableStateOf(state.noteCompound.note.body) }
+    var subjectId by remember { mutableStateOf(state.noteCompound.note.subjectId) }
 
     val photos: MutableList<Uri?> = remember { mutableStateListOf() }
     var selectedLabels: List<Label> = remember { mutableStateListOf() }
 
-    val v: MutableList<Uri?> = noteCompound.uriPaths.map { Uri.parse(it) }.toMutableList()
+    val v: MutableList<Uri?> = state.noteCompound.uriPaths.map { Uri.parse(it) }.toMutableList()
     val z = photos.union(v).toList()
 
     val context = LocalContext.current
@@ -103,7 +100,7 @@ fun NewNoteScreen(
                     IconButton(onClick = {
                         onSaveClicked(
                             Note(
-                                id = noteCompound.note.id,
+                                id = state.noteCompound.note.id,
                                 title = title,
                                 body = description,
                                 subjectId = subjectId
@@ -167,8 +164,8 @@ fun NewNoteScreen(
             OutlinedCard(modifier = Modifier.fillMaxWidth()) {
                 Text("Selecione a(s) etiqueta")
                 MultipleChipSelection(
-                    items = noteLabels,
-                    preSelection = noteCompound.labels.toTypedArray(),
+                    items = state.labels,
+                    preSelection = state.noteCompound.labels.toTypedArray(),
                     content = {
                         Text(text = it.name)
                     },
@@ -185,8 +182,8 @@ fun NewNoteScreen(
             OutlinedCard(modifier = Modifier.fillMaxWidth()) {
                 Text("Selecione a materia")
                 SingleChipSelection(
-                    items = subjects,
-                    preSelected = { noteCompound.subject },
+                    items = state.subjects,
+                    preSelected = { state.noteCompound.subject },
                     content = { Text(text = it.name) },
                     onSelection = { subjectId = it.id },
                     isLastItemSelected = true,
@@ -207,8 +204,8 @@ fun NewNoteScreen(
             }
         }
 
-        LaunchedEffect(key1 = saved, block = {
-            if (saved) {
+        LaunchedEffect(key1 = state.noteSaved, block = {
+            if (state.noteSaved) {
                 coroutineScope.launch { snackBar.showSnackbar(message = "Saved") }
             }
         })

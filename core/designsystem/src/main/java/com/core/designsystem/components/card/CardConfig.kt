@@ -1,5 +1,6 @@
 package com.core.designsystem.components.card
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -23,11 +24,13 @@ fun CardConfig(
     title: String,
     body: String,
     indicatorIcon: ImageVector = Icons.Filled.MoreHoriz,
-    onClick: () -> Unit
+    onCardClick: () -> Unit = {},
+    onMoreClick: () -> Unit = {}
 ) {
     OutlinedCard(
         modifier = modifier
             .fillMaxWidth()
+            .clickable { onCardClick() }
             .padding(horizontal = 2.dp, vertical = 2.dp)
     ) {
         ConstraintLayout(
@@ -61,7 +64,7 @@ fun CardConfig(
                     top.linkTo(textRef.top)
                     bottom.linkTo(bodyRef.bottom)
                 },
-                onClick = { onClick() }) {
+                onClick = { onMoreClick() }) {
                 Icon(
                     imageVector = indicatorIcon,
                     contentDescription = ""

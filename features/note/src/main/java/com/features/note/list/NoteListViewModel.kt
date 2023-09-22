@@ -1,6 +1,8 @@
 package com.features.note.list
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.core.common.AppDispatcher
 import com.core.common.Dispatcher
 import com.core.common.Result
@@ -10,6 +12,9 @@ import com.example.model.Label
 import com.example.model.Note
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
@@ -59,9 +64,5 @@ class NoteListViewModel @Inject constructor(
             is Result.Error -> postSideEffect(NoteListSideEffect.Toast(labelsResult.exception.toString()))
             is Result.Success -> reduce { state.copy(labels = labelsResult.data) }
         }
-    }
-
-    fun setSideEffect() = intent {
-        postSideEffect(NoteListSideEffect.ShowFilter)
     }
 }

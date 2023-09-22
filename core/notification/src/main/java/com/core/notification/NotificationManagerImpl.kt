@@ -46,7 +46,7 @@ internal class NotificationManagerImpl @Inject constructor(
 //            NotificationPeriod.ONCE ->
 //                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, alarmIntent)
 //        }
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, alarmIntent)
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, alarmIntent)
         Log.e("scheduled", calendar.toString())
         return true
     }

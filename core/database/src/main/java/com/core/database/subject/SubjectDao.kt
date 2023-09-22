@@ -5,7 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
-import com.core.database.subject.relations.SubjectWithNotesWithExams
+import com.core.database.subject.relations.SubjectWithTimetable
 
 @Dao
 interface SubjectDao {
@@ -18,7 +18,7 @@ interface SubjectDao {
 
     @Transaction
     @Query("SELECT * FROM subjects WHERE subjects.subjectId = :subjectId")
-    suspend fun fetchSubjectById(subjectId: Int?): SubjectWithNotesWithExams
+    suspend fun fetchSubjectById(subjectId: Int?): SubjectWithTimetable
 
     @Delete
     suspend fun deleteSubject(subject: SubjectEntity): Int
@@ -29,7 +29,7 @@ interface SubjectDao {
 
     @Transaction
     @Query("SELECT * FROM subjects WHERE subjects.subjectId = :subjectId")
-    suspend fun fetchSubjectWithNotes(subjectId: Int): SubjectWithNotesWithExams
+    suspend fun fetchSubjectWithNotes(subjectId: Int): SubjectWithTimetable
 
     @Query("SELECT * FROM subjects WHERE name LIKE '%' || :query || '%'")
     suspend fun searchSubjectByName(query: String): List<SubjectEntity>

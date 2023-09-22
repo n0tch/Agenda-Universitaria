@@ -1,4 +1,4 @@
-package com.home.home
+package com.home.list
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -19,24 +19,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.core.designsystem.components.fab.FabItem
 import com.core.designsystem.components.fab.FabMenu
-import com.home.home.adapters.examAdapter
-import com.home.home.adapters.notesAdapter
-import com.home.home.adapters.timetableAdapter
-import com.home.home.component.HomeProfileHeader
-import com.home.home.component.WeeklyDaySelector
-import com.home.home.drawer.DrawerBody
-import com.home.home.navigation.HomeNavigation
+import com.home.list.adapters.eventAdapter
+import com.home.list.adapters.notesAdapter
+import com.home.list.adapters.timetableAdapter
+import com.home.list.component.HomeProfileHeader
+import com.home.list.component.WeeklyDaySelector
+import com.home.list.drawer.DrawerBody
+import com.home.list.navigation.HomeNavigation
+import com.home.list.state.HomeAction
+import com.home.list.state.HomeListState
 import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
     screenList: List<String>,
-    examsState: ExamsState,
-    timetableState: TimetableState,
-    notesState: NoteState,
-    onAction: (HomeActon) -> Unit = {},
-    onNavigation: (HomeNavigation) -> Unit = {},
-    setAlarm: () -> Unit = {},
+    homeListState: HomeListState,
+    onAction: (HomeAction) -> Unit = {},
+    onNavigation: (HomeNavigation) -> Unit = {}
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val isGestureEnabled = drawerState.isOpen
@@ -63,9 +62,9 @@ fun HomeScreen(
                             }
                         )
                         WeeklyDaySelector(
-                            selectedDay = timetableState.selectedDayOfWeek,
+                            selectedDay = homeListState.timetableState.selectedDayOfWeek,
                             onClick = {
-                                onAction(HomeActon.DaySelected(it))
+                                onAction(HomeAction.DaySelected(it))
                             }
                         )
                     }
@@ -78,7 +77,7 @@ fun HomeScreen(
                             FabItem(Icons.Filled.CalendarMonth, "Add Timetable"),
                             FabItem(Icons.Filled.Hexagon, "Add exam")
                         ),
-                        onFabClicked = { setAlarm() }
+                        onFabClicked = {  }
                     )
                 },
             ) {
@@ -89,17 +88,21 @@ fun HomeScreen(
                     columns = GridCells.Fixed(2),
                 ) {
                     timetableAdapter(
-                        selectedDay = timetableState.selectedDayOfWeek,
-                        timetable = timetableState.timetables,
-                        onTimetableClicked = { subject -> onAction(HomeActon.TimeTableConfig(subject)) }
+                        selectedDay = homeListState.timetableState.selectedDayOfWeek,
+                        timetable = homeListState.timetableState.timetables,
+                        onTimetableClicked = { subject -> onNavigation(HomeNavigation.NavigateToSubjectById(subject.id)) },
+                        onConfigClicked = { subject -> onAction(HomeAction.TimeTableConfig(subject)) }
                     )
-                    examAdapter(
-                        exams = examsState.nextExams,
-                        totalCount = examsState.totalCount,
-                        onExamClicked = { exam -> onAction(HomeActon.ExamSelected(exam)) },
-                        onSeeAll = { onNavigation(HomeNavigation.NavigateToExams) }
+                    eventAdapter(
+                        events = homeListState.eventsState.events,
+                        onEventClicked = { event -> onNavigation(HomeNavigation.NavigateToEventById(event.id)) },
+                        onSeeAll = { onNavigation(HomeNavigation.NavigateToEvents) }
                     )
-                    notesAdapter(notes = notesState.notes, totalCount = notesState.totalCount)
+                    notesAdapter(
+                        notes = homeListState.noteState.note,
+                        onNoteClicked = { note -> onNavigation(HomeNavigation.NavigateToNoteById(note.id)) },
+                        onSeeAll = { onNavigation(HomeNavigation.NavigateToNotes) }
+                    )
                 }
             }
         }

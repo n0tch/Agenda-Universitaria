@@ -1,4 +1,4 @@
-package com.home.home.adapters
+package com.home.list.adapters
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,12 +17,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.core.designsystem.components.card.CardForward
 import com.core.designsystem.extensions.toDayMonthYear
+import com.example.model.event.Event
+import com.example.model.event.EventCompound
 import com.example.model.event.Exam
 
-fun LazyGridScope.examAdapter(
-    exams: List<Exam>,
-    totalCount: Int = 0,
-    onExamClicked: (Exam) -> Unit = {},
+fun LazyGridScope.eventAdapter(
+    events: List<EventCompound>,
+    onEventClicked: (Event) -> Unit = {},
     onSeeAll: () -> Unit = {}
 ){
     item(span = { GridItemSpan(2) }) {
@@ -32,7 +33,7 @@ fun LazyGridScope.examAdapter(
         ) {
             Text(
                 modifier = Modifier.padding(vertical = 8.dp),
-                text = "Proximas provas",
+                text = "Proximos eventos",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
@@ -40,7 +41,7 @@ fun LazyGridScope.examAdapter(
 
             Text(
                 modifier = Modifier.padding(vertical = 8.dp).clickable { onSeeAll() },
-                text = "Ver todos(${totalCount})",
+                text = "Ver todos",
                 fontSize = 14.sp,
                 textAlign = TextAlign.End,
                 fontWeight = FontWeight.Bold,
@@ -49,11 +50,11 @@ fun LazyGridScope.examAdapter(
         }
     }
 
-    items(exams, span = { GridItemSpan(1) }) { exam ->
+    items(events, span = { GridItemSpan(1) }) { event ->
         CardForward(
-            title = exam.name,
-            body = exam.date.toDayMonthYear(),
-            onClick = { onExamClicked(exam) }
+            title = event.event.name,
+            body = event.eventNotification?.notifyAt?.toDayMonthYear() ?: "",
+            onClick = { onEventClicked(event.event) }
         )
     }
 }

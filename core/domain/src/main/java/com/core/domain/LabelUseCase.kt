@@ -17,14 +17,11 @@ class LabelUseCase @Inject constructor(
     private val labelRepository: LabelRepository
 ) {
 
-    fun saveNoteLabel(label: Label): Flow<Result<Label>> = flow {
-        labelRepository
-            .saveNoteLabel(label)
-            .flowOn(ioDispatcher)
-            .catch { emit(Result.Error(it as Exception)) }
-            .collect {
-                emit(Result.Success(it))
-            }
+    suspend fun saveLabel(label: Label): Result<Label> = try {
+        val savedLabel = labelRepository.saveNoteLabel(label)
+        Result.Success(savedLabel)
+    }catch (exception: Exception){
+        Result.Error(exception)
     }
 
     suspend fun fetchNoteLabels(): Result<List<Label>> = try {
@@ -33,5 +30,4 @@ class LabelUseCase @Inject constructor(
     }catch (exception: Exception){
         Result.Error(exception)
     }
-
 }

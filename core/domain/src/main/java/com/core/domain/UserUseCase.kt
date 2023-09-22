@@ -17,10 +17,12 @@ class UserUseCase @Inject constructor(
     private val userRepository: UserRepository
 ) {
 
-    suspend fun fetchCurrentUser(): Flow<Result<CurrentUser>> = flow {
+    suspend fun fetchCurrentUser(): Result<CurrentUser> = try {
         val user = userRepository.fetchCurrentUser()
-        emit(Result.Success(user))
-    }.flowOn(ioDispatcher)
+        Result.Success(user)
+    }catch (exception: Exception){
+        Result.Error(exception)
+    }
 
     fun isUserLoggedIn(): Flow<Result<Boolean>> = flow {
         userRepository.isUserLoggedIn().map { Result.Success(it) }.collect { emit(it) }

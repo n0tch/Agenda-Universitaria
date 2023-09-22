@@ -13,7 +13,7 @@ import com.features.note.list.NoteListComponent
 const val noteGraphRoute = "note_graph"
 
 enum class NoteRoutes(val route: String){
-    ADD(NoteScreens.NOTE_DETAIL.route + "/{id}")
+    DETAIL(NoteScreens.NOTE_DETAIL.route + "/{id}")
 }
 
 fun NavGraphBuilder.noteNavGraph(navController: NavController) {
@@ -46,9 +46,9 @@ fun NavGraphBuilder.noteNavGraph(navController: NavController) {
         }
 
         composable(
-            route = NoteRoutes.ADD.route,
+            route = NoteRoutes.DETAIL.route,
             deepLinks = listOf(
-                navDeepLink { uriPattern = NoteRoutes.ADD.route }
+                navDeepLink { uriPattern = NoteRoutes.DETAIL.route }
             )
         ) { backStackEntry ->
             val noteId = backStackEntry.arguments?.getString("id")?.toIntOrNull() ?: 0
@@ -75,14 +75,8 @@ fun NavController.navigateToNotes() {
     }
 }
 
-fun NavController.navigateToAddNote(){
-    navigate(noteGraphRoute){
-        popUpTo(graph.findStartDestination().id) {
-            saveState = true
-        }
-        launchSingleTop = true
-        restoreState = true
-    }
+fun NavController.navigateToNoteDetail(noteId: Int){
+    navigate(NoteScreens.NOTE_DETAIL.route + "/$noteId")
 }
 
 fun NavController.navigateToNoteEdition(noteId: Int){

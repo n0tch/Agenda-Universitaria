@@ -1,4 +1,4 @@
-package com.home.home.component
+package com.home.list.component
 
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text

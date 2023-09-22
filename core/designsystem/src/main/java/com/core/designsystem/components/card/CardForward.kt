@@ -1,6 +1,8 @@
 package com.core.designsystem.components.card
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
@@ -26,8 +28,14 @@ fun CardForward(
     indicatorIcon: ImageVector = Icons.Filled.ChevronRight,
     onClick: () -> Unit
 ) {
-    OutlinedCard(modifier = modifier.fillMaxWidth().padding(horizontal = 2.dp, vertical = 2.dp), onClick = { onClick() }) {
-        ConstraintLayout(modifier = Modifier.fillMaxWidth().padding(6.dp)) {
+    OutlinedCard(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 2.dp, vertical = 2.dp)
+            .height(74.dp),
+        onClick = { onClick() }
+    ) {
+        ConstraintLayout(modifier = Modifier.fillMaxSize().padding(6.dp)) {
             val (textRef, bodyRef, indicatorRef) = createRefs()
 
             Text(

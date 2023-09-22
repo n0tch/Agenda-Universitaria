@@ -34,7 +34,7 @@ fun <T> SingleChipSelection(
         items.forEach {
             ElevatedFilterChip(
                 modifier = Modifier.padding(horizontal = 2.dp),
-                label = { content(it) },
+                label = { it?.let { content(it) } },
                 leadingIcon = {
                     if (itemSelected == it) {
                         Icon(imageVector = Icons.Filled.Check, contentDescription = "")

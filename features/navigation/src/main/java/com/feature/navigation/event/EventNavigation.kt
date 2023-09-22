@@ -5,37 +5,30 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.features.event.edit.EditEventComponent
-import com.features.event.edit.EditEventNavigation
 import com.features.event.list.ListEventComponent
 
 fun NavGraphBuilder.eventGraph(navController: NavController) {
 
     composable(route = EventScreens.DETAIL.route) {
-        EditEventComponent(onNavigation = {
-            when(it){
-                EditEventNavigation.OnBack -> navController.popBackStack()
-            }
-        })
+        EditEventComponent(
+            onBackPressed = { navController.popBackStack() }
+        )
     }
 
     composable(route = EventScreens.DETAIL_WITH_SUBJECT.route + "/{subjectId}") {
         val subject = it.arguments?.getString("subjectId") ?: "0"
         EditEventComponent(
-            subject=subject.toInt(),
-            onNavigation = {
-                when(it){
-                    EditEventNavigation.OnBack -> navController.popBackStack()
-                }
-            }
+            subject = subject.toInt(),
+            onBackPressed = { navController.popBackStack() }
         )
     }
 
     composable(route = EventScreens.LIST.route) {
-        ListEventComponent()
+        ListEventComponent(onBackPressed = { navController.popBackStack() })
     }
 }
 
-fun NavController.navigateToEditEvent(){
+fun NavController.navigateToEditEvent() {
     navigate(EventScreens.DETAIL.route) {
         popUpTo(graph.findStartDestination().id) {
             saveState = true
@@ -45,11 +38,11 @@ fun NavController.navigateToEditEvent(){
     }
 }
 
-fun NavController.navigateToEditEventWithSubject(subjectId: Int){
+fun NavController.navigateToEditEventWithSubject(subjectId: Int) {
     navigate(EventScreens.DETAIL_WITH_SUBJECT.route + "/$subjectId")
 }
 
-fun NavController.navigateToListEvent(){
+fun NavController.navigateToListEvent() {
     navigate(EventScreens.LIST.route) {
         popUpTo(graph.findStartDestination().id) {
             saveState = true

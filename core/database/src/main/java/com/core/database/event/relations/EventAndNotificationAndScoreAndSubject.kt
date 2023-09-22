@@ -5,20 +5,21 @@ import androidx.room.Relation
 import com.core.database.event.EventEntity
 import com.core.database.event.notification.NotificationEntity
 import com.core.database.event.score.ScoreEntity
+import com.core.database.label.LabelEntity
 import com.core.database.subject.SubjectEntity
 
 data class EventAndNotificationAndScoreAndSubject(
     @Embedded val event: EventEntity,
 
     @Relation(
-        parentColumn = "eventNotificationId",
-        entityColumn = "notificationId",
+        parentColumn = "eventId",
+        entityColumn = "eventId",
     )
     val notification: NotificationEntity? = null,
 
     @Relation(
-        parentColumn = "scoreId",
-        entityColumn = "scoreId"
+        parentColumn = "eventId",
+        entityColumn = "eventId"
     )
     val score: ScoreEntity? = null,
 
@@ -26,5 +27,11 @@ data class EventAndNotificationAndScoreAndSubject(
         parentColumn = "subjectId",
         entityColumn = "subjectId"
     )
-    val subject: SubjectEntity
+    val subject: SubjectEntity,
+
+    @Relation(
+        parentColumn = "labelId",
+        entityColumn = "labelId"
+    )
+    val label: LabelEntity
 )

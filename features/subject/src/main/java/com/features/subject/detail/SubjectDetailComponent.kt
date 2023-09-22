@@ -12,7 +12,6 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 @Composable
 fun SubjectDetailComponent(
     onBackPressed: () -> Unit,
-    subjectName: String,
     subjectId: Int,
     onNavigateToNote: (Int) -> Unit,
     navigateToAddEvent: (Int) -> Unit
@@ -23,9 +22,9 @@ fun SubjectDetailComponent(
     val state by viewModel.collectAsState()
 
     LaunchedEffect(key1 = Unit, block = {
-        viewModel.fetchSubject(subjectId)
+        viewModel.fetchSubjectWithTimetable(subjectId)
+        viewModel.fetchNotes(subjectId)
         viewModel.fetchEvents(subjectId)
-        viewModel.fetchTimetables(subjectId)
     })
 
     SubjectDetailScreen(

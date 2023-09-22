@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import com.core.database.note.relations.NoteWithLabel
 import com.core.database.note.relations.NoteWithLabelWithMediaAndSubject
 
 @Dao
@@ -23,8 +24,8 @@ interface NoteDao {
     @Query("SELECT * FROM notes WHERE noteId = :id")
     suspend fun fetchNotesById(id: Int): NoteEntity
 
-    @Query("SELECT * FROM notes")
-    suspend fun fetchNotesBySubjectId(): List<NoteEntity>
+    @Query("SELECT * FROM notes WHERE notes.noteSubjectId = :subjectId")
+    suspend fun fetchNotesBySubjectId(subjectId: Int): List<NoteWithLabel>
 
     @Transaction
     @Query("SELECT * FROM notes WHERE title LIKE '%' || :query || '%'")
