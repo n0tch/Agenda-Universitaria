@@ -11,7 +11,7 @@ internal class TimetableRepositoryImp @Inject constructor(
 ) : TimetableRepository {
 
     override suspend fun saveTimetableEntry(timetables: List<Timetable>, subjectId: Int): List<Timetable> {
-        val ids = timetableDao.saveTimetables(timetables.map { it.toEntityWithGivenSubjectId(subjectId) })
+        timetableDao.saveTimetables(timetables.map { it.toEntityWithGivenSubjectId(subjectId) })
         return listOf()
     }
 

@@ -11,10 +11,8 @@ internal class RegisterRepositoryImp @Inject constructor(
     override suspend fun signupWithUserCredentials(
         email: String,
         password: String
-    ): CurrentUser = try {
+    ): CurrentUser {
         val user = registerDataProvider.signUpWithCredentials(email, password)
-        user.toCurrentUser()
-    } catch (exception: Exception) {
-        throw exception
+        return user.toCurrentUser()
     }
 }

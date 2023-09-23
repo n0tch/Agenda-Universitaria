@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.hilt)
 }
 
+apply(from = "../../config/detekt/detekt.gradle")
+
 android {
     namespace = "com.core.data"
     compileSdk = 33

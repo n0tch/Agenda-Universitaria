@@ -23,8 +23,6 @@ interface NoteRepository {
 
     suspend fun deleteNote(note: Note): Boolean
 
-    suspend fun saveNoteImagePaths(noteId: Int, images: List<String>)
-
     suspend fun fetchNotesByLabelId(labelId: Int): List<NoteCompound>
 
     suspend fun fetchNotesCount(): Int

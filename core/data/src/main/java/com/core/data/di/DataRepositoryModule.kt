@@ -67,5 +67,7 @@ internal abstract class DataRepositoryModule {
     abstract fun bindsEventRepository(repository: EventRepositoryImp): EventRepository
 
     @Binds
-    abstract fun bindsSheduleNotificationRepository(repository: ScheduleNotificationRepositoryImp): ScheduleNotificationRepository
+    abstract fun bindsSheduleNotificationRepository(
+        repository: ScheduleNotificationRepositoryImp
+    ): ScheduleNotificationRepository
 }

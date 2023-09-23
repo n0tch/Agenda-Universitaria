@@ -47,10 +47,6 @@ internal class NoteRepositoryImp @Inject constructor(
         return deleted > 0
     }
 
-    override suspend fun saveNoteImagePaths(noteId: Int, images: List<String>) {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun fetchNotesByLabelId(labelId: Int): List<NoteCompound> {
         return noteDao.fetchNotesByLabelId(labelId).map { it.toNoteCompound() }
     }
