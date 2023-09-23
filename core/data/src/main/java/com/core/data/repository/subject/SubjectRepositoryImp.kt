@@ -1,6 +1,5 @@
 package com.core.data.repository.subject
 
-import android.util.Log
 import com.core.database.subject.SubjectDao
 import com.example.model.Subject
 import com.example.model.SubjectCompound
@@ -20,8 +19,6 @@ internal class SubjectRepositoryImp @Inject constructor(
     }
 
     override suspend fun fetchSubjectById(subjectId: Int): SubjectCompound {
-        val a = subjectDao.fetchSubjectById(subjectId)
-        Log.e("fetchSubjectById", a.toString())
         return subjectDao.fetchSubjectById(subjectId).toSubjectCompound()
     }
 

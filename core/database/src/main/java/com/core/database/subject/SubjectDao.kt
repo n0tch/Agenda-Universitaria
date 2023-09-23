@@ -23,10 +23,6 @@ interface SubjectDao {
     @Delete
     suspend fun deleteSubject(subject: SubjectEntity): Int
 
-//    @Transaction
-//    @Query("SELECT * FROM subjects WHERE subjects.uid = :subjectId")
-//    suspend fun fetchCompoundSubjectsById(subjectId: Int): SubjectCompoundEntity
-
     @Transaction
     @Query("SELECT * FROM subjects WHERE subjects.subjectId = :subjectId")
     suspend fun fetchSubjectWithNotes(subjectId: Int): SubjectWithTimetable
