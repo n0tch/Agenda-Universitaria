@@ -10,13 +10,11 @@ internal class RegisterDataProviderImp @Inject constructor(
     private val firebaseAuth: FirebaseAuth
 ): RegisterDataProvider {
 
-    override suspend fun signUpWithCredentials(email: String, password: String): CurrentUserResponse = try {
-        firebaseAuth
+    override suspend fun signUpWithCredentials(email: String, password: String): CurrentUserResponse {
+        return firebaseAuth
             .createUserWithEmailAndPassword(email, password)
             .await()
             .user
             .toCurrentUserResponse()
-    } catch (exception: Exception){
-        throw exception
     }
 }

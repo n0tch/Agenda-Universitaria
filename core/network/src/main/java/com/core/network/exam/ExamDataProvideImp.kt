@@ -22,7 +22,7 @@ class ExamDataProvideImp @Inject constructor(
 
     override fun fetchExamById(userId: String, examId: String): Flow<ExamResponse> = flow {
         val exam = firebaseDatabaseHelper.getData<ExamResponse>("$userId/$EXAM_PATH/$examId")
-        emit(exam)
+        exam?.let { emit(it) }
     }
 
     companion object {

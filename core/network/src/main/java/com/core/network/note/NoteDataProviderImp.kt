@@ -1,12 +1,9 @@
 package com.core.network.note
 
-import android.provider.ContactsContract
 import android.util.Log
 import com.core.network.helper.FirebaseDatabaseHelper
-import com.core.network.model.noteResponse.NoteLabelResponse
 import com.core.network.model.noteResponse.NoteResponse
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.GenericTypeIndicator
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -20,8 +17,8 @@ class NoteDataProviderImp @Inject constructor(
 ) : NoteDataProvider {
 
     override fun saveNote(userId: String, note: NoteResponse): Flow<NoteResponse> = flow {
-        val note = firebaseDatabaseHelper.setData("$userId/$NOTE_PATH/", note)
-        emit(note)
+        val savedNote = firebaseDatabaseHelper.setData("$userId/$NOTE_PATH/", note)
+        emit(savedNote)
     }
 
     override fun fetchNotes(userId: String): Flow<List<NoteResponse?>> = flow {

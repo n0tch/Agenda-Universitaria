@@ -71,10 +71,14 @@ internal class NotificationManagerImpl @Inject constructor(
         alarmManager.setRepeating(
             AlarmManager.RTC_WAKEUP, 
             calendar.timeInMillis,
-            AlarmManager.INTERVAL_DAY * 7,
+            AlarmManager.INTERVAL_DAY * ONE_WEEK_DAY_COUNT,
             alarmIntent
         )
 
         return true
+    }
+
+    companion object{
+        private const val ONE_WEEK_DAY_COUNT = 7
     }
 }

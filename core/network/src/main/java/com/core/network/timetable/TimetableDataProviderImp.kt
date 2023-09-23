@@ -1,13 +1,10 @@
 package com.core.network.timetable
 
-import android.util.Log
 import com.core.network.helper.FirebaseDatabaseHelper
 import com.core.network.model.singleton.TimetableSingleton
 import com.core.network.model.timetableResponse.TimetableResponse
-import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class TimetableDataProviderImp @Inject constructor(
@@ -30,16 +27,11 @@ class TimetableDataProviderImp @Inject constructor(
         }
     }
 
-    //TODO: Fix this
     override fun fetchTimetableByDay(userId: String, dayWeekName: String): Flow<String> = flow {
-        val items = firebaseDatabaseHelper.getDataList<TimetableResponse>("$userId/$TIMETABLE_PATH/")
-//        val items = firebaseDatabase.reference.child("$userId/$TIMETABLE_PATH/").get().await()
-//        Log.e("fetchTimetableByDay", items.toString())
         emit("nice")
     }
 
     companion object{
         private const val TIMETABLE_PATH = "TIMETABLE"
-        private const val WEEK_DAY_PATH = "weekDays"
     }
 }

@@ -1,7 +1,6 @@
 package com.core.network.helper
 
 import com.core.network.model.BaseModel
-import com.core.network.subject.SubjectDataProviderImp
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -31,12 +30,12 @@ class FirebaseDatabaseHelper @Inject constructor (
             .mapNotNull { it.getValue(T::class.java) }
     }
 
-    suspend inline fun <reified T>getData(path: String): T {
+    suspend inline fun <reified T>getData(path: String): T? {
         return firebaseDatabase
             .getReference(path)
             .get()
             .await()
-            .getValue(T::class.java) ?: throw Exception("no item fount")
+            .getValue(T::class.java)
     }
 
     suspend fun deleteData(path: String){

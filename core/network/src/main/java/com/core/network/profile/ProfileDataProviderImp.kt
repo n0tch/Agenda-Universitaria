@@ -1,8 +1,8 @@
 package com.core.network.profile
 
 import android.net.Uri
-import com.core.network.model.userResponse.CurrentUserResponse
 import com.core.network.model.toCurrentUserResponse
+import com.core.network.model.userResponse.CurrentUserResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.storage.FirebaseStorage
@@ -16,19 +16,15 @@ internal class ProfileDataProviderImp @Inject constructor(
     private val firebaseStorage: FirebaseStorage
 ): ProfileDataProvider {
 
-    suspend fun uploadImageProfile(imageUri: Uri?, userId: String): String = try {
-        imageUri?.let {
+    private suspend fun uploadImageProfile(imageUri: Uri?, userId: String): String {
+        return imageUri?.let {
             val profileRef = firebaseStorage
                 .reference
                 .child("profileImages/$userId/${imageUri.lastPathSegment}")
 
             profileRef.putFile(it).await()
             profileRef.downloadUrl.await().toString()
-        } ?: run {
-            throw Exception("none")
-        }
-    } catch (exception: Exception) {
-        throw exception
+        } ?: run { "" }
     }
 
     override suspend fun updateProfile(userName: String, photo: Uri?): CurrentUserResponse {

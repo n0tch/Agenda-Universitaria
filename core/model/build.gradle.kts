@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id("kotlin-parcelize")
 }
-
+apply(from = "../../config/detekt/detekt.gradle")
 android {
     namespace = "com.example.model"
     compileSdk = 33

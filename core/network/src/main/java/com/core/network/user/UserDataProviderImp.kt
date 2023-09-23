@@ -1,7 +1,7 @@
 package com.core.network.user
 
-import com.core.network.model.userResponse.CurrentUserResponse
 import com.core.network.model.toCurrentUserResponse
+import com.core.network.model.userResponse.CurrentUserResponse
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

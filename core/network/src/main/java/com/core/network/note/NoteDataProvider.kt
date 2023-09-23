@@ -1,6 +1,5 @@
 package com.core.network.note
 
-import android.provider.ContactsContract.CommonDataKinds.Note
 import com.core.network.model.noteResponse.NoteResponse
 import kotlinx.coroutines.flow.Flow
 

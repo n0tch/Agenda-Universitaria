@@ -11,7 +11,6 @@ fun NavController.navigateTo(screenName: String){
     when(screenName){
         HomeMainScreens.SUBJECT.label -> navigateToSubjects()
         HomeMainScreens.NOTE.label -> navigateToNotes()
-//        HomeMainScreens.Events.label -> navigateToExams()
         HomeMainScreens.TIMETABLE.label -> navigateToTimetable()
         HomeMainScreens.HOMEWORK.label -> navigateToEditEvent()
         HomeMainScreens.NOTIFICATIONS.label -> navigateToListEvent()

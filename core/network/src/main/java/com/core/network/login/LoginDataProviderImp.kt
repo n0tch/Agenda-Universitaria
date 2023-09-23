@@ -1,7 +1,7 @@
 package com.core.network.login
 
-import com.core.network.model.userResponse.CurrentUserResponse
 import com.core.network.model.toCurrentUserResponse
+import com.core.network.model.userResponse.CurrentUserResponse
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -24,17 +24,11 @@ internal class LoginDataProviderImp @Inject constructor(
         emit(user.toCurrentUserResponse())
     }
 
-    override fun loginWithGoogle(): Flow<CurrentUserResponse> = flow {
-        throw Exception("Not implemented")
-    }
+    override fun loginWithGoogle(): Flow<CurrentUserResponse> = flow {}
 
-    override fun loginWithFacebook(): Flow<CurrentUserResponse> = flow {
-        throw Exception("Not implemented")
-    }
+    override fun loginWithFacebook(): Flow<CurrentUserResponse> = flow {}
 
-    override fun loginAnonymous(): Flow<CurrentUserResponse> = flow {
-        throw Exception("Not implemented")
-    }
+    override fun loginAnonymous(): Flow<CurrentUserResponse> = flow {}
 
     override fun logout(): Flow<Boolean> = flow {
         firebaseAuth.signOut()

@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt)
 }
+apply(from = "../../config/detekt/detekt.gradle")
 
 android {
     namespace = "com.core.notification"

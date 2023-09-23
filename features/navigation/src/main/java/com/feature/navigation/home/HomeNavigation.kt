@@ -1,11 +1,9 @@
 package com.feature.navigation.home
 
-import android.content.Intent
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.feature.calendar.CalendarComponent
 import com.feature.navigation.HomeMainScreens
 import com.feature.navigation.calendar.navigateToCalendar
 import com.feature.navigation.event.navigateToListEvent
@@ -25,13 +23,19 @@ fun NavGraphBuilder.homeGraph(navController: NavController) {
                 screenList = HomeMainScreens.values().map { it.label },
                 onNavigation = { navigation ->
                     when(navigation){
-                        is HomeNavigation.NavigateToEventById -> {}//navController.navigateToEv(navigation.examId)
-                        is HomeNavigation.NavigateToNoteById -> navController.navigateToNoteDetail(navigation.noteId)
-                        HomeNavigation.NavigateToEvents -> navController.navigateToListEvent()
-                        HomeNavigation.NavigateToNotes -> navController.navigateToNotes()
-                        is HomeNavigation.NavigateToScreenByName -> navController.navigateTo(navigation.screenName)
-                        is HomeNavigation.NavigateToSubjectById -> navController.navigateToSubjectById(navigation.subjectId)
-                        is HomeNavigation.NavigateToCalendar -> navController.navigateToCalendar()
+                        is HomeNavigation.NavigateToEventById -> {}
+                        is HomeNavigation.NavigateToNoteById ->
+                            navController.navigateToNoteDetail(navigation.noteId)
+                        HomeNavigation.NavigateToEvents ->
+                            navController.navigateToListEvent()
+                        HomeNavigation.NavigateToNotes ->
+                            navController.navigateToNotes()
+                        is HomeNavigation.NavigateToScreenByName ->
+                            navController.navigateTo(navigation.screenName)
+                        is HomeNavigation.NavigateToSubjectById ->
+                            navController.navigateToSubjectById(navigation.subjectId)
+                        is HomeNavigation.NavigateToCalendar ->
+                            navController.navigateToCalendar()
                     }
                 }
             )
@@ -44,7 +48,6 @@ fun NavController.navigateToHome() {
         popUpTo(HomeScreens.HOME.route) {
             saveState = true
         }
-//        launchSingleTop = true
         restoreState = true
     }
 }

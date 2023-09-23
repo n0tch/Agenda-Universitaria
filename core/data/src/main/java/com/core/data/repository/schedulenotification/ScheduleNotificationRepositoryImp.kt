@@ -20,7 +20,7 @@ class ScheduleNotificationRepositoryImp @Inject constructor(
         calendars.forEach { calendar ->
             notificationManager.scheduleNotification(
                 calendar = calendar.apply {
-                    val minute = calendar.get(Calendar.MINUTE) - notificationEarlier.min
+                    val minute = calendar.get(Calendar.MINUTE) - notificationEarlier.minutes
                     set(Calendar.MINUTE, minute)
                 },
                 decorator = notificationDecorator,

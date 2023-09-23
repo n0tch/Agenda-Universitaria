@@ -6,4 +6,6 @@ detekt {
     reports {
         html.enabled = true
     }
+    parallel = true
+    autoCorrect = true
 }

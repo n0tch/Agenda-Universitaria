@@ -1,7 +1,5 @@
 package com.example.model.event
 
-import com.example.model.NotificationType
-
 data class EventNotification(
     val id: Int = 0,
     val eventId: Int = 0,
