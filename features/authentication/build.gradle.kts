@@ -7,11 +7,11 @@ plugins {
 
 android {
     namespace = "com.features.authentication"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 26
-        targetSdk = 33
+
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")

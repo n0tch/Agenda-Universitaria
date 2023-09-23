@@ -6,11 +6,11 @@ plugins {
 
 android {
     namespace = "com.core.designsystem"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 26
-        targetSdk = 33
+
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")

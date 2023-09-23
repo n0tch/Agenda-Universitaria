@@ -27,8 +27,8 @@ android {
 
     defaultConfig {
         applicationId = "com.example.agendauniversitaria"
-        minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.compileSdk.get().toInt()
+        minSdk = 26
+
         versionCode = getVersionCode()
         versionName = getVersionName()
 
