@@ -1,6 +1,6 @@
 [versions]
 #Sdk
-compileSdk = "33"
+compileSdk = "34"
 detektFormatting = "1.16.0"
 minSdk = "26"
 
