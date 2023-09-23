@@ -1,11 +1,9 @@
 package com.core.data.repository.subject
 
-import com.core.data.repository.timetable.toTimetable
 import com.core.database.subject.SubjectEntity
 import com.core.database.subject.relations.SubjectWithTimetable
 import com.example.model.Subject
 import com.example.model.SubjectCompound
-import java.time.DayOfWeek
 
 internal fun Subject.toEntity() = SubjectEntity(
     name = name,

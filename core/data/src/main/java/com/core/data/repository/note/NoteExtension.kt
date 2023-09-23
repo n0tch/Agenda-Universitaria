@@ -7,7 +7,6 @@ import com.core.database.note.relations.NoteWithLabel
 import com.core.database.note.relations.NoteWithLabelWithMediaAndSubject
 import com.example.model.Note
 import com.example.model.NoteCompound
-import com.example.model.NotesWithCountCompound
 import com.example.model.NoteWithLabelCompound
 
 internal fun Note.toEntity() = NoteEntity(

@@ -2,8 +2,6 @@ package com.core.database.subject.relations
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.core.database.event.EventEntity
-import com.core.database.note.NoteEntity
 import com.core.database.subject.SubjectEntity
 import com.core.database.timetable.TimetableEntity
 

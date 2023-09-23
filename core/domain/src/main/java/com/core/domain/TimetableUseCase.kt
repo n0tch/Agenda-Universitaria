@@ -5,7 +5,6 @@ import com.core.common.AppDispatcher
 import com.core.common.Dispatcher
 import com.core.common.Result
 import com.core.data.repository.timetable.TimetableRepository
-import com.core.notification.AppNotificationManager
 import com.example.model.Timetable
 import com.example.model.TimetableCompound
 import kotlinx.coroutines.CoroutineDispatcher

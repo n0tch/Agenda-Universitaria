@@ -731,7 +731,7 @@ style:
   UntilInsteadOfRangeTo:
     active: false
   UnusedImports:
-    active: false
+    active: true
   UnusedParameter:
     active: true
     allowedNames: 'ignored|expected'
@@ -757,9 +757,9 @@ style:
   UseEmptyCounterpart:
     active: false
   UseIfEmptyOrIfBlank:
-    active: false
+    active: true
   UseIfInsteadOfWhen:
-    active: false
+    active: true
     ignoreWhenContainingVariableDeclaration: false
   UseIsNullOrEmpty:
     active: true

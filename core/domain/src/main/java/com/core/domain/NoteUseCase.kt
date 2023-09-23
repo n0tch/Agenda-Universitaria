@@ -5,16 +5,14 @@ import android.util.Log
 import com.core.common.AppDispatcher
 import com.core.common.Dispatcher
 import com.core.common.Result
-import com.core.data.repository.label.LabelRepository
 import com.core.data.repository.note.NoteLabelRepository
 import com.core.data.repository.note.NoteRepository
 import com.core.data.repository.notemedia.NoteMediaRepository
-import com.core.data.repository.subject.SubjectRepository
 import com.example.model.Label
 import com.example.model.Note
 import com.example.model.NoteCompound
-import com.example.model.NotesWithCountCompound
 import com.example.model.NoteWithLabelCompound
+import com.example.model.NotesWithCountCompound
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -24,8 +22,6 @@ import javax.inject.Inject
 class NoteUseCase @Inject constructor(
     @Dispatcher(AppDispatcher.IO) private val ioDispatcher: CoroutineDispatcher,
     private val noteRepository: NoteRepository,
-    private val subjectRepository: SubjectRepository,
-    private val labelRepository: LabelRepository,
     private val noteLabelRepository: NoteLabelRepository,
     private val noteMediaRepository: NoteMediaRepository
 ) {
@@ -41,7 +37,7 @@ class NoteUseCase @Inject constructor(
         noteLabelRepository.saveNoteLabels(savedNote.id, labels)
 
         Result.Success(true)
-    }catch (exception: Exception){
+    } catch (exception: Exception) {
         Result.Error(exception)
     }
 
@@ -56,21 +52,21 @@ class NoteUseCase @Inject constructor(
         noteLabelRepository.updateNoteLabels(updatedNote.id, labels)
 
         Result.Success(updatedNote)
-    }catch (exception: Exception){
+    } catch (exception: Exception) {
         Result.Error(exception)
     }
 
     suspend fun fetchNotes(): Result<List<NoteCompound>> = try {
         val notes = noteRepository.fetchNotes()
         Result.Success(notes)
-    }catch (exception: Exception){
+    } catch (exception: Exception) {
         Result.Error(exception)
     }
 
     suspend fun fetchNotesWithCount(count: Int): Result<NotesWithCountCompound> = try {
         val notes = noteRepository.fetchNotes(count)
         Result.Success(notes)
-    } catch(exception: Exception) {
+    } catch (exception: Exception) {
         Log.e("fetchNotes with count", exception.message.toString())
         Result.Error(exception)
     }
@@ -86,38 +82,35 @@ class NoteUseCase @Inject constructor(
     suspend fun searchNotes(query: String): Result<List<NoteCompound>> = try {
         val notes = noteRepository.searchNote(query)
         Result.Success(notes)
-    }catch (exception: Exception){
+    } catch (exception: Exception) {
         Result.Error(exception)
     }
 
     suspend fun deleteNote(note: Note): Result<Boolean> = try {
         val deleted = noteRepository.deleteNote(note)
-        if (deleted)
-            Result.Success(true)
-        else
-            throw Exception("")
-    }catch (exception: Exception){
+        Result.Success(deleted)
+    } catch (exception: Exception) {
         Result.Error(exception)
     }
 
     suspend fun fetchNoteById(noteId: Int): Result<NoteCompound> = try {
         val noteCompound = noteRepository.fetchNoteById(noteId)
         Result.Success(noteCompound)
-    }catch (exception: Exception){
+    } catch (exception: Exception) {
         Result.Error(exception)
     }
 
     suspend fun fetchNoteBySubjectId(subjectId: Int): Result<List<NoteWithLabelCompound>> = try {
         val notes = noteRepository.fetchNotesBySubject(subjectId)
         Result.Success(notes)
-    } catch (exception: Exception){
+    } catch (exception: Exception) {
         Result.Error(exception)
     }
 
     suspend fun fetchNotesByLabel(label: Label): Result<List<NoteCompound>> = try {
         val notes = noteRepository.fetchNotesByLabelId(label.id)
         Result.Success(notes)
-    }catch (exception: Exception){
+    } catch (exception: Exception) {
         Result.Error(exception)
     }
 }

@@ -2,8 +2,6 @@ package com.core.data.repository.label
 
 import com.core.database.label.LabelDao
 import com.example.model.Label
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 internal class LabelRepositoryImp @Inject constructor(

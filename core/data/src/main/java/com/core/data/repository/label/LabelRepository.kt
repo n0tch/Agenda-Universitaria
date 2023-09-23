@@ -1,7 +1,6 @@
 package com.core.data.repository.label
 
 import com.example.model.Label
-import kotlinx.coroutines.flow.Flow
 
 interface LabelRepository {
     suspend fun saveNoteLabel(label: Label): Label

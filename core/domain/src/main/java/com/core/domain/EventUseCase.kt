@@ -5,10 +5,7 @@ import com.core.data.repository.event.EventRepository
 import com.core.data.repository.schedulenotification.ScheduleNotificationRepository
 import com.example.model.event.Event
 import com.example.model.event.EventCompound
-import com.example.model.event.EventNotification
 import com.example.model.event.EventNotificationDecorator
-//import com.features.event.edit.EventSaveRequest
-import com.example.model.event.EventScore
 import com.example.model.event.EventToSave
 import com.example.model.event.NotificationEarlier
 import com.example.model.event.NotificationPeriod
@@ -21,7 +18,11 @@ class EventUseCase @Inject constructor(
 ) {
 
     suspend fun saveEvent(event: EventToSave): Result<Event> = try {
-        val savedEvent = eventRepository.saveEvent(event = event.event, subjectId = event.subjectId, labelId = event.label.id)
+        val savedEvent = eventRepository.saveEvent(
+            event = event.event,
+            subjectId = event.subjectId,
+            labelId = event.label.id
+        )
 
         if(event.hasScore){
             eventRepository.saveScore(event.eventScore, savedEvent.id)

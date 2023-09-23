@@ -3,7 +3,6 @@ package com.core.data.repository.notemedia
 import android.net.Uri
 import android.util.Log
 import com.core.database.media.NoteMediaDao
-import com.core.database.media.MediaEntity
 import com.core.database.note.relations.NoteMediaCrossRef
 import com.example.model.NoteMedia
 import javax.inject.Inject
