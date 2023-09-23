@@ -12,6 +12,8 @@ plugins {
     id("com.google.gms.google-services")
 }
 
+apply(from = "../config/detekt/detekt.gradle")
+
 val properties = Properties().apply {
     load(FileInputStream("${project.rootDir}/version.properties"))
     forEach { prop ->

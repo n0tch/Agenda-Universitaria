@@ -1,6 +1,7 @@
 [versions]
 #Sdk
 compileSdk = "33"
+detektFormatting = "1.16.0"
 minSdk = "26"
 
 #App Versions
@@ -77,6 +78,7 @@ constraintlayout = "2.1.4"
 [libraries]
 
 #Kotlin
+detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detektFormatting" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
 
 #Android

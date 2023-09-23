@@ -14,9 +14,6 @@ interface EventDao {
     @Insert
     suspend fun saveEvent(eventEntity: EventEntity): Long
 
-    @Query("SELECT * FROM events")
-    suspend fun fetchEvents(): List<EventEntity>
-
     @Transaction
     @Query("SELECT * FROM events")
     suspend fun fetchCompoundEvents(): List<EventAndNotificationAndScoreAndSubject>

@@ -21,9 +21,6 @@ interface NoteDao {
     @Delete
     suspend fun deleteNote(noteEntity: NoteEntity): Int
 
-    @Query("SELECT * FROM notes WHERE noteId = :id")
-    suspend fun fetchNotesById(id: Int): NoteEntity
-
     @Query("SELECT * FROM notes WHERE notes.noteSubjectId = :subjectId")
     suspend fun fetchNotesBySubjectId(subjectId: Int): List<NoteWithLabel>
 
@@ -44,11 +41,10 @@ interface NoteDao {
     suspend fun fetchNoteWithLabelsAndSubject(noteId: Int): NoteWithLabelWithMediaAndSubject
 
     @Transaction
-    @Query("SELECT * FROM notes")
-    suspend fun fetchAllNoteCompound(): List<NoteWithLabelWithMediaAndSubject>
-
-    @Transaction
-    @Query("SELECT * FROM notes WHERE notes.noteId in (SELECT noteId FROM notelabelcrossref WHERE notelabelcrossref.labelId = :labelId)")
+    @Query("""SELECT * FROM notes 
+                WHERE notes.noteId in 
+                (SELECT noteId FROM notelabelcrossref WHERE notelabelcrossref.labelId = :labelId)
+            """)
     suspend fun fetchNotesByLabelId(labelId: Int): List<NoteWithLabelWithMediaAndSubject>
 
     @Query("SELECT COUNT(*) FROM notes")
