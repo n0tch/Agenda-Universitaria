@@ -16,6 +16,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.core.designsystem.components.fab.FabItem
 import com.core.designsystem.components.fab.FabMenu
@@ -37,6 +38,7 @@ fun HomeScreen(
     onAction: (HomeAction) -> Unit = {},
     onNavigation: (HomeNavigation) -> Unit = {}
 ) {
+    val context = LocalContext.current
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val isGestureEnabled = drawerState.isOpen
     val coroutine = rememberCoroutineScope()
@@ -48,7 +50,12 @@ fun HomeScreen(
             DrawerBody(
                 photoUrl = "",
                 screensList = screenList,
-                onDrawerItemClicked = { onNavigation(HomeNavigation.NavigateToScreenByName(it)) }
+                onDrawerItemClicked = {
+                    if(it == "Calendario")
+                        onNavigation(HomeNavigation.NavigateToCalendar(context))
+                    else
+                        onNavigation(HomeNavigation.NavigateToScreenByName(it))
+                }
             )
         },
         content = {

@@ -7,7 +7,7 @@ import com.example.model.event.EventScore
 
 interface EventRepository {
 
-    suspend fun saveEvent(name: String, subjectId: Int, labelId: Int): Event
+    suspend fun saveEvent(event: Event, labelId: Int, subjectId: Int): Event
 
     suspend fun fetchEvents(): List<EventCompound>
 
@@ -15,7 +15,7 @@ interface EventRepository {
 
     suspend fun fetchEventsBySubjectId(subjectId: Int): List<EventCompound>
 
-    suspend fun saveNotification(notification: EventNotification)
+    suspend fun saveNotification(notification: EventNotification?, eventId: Int)
 
-    suspend fun saveScore(score: EventScore)
+    suspend fun saveScore(score: EventScore?, eventId: Int)
 }

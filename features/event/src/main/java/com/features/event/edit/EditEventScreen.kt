@@ -34,8 +34,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.core.designsystem.components.chip.SingleChipSelection
+import com.core.designsystem.components.colorpicker.ColorPicker
 import com.core.designsystem.components.timepicker.DateTimePicker
-import com.example.model.event.EventSaveRequest
 import com.example.model.event.NotificationPeriod
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,17 +45,7 @@ internal fun EditEventScreen(
     state: EditEventState,
     onAction: (EditEventAction) -> Unit = {}
 ) {
-
-    var name by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
-    var notificationEnabled by remember { mutableStateOf(false) }
-    var notificationDate: Long? by remember { mutableStateOf(null) }
-    var notificationHour by remember { mutableStateOf(0) }
-    var notificationMinute by remember { mutableStateOf(0) }
-    var scoreEnabled by remember { mutableStateOf(false) }
-    var scoreValue: Float? by remember { mutableStateOf(null) }
-    var subject by remember { mutableStateOf(0) }
-    var label by remember { mutableStateOf(0) }
+    val event = remember { NewEventDataState() }
 
     Scaffold(
         topBar = {
@@ -82,14 +72,8 @@ internal fun EditEventScreen(
                 Text(text = "Informe o nome")
                 TextField(
                     modifier = Modifier.fillMaxWidth(),
-                    value = name,
-                    onValueChange = { name = it })
-
-                Text(text = "Informe a descriçao")
-                TextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = description,
-                    onValueChange = { description = it })
+                    value = event.name.value,
+                    onValueChange = { event.name.value = it })
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -101,7 +85,7 @@ internal fun EditEventScreen(
                             Text(it.name)
                         },
                         preSelected = { state.subjects.firstOrNull { it.id == subjectSelected } },
-                        onSelection = { subject = it.id }
+                        onSelection = { event.subjectId.value = it.id }
                     )
                 }
 
@@ -116,7 +100,7 @@ internal fun EditEventScreen(
                         onLastItemClicked = {
 
                         },
-                        onSelection = { label = it.id }
+                        onSelection = { event.label.value = it }
                     )
                 }
 
@@ -127,17 +111,17 @@ internal fun EditEventScreen(
                 ) {
                     Text(text = "Habilitar notificacao?")
                     Switch(
-                        checked = notificationEnabled,
-                        onCheckedChange = { notificationEnabled = it })
+                        checked = event.hasNotification.value,
+                        onCheckedChange = { event.hasNotification.value = it })
                 }
 
-                AnimatedVisibility(visible = notificationEnabled) {
+                AnimatedVisibility(visible = event.hasNotification.value) {
                     Column {
                         DateTimePicker(
-                            onDateSelected = { date -> date?.let { notificationDate = it } },
+                            onDateSelected = { date -> date?.let { event.date.value = it } },
                             onTimeSelected = { hour, minute ->
-                                notificationHour = hour
-                                notificationMinute = minute
+                                event.hour.value = hour
+                                event.minute.value = minute
                             }
                         )
                         OutlinedCard(modifier = Modifier.fillMaxWidth()) {
@@ -148,7 +132,7 @@ internal fun EditEventScreen(
                                     Text(it.name)
                                 },
                                 onSelection = {
-
+                                    event.notificationPeriod.value = it.name
                                 }
                             )
                         }
@@ -162,33 +146,38 @@ internal fun EditEventScreen(
                 ) {
                     Text(text = "Vale ponto?")
                     Switch(
-                        checked = scoreEnabled,
-                        onCheckedChange = { scoreEnabled = it })
+                        checked = event.hasScore.value,
+                        onCheckedChange = { event.hasScore.value = it })
                 }
 
-                AnimatedVisibility(visible = scoreEnabled) {
+                AnimatedVisibility(visible = event.hasScore.value) {
                     TextField(
                         modifier = Modifier.fillMaxWidth(),
-                        value = "$scoreValue",
-                        onValueChange = { scoreValue = it.toFloat() },
+                        value = event.score.value,
+                        onValueChange = { event.score.value = it },
                         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
                     )
                 }
 
+                ColorPicker(title = "Selecione a cor de identificação", onColorSelected = { event.color.value = it })
+
                 Button(
                     onClick = {
                         onAction(
-                            EditEventAction.SaveEvent(
-                                EventSaveRequest(
-                                    event = name,
-                                    subjectId = subject,
-                                    labelId = label,
-                                    score = scoreValue,
-                                    date = notificationDate,
-                                    hour = notificationHour,
-                                    minute = notificationMinute
-                                )
-                            )
+                            EditEventAction.SaveEvent(event.toEventData())
+//                            EditEventAction.SaveEvent(
+//                                EventSaveRequest(
+//                                    name = name,
+//                                    subjectId = subject,
+//                                    labelId = label,
+//                                    hasScore = scoreEnabled,
+//                                    score = scoreValue,
+//                                    hasNotification = notificationEnabled,
+//                                    date = notificationDate,
+//                                    hour = notificationHour,
+//                                    minute = notificationMinute
+//                                )
+//                            )
                         )
                     }
                 ) {

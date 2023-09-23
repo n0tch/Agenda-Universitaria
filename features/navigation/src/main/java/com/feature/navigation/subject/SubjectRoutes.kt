@@ -25,7 +25,7 @@ fun NavGraphBuilder.subjectGraph(navController: NavController) {
             SubjectComponent(
                 onBackPressed = { navController.popBackStack() },
                 navigateToSubjectDetail = { name, id ->
-                    navController.navigate(SubjectScreens.SUBJECT_DETAIL.route + "/${name}/${id}")
+                    navController.navigate(SubjectScreens.SUBJECT_DETAIL.route + "/${name}")
                 },
                 navigateToSubjectEdit = { navController.navigateToEditSubject() }
             )

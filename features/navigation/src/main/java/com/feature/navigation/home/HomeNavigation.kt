@@ -1,10 +1,13 @@
 package com.feature.navigation.home
 
+import android.content.Intent
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.feature.calendar.CalendarComponent
 import com.feature.navigation.HomeMainScreens
+import com.feature.navigation.calendar.navigateToCalendar
 import com.feature.navigation.event.navigateToListEvent
 import com.feature.navigation.navigateTo
 import com.feature.navigation.note.navigateToNoteDetail
@@ -28,6 +31,7 @@ fun NavGraphBuilder.homeGraph(navController: NavController) {
                         HomeNavigation.NavigateToNotes -> navController.navigateToNotes()
                         is HomeNavigation.NavigateToScreenByName -> navController.navigateTo(navigation.screenName)
                         is HomeNavigation.NavigateToSubjectById -> navController.navigateToSubjectById(navigation.subjectId)
+                        is HomeNavigation.NavigateToCalendar -> navController.navigateToCalendar()
                     }
                 }
             )

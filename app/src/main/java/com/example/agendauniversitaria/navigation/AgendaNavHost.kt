@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.feature.navigation.authentication.login.loginGraph
+import com.feature.navigation.calendar.calendarGraph
 import com.feature.navigation.event.eventGraph
 import com.feature.navigation.home.homeGraph
 import com.feature.navigation.home.homeGraphRoute
@@ -20,5 +21,6 @@ fun AgendaNavHost(navController: NavHostController, startDestination: String = h
         subjectGraph(navController)
         timetableGraph(navController)
         eventGraph(navController)
+        calendarGraph(navController)
     }
 }

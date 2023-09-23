@@ -9,7 +9,7 @@ import com.core.common.Result
 import com.core.domain.EventUseCase
 import com.core.domain.LabelUseCase
 import com.core.domain.SubjectUseCase
-import com.example.model.event.EventSaveRequest
+import com.example.model.event.EventToSave
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
@@ -57,7 +57,7 @@ internal class EditEventViewModel @Inject constructor(
     }
 
     fun saveEvent(
-        event: EventSaveRequest
+        event: EventToSave
     ) = intent {
         viewModelScope.launch {
             when(eventUseCase.saveEvent(event)){
@@ -70,7 +70,7 @@ internal class EditEventViewModel @Inject constructor(
     fun setAction(editEventAction: EditEventAction) = intent {
         when(editEventAction){
             EditEventAction.OnBack -> postSideEffect(EditEventSideEffect.OnBack)
-            is EditEventAction.SaveEvent -> saveEvent(editEventAction.eventSaveRequest)
+            is EditEventAction.SaveEvent -> saveEvent(editEventAction.eventToSave)
         }
     }
 }

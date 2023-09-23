@@ -7,16 +7,12 @@ import com.core.database.event.relations.EventAndNotificationAndScoreAndSubject
 import com.example.model.event.Event
 import com.example.model.event.EventCompound
 
-internal fun EventCompound.toEventEntity(subjectId: Int) = EventEntity(
-    name = event.name,
-    labelId = 1,
-    subjectId = subjectId
-)
-
 fun Event.toEntity(subjectId: Int, labelId: Int) = EventEntity(
     name = name,
+    date = date,
     subjectId = subjectId,
-    labelId = labelId
+    labelId = labelId,
+    color = color
 )
 
 fun EventAndNotificationAndScoreAndSubject.toEventCompound() = EventCompound(
@@ -30,5 +26,7 @@ fun EventAndNotificationAndScoreAndSubject.toEventCompound() = EventCompound(
 fun EventEntity.toEvent() = Event(
     id = eventId,
     name = name ?: "",
-    createdAt = createdAt
+    date = date ?: 0L,
+    createdAt = createdAt,
+    color = color
 )

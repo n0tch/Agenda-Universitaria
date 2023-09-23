@@ -5,6 +5,8 @@ import com.example.model.NotificationDecorator
 data class Event(
     val id: Int = 0,
     val name: String,
+    val date: Long,
+    val color: String,
     val createdAt: Long? = null,
     val updatedAt: Long? = null
 )

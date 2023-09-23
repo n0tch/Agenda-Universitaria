@@ -207,7 +207,7 @@ internal fun SubjectEditScreen(
                                 subject = Subject(
                                     name = subjectName,
                                     place = placeName,
-                                    teacher = teacherName
+                                    teacher = teacherName,
                                 ),
                                 notificationEnabled = notificationEnabled,
                                 timetable = selectedTimetables.values.flatten(),

@@ -9,7 +9,8 @@ enum class HomeMainScreens(val label: String) {
     EXAMS("Provas"),
     HOMEWORK("Trabalhos"),
     NOTIFICATIONS("Notificações"),
-    TIMETABLE("Grade horária")
+    TIMETABLE("Grade horária"),
+    CALENDAR("Calendario")
 }
 
 enum class HomeMainScreenAddRoutes(val label: String, val route: String){

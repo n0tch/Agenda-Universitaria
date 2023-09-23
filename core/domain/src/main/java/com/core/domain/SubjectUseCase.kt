@@ -4,13 +4,16 @@ import android.util.Log
 import com.core.common.AppDispatcher
 import com.core.common.Dispatcher
 import com.core.common.Result
+import com.core.data.repository.event.EventRepository
 import com.core.data.repository.schedulenotification.ScheduleNotificationRepository
 import com.core.data.repository.subject.SubjectRepository
 import com.core.data.repository.timetable.TimetableRepository
+import com.example.model.NotificationType
 import com.example.model.Subject
 import com.example.model.SubjectCompound
 import com.example.model.SubjectNotificationDecorator
 import com.example.model.Timetable
+import com.example.model.event.EventNotification
 import com.example.model.event.NotificationEarlier
 import com.example.model.event.NotificationPeriod
 import kotlinx.coroutines.CoroutineDispatcher
@@ -24,6 +27,7 @@ class SubjectUseCase @Inject constructor(
     @Dispatcher(AppDispatcher.IO) private val ioDispatcher: CoroutineDispatcher,
     private val subjectRepository: SubjectRepository,
     private val timetableRepository: TimetableRepository,
+    private val eventRepository: EventRepository,
     private val scheduleNotificationRepository: ScheduleNotificationRepository
 ) {
 
@@ -53,6 +57,7 @@ class SubjectUseCase @Inject constructor(
         val subject = subjectRepository.fetchSubjectById(subjectId)
         Result.Success(subject)
     } catch (exception: Exception) {
+        Log.e("fetchSubject", exception.toString())
         Result.Error(exception)
     }
 

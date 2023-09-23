@@ -21,9 +21,9 @@ internal fun SubjectEntity.toSubject() = Subject(
 )
 
 internal fun SubjectWithTimetable.toSubjectCompound() = SubjectCompound(
-    subject = subject.toSubject(),
-    timetables = timetable
-        .groupBy { it.weekDay }
-        .mapKeys { DayOfWeek.valueOf(it.key ?: "") }
-        .mapValues { it.value.map { it.toTimetable() } }
+//    subject = subject.toSubject(),
+//    timetables = timetable
+//        .groupBy { it.weekDay }
+//        .mapKeys { DayOfWeek.valueOf(it.key ?: "") }
+//        .mapValues { it.value.map { it.toTimetable() } }
 )

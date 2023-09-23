@@ -1,5 +1,6 @@
 package com.home.list.navigation
 
+import android.content.Context
 import com.core.common.viewmodel.Navigation
 
 sealed class HomeNavigation: Navigation {
@@ -13,4 +14,6 @@ sealed class HomeNavigation: Navigation {
     class NavigateToSubjectById(val subjectId: Int): HomeNavigation()
 
     class NavigateToScreenByName(val screenName: String): HomeNavigation()
+
+    class NavigateToCalendar(val context: Context): HomeNavigation()
 }

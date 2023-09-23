@@ -72,6 +72,7 @@ iamge-picker-version = "2.1"
 
 #orbit-mvi
 orbit-version = "6.1.0"
+constraintlayout = "2.1.4"
 
 [libraries]
 
@@ -146,6 +147,7 @@ imagePicker = { module = "com.github.dhaval2404:imagepicker", version.ref = "iam
 orbit-mvi-core = { module = "org.orbit-mvi:orbit-core", version.ref = "orbit-version" }
 orbit-mvi-viewmodel = { module = "org.orbit-mvi:orbit-viewmodel", version.ref = "orbit-version" }
 orbit-mvi-compose = { module = "org.orbit-mvi:orbit-compose", version.ref = "orbit-version" }
+constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 
 [bundles]
 compose = [

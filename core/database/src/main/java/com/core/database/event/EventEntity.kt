@@ -9,9 +9,9 @@ data class EventEntity(
     val name: String?,
     val subjectId: Int,
     val labelId: Int,
+    val date: Long? = null,
+    val color: String,
     val isGroupEvent: Boolean? = null,
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long? = null
-//    val eventNotificationId: Int? = null,
-//    val scoreId: Int? = null,
 )

@@ -18,7 +18,7 @@ interface SubjectDao {
 
     @Transaction
     @Query("SELECT * FROM subjects WHERE subjects.subjectId = :subjectId")
-    suspend fun fetchSubjectById(subjectId: Int?): SubjectWithTimetable
+    suspend fun fetchSubjectById(subjectId: Int): SubjectWithTimetable
 
     @Delete
     suspend fun deleteSubject(subject: SubjectEntity): Int

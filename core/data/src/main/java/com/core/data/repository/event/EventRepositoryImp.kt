@@ -1,11 +1,8 @@
 package com.core.data.repository.event
 
-import android.util.Log
 import com.core.database.event.EventDao
 import com.core.database.event.notification.NotificationEntity
-import com.core.database.event.relations.EventAndNotificationAndScoreAndSubject
 import com.core.database.event.score.ScoreEntity
-import com.core.notification.AppNotificationManager
 import com.example.model.event.Event
 import com.example.model.event.EventCompound
 import com.example.model.event.EventNotification
@@ -15,12 +12,10 @@ import com.example.model.event.NotificationPeriod
 import javax.inject.Inject
 
 internal class EventRepositoryImp @Inject constructor(
-    private val eventDao: EventDao,
-    private val notificationManager: AppNotificationManager
+    private val eventDao: EventDao
 ): EventRepository {
 
-    override suspend fun saveEvent(name: String, subjectId: Int, labelId: Int): Event {
-        val event = Event(name = name)
+    override suspend fun saveEvent(event: Event, labelId: Int, subjectId: Int): Event {
         val id = eventDao.saveEvent(event.toEntity(subjectId, labelId))
         return event.copy(id = id.toInt())
     }
@@ -33,12 +28,12 @@ internal class EventRepositoryImp @Inject constructor(
         return eventDao.fetchCompoundEvents(limit).map { it.toEventCompound() }
     }
 
-    override suspend fun saveNotification(notification: EventNotification) {
-        eventDao.saveNotification(notification.toEntity())
+    override suspend fun saveNotification(notification: EventNotification?, eventId: Int) {
+        notification?.toEntity(eventId)?.let { eventDao.saveNotification(it) }
     }
 
-    override suspend fun saveScore(score: EventScore) {
-        eventDao.saveScore(score.toEntity())
+    override suspend fun saveScore(score: EventScore?, eventId: Int) {
+        score?.toEntity(eventId)?.let { eventDao.saveScore(it) }
     }
 
     override suspend fun fetchEventsBySubjectId(subjectId: Int): List<EventCompound> {
@@ -46,7 +41,7 @@ internal class EventRepositoryImp @Inject constructor(
     }
 }
 
-fun EventScore.toEntity() = ScoreEntity(
+fun EventScore.toEntity(eventId: Int) = ScoreEntity(
     score = score,
     eventId = eventId
 )
@@ -72,7 +67,7 @@ fun ScoreEntity.toEventScore() = EventScore(
     score = score ?: 0F
 )
 
-fun EventNotification.toEntity() = NotificationEntity(
+fun EventNotification.toEntity(eventId: Int) = NotificationEntity(
     notifyAt = notifyAt,
     eventId = eventId,
     notificationPeriod = notificationPeriod.name,
