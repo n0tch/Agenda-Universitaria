@@ -9,6 +9,7 @@ import com.example.model.event.EventNotification
 import com.example.model.event.EventScore
 import com.example.model.event.NotificationEarlier
 import com.example.model.event.NotificationPeriod
+import java.util.Calendar
 import javax.inject.Inject
 
 internal class EventRepositoryImp @Inject constructor(
@@ -30,6 +31,13 @@ internal class EventRepositoryImp @Inject constructor(
 
     override suspend fun saveNotification(notification: EventNotification?, eventId: Int) {
         notification?.toEntity(eventId)?.let { eventDao.saveNotification(it) }
+    }
+
+    override suspend fun fetchEventsGroupedByDate(): Map<Calendar, List<Event>> {
+        return eventDao
+            .fetchEventsGroupedByDate()
+            .mapKeys { Calendar.getInstance().apply { timeInMillis = it.key } }
+            .mapValues { it.value.map { eventEntity -> eventEntity.toEvent() } }
     }
 
     override suspend fun saveScore(score: EventScore?, eventId: Int) {

@@ -21,6 +21,7 @@ interface NoteDao {
     @Delete
     suspend fun deleteNote(noteEntity: NoteEntity): Int
 
+    @Transaction
     @Query("SELECT * FROM notes WHERE notes.noteSubjectId = :subjectId")
     suspend fun fetchNotesBySubjectId(subjectId: Int): List<NoteWithLabel>
 

@@ -82,4 +82,8 @@ class EventUseCase @Inject constructor(
     } catch (exception: Exception) {
         Result.Error(exception)
     }
+
+    suspend fun fetchEventsGroupedByDate(): Map<Calendar, List<Event>>{
+        return eventRepository.fetchEventsGroupedByDate()
+    }
 }

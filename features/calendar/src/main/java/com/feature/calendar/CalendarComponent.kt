@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
@@ -27,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,6 +47,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.core.designsystem.components.LoadingView
+import com.example.model.event.Event
 import com.kizitonwose.calendar.compose.CalendarLayoutInfo
 import com.kizitonwose.calendar.compose.CalendarState
 import com.kizitonwose.calendar.compose.HorizontalCalendar
@@ -61,15 +68,48 @@ import java.time.DayOfWeek
 import java.time.Month
 import java.time.YearMonth
 import java.time.format.TextStyle
+import java.util.Calendar
 import java.util.Locale
 
 @Composable
 fun CalendarComponent() {
+
+    val viewModel: CalendarViewModel = hiltViewModel()
+    val eventsState by viewModel.events.collectAsStateWithLifecycle()
+    val loading by viewModel.loading.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchCalendar()
+    }
+
+    if (loading) {
+        LoadingView()
+    } else {
+        CalendarScreen(eventsState)
+    }
+}
+
+@Composable
+fun CalendarScreen(events: Map<Calendar, List<Event>>) {
     val currentMonth = remember { YearMonth.now() }
     val startMonth = remember { currentMonth.minusMonths(500) }
     val endMonth = remember { currentMonth.plusMonths(500) }
     var selection by remember { mutableStateOf<CalendarDay?>(null) }
     val daysOfWeek = remember { daysOfWeek() }
+    val eventsInSelectedDate = remember {
+        derivedStateOf {
+            val date = selection?.date
+            if (date == null)
+                emptyList()
+            else {
+                events.filterKeys {
+                    it.get(Calendar.DAY_OF_MONTH) == date.dayOfMonth &&
+                            it.get(Calendar.MONTH) == date.monthValue &&
+                            it.get(Calendar.YEAR) == date.year
+                }.values.flatten()
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -86,7 +126,6 @@ fun CalendarComponent() {
         val coroutineScope = rememberCoroutineScope()
         val visibleMonth = rememberFirstCompletelyVisibleMonth(state)
         LaunchedEffect(visibleMonth) {
-//             Clear selection if we scroll to a new month.
             selection = null
         }
 
@@ -110,9 +149,19 @@ fun CalendarComponent() {
             state = state,
             dayContent = { day ->
                 CompositionLocalProvider(LocalRippleTheme provides Example3RippleTheme) {
+                    val colors = if (day.position == DayPosition.MonthDate) {
+                        events.filterKeys {
+                            it.get(Calendar.DAY_OF_MONTH) == day.date.dayOfMonth &&
+                                    it.get(Calendar.MONTH) == day.date.monthValue &&
+                                    it.get(Calendar.YEAR) == day.date.year
+                        }.values.flatten().map { Color.Red }
+                    } else {
+                        emptyList()
+                    }
                     Day(
                         day = day,
                         isSelected = selection == day,
+                        colors = colors
                     ) { clicked ->
                         selection = clicked
                     }
@@ -126,6 +175,12 @@ fun CalendarComponent() {
             },
         )
         Divider(color = MaterialTheme.colorScheme.onBackground)
+
+        LazyColumn(modifier = Modifier.fillMaxWidth()) {
+            items(items = eventsInSelectedDate.value) { event ->
+                Text(event.name)
+            }
+        }
     }
 }
 

@@ -23,7 +23,7 @@ val properties = Properties().apply {
 
 android {
     namespace = "com.example.agendauniversitaria"
-    compileSdk = libs.versions.compileSdk.get().toInt()
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.agendauniversitaria"
@@ -117,6 +117,8 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
 
     debugImplementation(libs.leakcanary)
+
+    implementation(libs.splash)
 }
 
 kapt {

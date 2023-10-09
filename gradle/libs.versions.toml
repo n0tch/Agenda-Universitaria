@@ -71,6 +71,9 @@ leak-canary-version = "2.12"
 #image picker version
 iamge-picker-version = "2.1"
 
+#splash
+splash-version = "1.0.0"
+
 #orbit-mvi
 orbit-version = "6.1.0"
 constraintlayout = "2.1.4"
@@ -144,6 +147,9 @@ leakcanary = { module = "com.squareup.leakcanary:leakcanary-android", version.re
 
 #Image Picker
 imagePicker = { module = "com.github.dhaval2404:imagepicker", version.ref = "iamge-picker-version"}
+
+#splash
+splash = { module = "androidx.core:core-splashscreen", version.ref = "splash-version" }
 
 #Orbit mvi
 orbit-mvi-core = { module = "org.orbit-mvi:orbit-core", version.ref = "orbit-version" }

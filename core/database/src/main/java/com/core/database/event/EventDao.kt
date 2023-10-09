@@ -2,6 +2,7 @@ package com.core.database.event
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.MapInfo
 import androidx.room.Query
 import androidx.room.Transaction
 import com.core.database.event.notification.NotificationEntity
@@ -25,6 +26,10 @@ interface EventDao {
     @Transaction
     @Query("SELECT * FROM events WHERE events.subjectId = :subjectId")
     suspend fun fetchEventsBySubjectId(subjectId: Int): List<EventAndNotificationAndScoreAndSubject>
+
+    @MapInfo(keyColumn = "date", valueColumn = "date")
+    @Query("SELECT * FROM events GROUP BY events.date ORDER BY events.date")
+    suspend fun fetchEventsGroupedByDate(): Map<Long, List<EventEntity>>
 
     //Notification
     @Insert
