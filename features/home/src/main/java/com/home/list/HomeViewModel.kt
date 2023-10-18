@@ -30,7 +30,6 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     @Dispatcher(AppDispatcher.UI) private val uiDispatcher: CoroutineDispatcher,
-    private val userUseCase: UserUseCase,
     private val homeUseCase: HomeUseCase,
     private val noteUseCase: NoteUseCase,
     private val eventUseCase: EventUseCase,
@@ -39,11 +38,10 @@ class HomeViewModel @Inject constructor(
     override val container = container<HomeListState, HomeSideEffect>(HomeListState())
 
     init {
-        fetchCurrentUser()
-        fetchTimetableBtWeekDay(LocalDate.now().dayOfWeek)
+        fetchTimetableByWeekDay(LocalDate.now().dayOfWeek)
     }
 
-    fun fetchTimetableBtWeekDay(dayOfWeek: DayOfWeek) = intent {
+    fun fetchTimetableByWeekDay(dayOfWeek: DayOfWeek) = intent {
         when (val timetableResult = homeUseCase.fetchTimetableByDay(dayOfWeek)) {
             is Result.Error -> postSideEffect(HomeSideEffect.Toast(timetableResult.exception.toString()))
             is Result.Success -> {
@@ -59,27 +57,8 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun fetchCurrentUser() = intent {
-        val userResult = userUseCase
-            .fetchCurrentUser()
-        when (userResult) {
-            is Result.Error -> postSideEffect(HomeSideEffect.Toast(userResult.toString()))
-            is Result.Success -> reduce {
-                state.copy(
-                    currentUserState = CurrentUserState(
-                        username = userResult.data.userName,
-                        photoUrl = userResult.data.photoUrl,
-                        email = userResult.data.email
-                    )
-                )
-            }
-        }
-    }
-
     fun fetchLatestNotes() = intent {
-        val notesResult = noteUseCase.fetchNotesWithCount(LATEST_TEN)
-
-        when (notesResult) {
+        when (val notesResult = noteUseCase.fetchNotesWithCount(LATEST_TEN)) {
             is Result.Error -> postSideEffect(HomeSideEffect.Toast(notesResult.exception.toString()))
             is Result.Success -> reduce {
                 state.copy(
@@ -93,9 +72,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun fetchLatestEvents() = intent {
-        val eventsResult = eventUseCase.fetchEvents(LATEST_TEN)
-
-        when(eventsResult){
+        when (val eventsResult = eventUseCase.fetchEvents(LATEST_TEN)) {
             is Result.Error -> postSideEffect(HomeSideEffect.Toast(eventsResult.exception.toString()))
             is Result.Success -> reduce { state.copy(eventsState = EventState(eventsResult.data)) }
         }
@@ -103,9 +80,10 @@ class HomeViewModel @Inject constructor(
 
     fun setAction(homeActon: HomeAction) {
         when (homeActon) {
-            is HomeAction.DaySelected -> fetchTimetableBtWeekDay(homeActon.dayOfWeek)
+            is HomeAction.DaySelected -> fetchTimetableByWeekDay(homeActon.dayOfWeek)
             is HomeAction.EventSelected -> {}
             is HomeAction.NoteClicked -> {}
+            is HomeAction.FabClicked -> {}
             is HomeAction.TimeTableConfig -> intent {
                 reduce {
                     state.copy(

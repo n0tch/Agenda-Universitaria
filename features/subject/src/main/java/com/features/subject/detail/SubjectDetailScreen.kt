@@ -24,10 +24,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.core.designsystem.components.Pill
-import com.core.designsystem.components.fab.FabItem
+import com.core.designsystem.components.fab.FabItemEnum
 import com.core.designsystem.components.fab.FabMenu
 import com.core.designsystem.components.row.GridLazyRow
 import com.core.designsystem.extensions.asLocalizedDate
@@ -77,12 +78,7 @@ fun SubjectDetailScreen(
         },
         floatingActionButton = {
             FabMenu(
-                items = listOf(
-                    FabItem(Icons.Filled.Notes, "Nota"),
-                    FabItem(Icons.Filled.NoteAdd, "Prova"),
-                    FabItem(Icons.Filled.PostAdd, "Trabalho"),
-                    FabItem(Icons.Filled.BookmarkAdd, "Customizado"),
-                ),
+                items = SubjectsFabItems.values().toList(),
                 onFabClicked = {
                     when (it.icon) {
                         Icons.Filled.NoteAdd -> onAddEventClicked("prova")
@@ -186,4 +182,14 @@ fun SubjectDetailScreenPreview() {
         detailState = SubjectDetailState(),
         onNoteClicked = {},
     )
+}
+
+enum class SubjectsFabItems(
+    override val icon: ImageVector,
+    override val label: String
+): FabItemEnum{
+    NOTES(Icons.Filled.Notes, "Nota"),
+    EXAMS(Icons.Filled.NoteAdd, "Prova"),
+    HOMEWORK(Icons.Filled.PostAdd, "Trabalho"),
+    CUSTOM(Icons.Filled.BookmarkAdd, "Customizado")
 }

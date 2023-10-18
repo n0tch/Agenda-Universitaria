@@ -16,9 +16,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.core.designsystem.components.fab.FabItem
+import com.core.designsystem.components.fab.FabItemEnum
 import com.core.designsystem.components.fab.FabMenu
 import com.home.list.adapters.eventAdapter
 import com.home.list.adapters.notesAdapter
@@ -79,12 +80,14 @@ fun HomeScreen(
                 floatingActionButton = {
                     FabMenu(
                         items = listOf(
-                            FabItem(Icons.Filled.Note, "Add note"),
-                            FabItem(Icons.Filled.Newspaper, "Add disciplina"),
-                            FabItem(Icons.Filled.CalendarMonth, "Add Timetable"),
-                            FabItem(Icons.Filled.Hexagon, "Add exam")
+                            FabItemHome.EXAM,
+                            FabItemHome.NOTE,
+                            FabItemHome.DISCIPLINE,
+                            FabItemHome.TIMETABLE
                         ),
-                        onFabClicked = {  }
+                        onFabClicked = {
+                            onAction(HomeAction.FabClicked(it))
+                        }
                     )
                 },
             ) {
@@ -114,6 +117,16 @@ fun HomeScreen(
             }
         }
     )
+}
+
+enum class FabItemHome(
+    override val icon: ImageVector,
+    override val label: String
+): FabItemEnum {
+    EXAM(Icons.Filled.Hexagon, "Add Event"),
+    NOTE(Icons.Filled.Note, "Add note"),
+    TIMETABLE(Icons.Filled.Newspaper, "Add disciplina"),
+    DISCIPLINE(Icons.Filled.CalendarMonth, "Add Timetable")
 }
 
 //@Preview

@@ -9,6 +9,8 @@ import com.example.model.event.EventNotification
 import com.example.model.event.EventScore
 import com.example.model.event.NotificationEarlier
 import com.example.model.event.NotificationPeriod
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -26,7 +28,8 @@ internal class EventRepositoryImp @Inject constructor(
     }
 
     override suspend fun fetchEvents(limit: Int): List<EventCompound> {
-        return eventDao.fetchCompoundEvents(limit).map { it.toEventCompound() }
+        val now: Long = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        return eventDao.fetchCompoundEvents(now, limit).map { it.toEventCompound() }
     }
 
     override suspend fun saveNotification(notification: EventNotification?, eventId: Int) {

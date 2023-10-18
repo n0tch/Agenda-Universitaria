@@ -41,11 +41,9 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.core.designsystem.components.chip.MultipleChipSelection
 import com.core.designsystem.components.chip.SingleChipSelection
-import com.core.designsystem.components.fab.FabItem
 import com.core.designsystem.components.fab.FabMenu
 import com.example.model.Label
 import com.example.model.Note
-import com.example.model.NoteCompound
 import com.github.dhaval2404.imagepicker.ImagePicker
 import kotlinx.coroutines.launch
 
@@ -116,7 +114,7 @@ fun NewNoteScreen(
         },
         floatingActionButton = {
             FabMenu(
-                items = EditNoteButtons.values().map { FabItem(it.icon, it.label) },
+                items = EditNoteButtons.values().map { it },
                 onFabClicked = {
                     when (it.icon) {
                         EditNoteButtons.GALLERY.icon -> {

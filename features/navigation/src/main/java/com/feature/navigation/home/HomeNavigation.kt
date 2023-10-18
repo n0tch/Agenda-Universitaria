@@ -36,6 +36,9 @@ fun NavGraphBuilder.homeGraph(navController: NavController) {
                             navController.navigateToSubjectById(navigation.subjectId)
                         is HomeNavigation.NavigateToCalendar ->
                             navController.navigateToCalendar()
+                        is HomeNavigation.NavigateToScreenByEnum -> {
+
+                        }
                     }
                 }
             )

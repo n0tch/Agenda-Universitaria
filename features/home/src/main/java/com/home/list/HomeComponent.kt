@@ -46,7 +46,7 @@ fun HomeComponent(
     viewModel.collectSideEffect {
         when (it) {
             is HomeSideEffect.Toast -> Log.e("Error", it.message)
-            is HomeSideEffect.DaySelected -> viewModel.fetchTimetableBtWeekDay(it.dayOfWeek)
+            is HomeSideEffect.DaySelected -> viewModel.fetchTimetableByWeekDay(it.dayOfWeek)
         }
     }
 
